@@ -4,7 +4,7 @@ import StrandAnalytics
 
 /// Locks the prefilled new-issue URL (spec section 5.2): it must bind bug_report.yml's existing
 /// id fields (version/platform/os_version/test_profile/title) and self-apply the "bug,test:<id>"
-/// labels, with every component percent-encoded. The repo is ParthJadhav/noop (bug_report.yml line 10).
+/// labels, with every component percent-encoded. The repo is MatB57/noop (this fork's own tracker).
 final class TestReportLinkTests: XCTestCase {
 
     func testSleepProfileURLEncodesEveryFieldAndLabel() {
@@ -13,7 +13,7 @@ final class TestReportLinkTests: XCTestCase {
             version: "7.3.0", platform: "iOS", osVersion: "18.5")
         XCTAssertNotNil(url)
         let s = url!.absoluteString
-        XCTAssertTrue(s.hasPrefix("https://github.com/ParthJadhav/noop/issues/new?"))
+        XCTAssertTrue(s.hasPrefix("https://github.com/MatB57/noop/issues/new?"))
         XCTAssertTrue(s.contains("template=bug_report.yml"))
         // Label component: "bug,test:sleep" with the comma percent-encoded.
         XCTAssertTrue(s.contains("labels=bug%2Ctest:sleep"))
