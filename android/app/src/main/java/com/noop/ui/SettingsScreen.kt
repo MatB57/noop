@@ -1995,11 +1995,11 @@ fun SettingsScreen(vm: AppViewModel, onOpenTestCentre: () -> Unit = {}) {
                             interactionSource = projectHomeInteraction,
                             indication = null,
                         ) {
-                            val intent = Intent(Intent.ACTION_VIEW, Uri.parse("https://github.com/ParthJadhav/noop"))
+                            val intent = Intent(Intent.ACTION_VIEW, Uri.parse("https://github.com/MatB57/noop"))
                             try {
                                 context.startActivity(intent)
                             } catch (_: ActivityNotFoundException) {
-                                Toast.makeText(context, "github.com/ParthJadhav/noop", Toast.LENGTH_LONG).show()
+                                Toast.makeText(context, "github.com/MatB57/noop", Toast.LENGTH_LONG).show()
                             }
                         }
                         .padding(horizontal = 14.dp, vertical = 12.dp)
