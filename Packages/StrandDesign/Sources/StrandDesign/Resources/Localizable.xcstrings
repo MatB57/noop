@@ -8,6 +8,12 @@
             "state": "translated",
             "value": "%lld days ago"
           }
+        },
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "il y a %lld jours"
+          }
         }
       }
     },
@@ -42,12 +48,24 @@
             "state": "translated",
             "value": "%lld 小時"
           }
+        },
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "%lld heures"
+          }
         }
       }
     },
     "%lld minutes": {
       "localizations": {
         "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "%lld minutes"
+          }
+        },
+        "fr": {
           "stringUnit": {
             "state": "translated",
             "value": "%lld minutes"
@@ -62,6 +80,12 @@
             "state": "translated",
             "value": "%lld points, mean %@, range %@ to %@"
           }
+        },
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "%lld points, moyenne %@, plage %@ à %@"
+          }
         }
       }
     },
@@ -71,6 +95,12 @@
           "stringUnit": {
             "state": "translated",
             "value": "%lld readings"
+          }
+        },
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "%lld mesures"
           }
         }
       }
@@ -82,6 +112,12 @@
             "state": "translated",
             "value": "%lld workouts"
           }
+        },
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "%lld entraînements"
+          }
         }
       }
     },
@@ -91,6 +127,12 @@
           "stringUnit": {
             "state": "translated",
             "value": "%lldd ago"
+          }
+        },
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "il y a %lldj"
           }
         }
       }
@@ -126,6 +168,12 @@
             "state": "translated",
             "value": "%lld 小時前"
           }
+        },
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "il y a %lldh"
+          }
         }
       }
     },
@@ -135,6 +183,12 @@
           "stringUnit": {
             "state": "translated",
             "value": "%lldm ago"
+          }
+        },
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "il y a %lldmin"
           }
         }
       }
@@ -170,12 +224,24 @@
             "state": "translated",
             "value": "1 小時"
           }
+        },
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "1 heure"
+          }
         }
       }
     },
     "1 minute": {
       "localizations": {
         "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "1 minute"
+          }
+        },
+        "fr": {
           "stringUnit": {
             "state": "translated",
             "value": "1 minute"
@@ -190,6 +256,12 @@
             "state": "translated",
             "value": "1 workout"
           }
+        },
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "1 entraînement"
+          }
         }
       }
     },
@@ -199,6 +271,12 @@
           "stringUnit": {
             "state": "translated",
             "value": "ALL-OUT"
+          }
+        },
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "MAXIMAL"
           }
         }
       }
@@ -262,6 +340,12 @@
             "state": "translated",
             "value": "Classic"
           }
+        },
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Classique"
+          }
         }
       }
     },
@@ -272,6 +356,12 @@
             "state": "translated",
             "value": "DEPLETED"
           }
+        },
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "ÉPUISÉ"
+          }
         }
       }
     },
@@ -281,6 +371,12 @@
           "stringUnit": {
             "state": "translated",
             "value": "Dark"
+          }
+        },
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Sombre"
           }
         }
       }
@@ -368,6 +464,12 @@
             "state": "translated",
             "value": "預設"
           }
+        },
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Par défaut"
+          }
         }
       }
     },
@@ -402,6 +504,12 @@
             "state": "translated",
             "value": "高"
           }
+        },
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "ÉLEVÉ"
+          }
         }
       }
     },
@@ -411,6 +519,12 @@
           "stringUnit": {
             "state": "translated",
             "value": "LIGHT"
+          }
+        },
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "LÉGER"
           }
         }
       }
@@ -445,6 +559,12 @@
           "stringUnit": {
             "state": "translated",
             "value": "低"
+          }
+        },
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "FAIBLE"
           }
         }
       }
@@ -508,6 +628,12 @@
             "state": "translated",
             "value": "MODERATE"
           }
+        },
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "MODÉRÉ"
+          }
         }
       }
     },
@@ -570,6 +696,12 @@
             "state": "translated",
             "value": "No heart-rate data"
           }
+        },
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Aucune donnée de fréquence cardiaque"
+          }
         }
       }
     },
@@ -604,6 +736,12 @@
             "state": "translated",
             "value": "巔峰"
           }
+        },
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "PIC"
+          }
         }
       }
     },
@@ -613,6 +751,12 @@
           "stringUnit": {
             "state": "translated",
             "value": "PRIMED"
+          }
+        },
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "PRÊT"
           }
         }
       }
@@ -624,6 +768,12 @@
             "state": "translated",
             "value": "Recovery calendar, %lld days, average %lld, low %lld, high %lld"
           }
+        },
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Calendrier de récupération, %lld jours, moyenne %lld, minimum %lld, maximum %lld"
+          }
         }
       }
     },
@@ -633,6 +783,12 @@
           "stringUnit": {
             "state": "translated",
             "value": "Recovery calendar, no data"
+          }
+        },
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Calendrier de récupération, aucune donnée"
           }
         }
       }
@@ -644,6 +800,12 @@
             "state": "translated",
             "value": "STRENUOUS"
           }
+        },
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "INTENSE"
+          }
         }
       }
     },
@@ -653,6 +815,12 @@
           "stringUnit": {
             "state": "translated",
             "value": "Sleep stages, %@"
+          }
+        },
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Stades de sommeil, %@"
           }
         }
       }
@@ -664,6 +832,12 @@
             "state": "translated",
             "value": "Sleep stages, no data"
           }
+        },
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Stades de sommeil, aucune donnée"
+          }
         }
       }
     },
@@ -673,6 +847,12 @@
           "stringUnit": {
             "state": "translated",
             "value": "System"
+          }
+        },
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Système"
           }
         }
       }
@@ -736,6 +916,12 @@
             "state": "translated",
             "value": "Trend, %lld points, latest %@, low %@, high %@"
           }
+        },
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Tendance, %lld points, dernier %@, minimum %@, maximum %@"
+          }
         }
       }
     },
@@ -770,6 +956,12 @@
             "state": "translated",
             "value": "昨天"
           }
+        },
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Hier"
+          }
         }
       }
     },
@@ -780,6 +972,12 @@
             "state": "translated",
             "value": "asleep %@"
           }
+        },
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "endormi %@"
+          }
         }
       }
     },
@@ -789,6 +987,12 @@
           "stringUnit": {
             "state": "translated",
             "value": "average %@ bpm"
+          }
+        },
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "moyenne %@ bpm"
           }
         }
       }
@@ -824,6 +1028,12 @@
             "state": "translated",
             "value": "剛剛"
           }
+        },
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "à l'instant"
+          }
         }
       }
     },
@@ -833,6 +1043,12 @@
           "stringUnit": {
             "state": "translated",
             "value": "range %@ to %@"
+          }
+        },
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "plage %@ à %@"
           }
         }
       }

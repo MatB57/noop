@@ -8,6 +8,12 @@
             "state": "translated",
             "value": "%@ %lld"
           }
+        },
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "%@ %lld"
+          }
         }
       }
     },
@@ -18,6 +24,12 @@
             "state": "translated",
             "value": "%@ calibrating"
           }
+        },
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "%@ en calibration"
+          }
         }
       }
     },
@@ -27,6 +39,12 @@
           "stringUnit": {
             "state": "translated",
             "value": "%@ unavailable"
+          }
+        },
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "%@ indisponible"
           }
         }
       }
@@ -90,12 +108,24 @@
             "state": "translated",
             "value": "Charge %lld out of 100"
           }
+        },
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Charge %lld sur 100"
+          }
         }
       }
     },
     "Charge %lld · %lld bpm%@": {
       "localizations": {
         "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Charge %lld · %lld bpm%@"
+          }
+        },
+        "fr": {
           "stringUnit": {
             "state": "translated",
             "value": "Charge %lld · %lld bpm%@"
@@ -110,6 +140,12 @@
             "state": "translated",
             "value": "Charge %lld%@"
           }
+        },
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Charge %lld%@"
+          }
         }
       }
     },
@@ -119,6 +155,12 @@
           "stringUnit": {
             "state": "translated",
             "value": "Charge calibrating"
+          }
+        },
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Charge en calibration"
           }
         }
       }
@@ -130,6 +172,12 @@
             "state": "translated",
             "value": "Charge calibrating, needs more data"
           }
+        },
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Charge en calibration, besoin de plus de données"
+          }
         }
       }
     },
@@ -139,6 +187,12 @@
           "stringUnit": {
             "state": "translated",
             "value": "Charge out of date, last synced %@. Open NOOP on iPhone."
+          }
+        },
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Charge non à jour, dernière synchro %@. Ouvrez NOOP sur iPhone."
           }
         }
       }
@@ -150,6 +204,12 @@
             "state": "translated",
             "value": "Charge stale · %@"
           }
+        },
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Charge obsolète · %@"
+          }
         }
       }
     },
@@ -160,12 +220,24 @@
             "state": "translated",
             "value": "Charge unavailable"
           }
+        },
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Charge indisponible"
+          }
         }
       }
     },
     "Charge · %@": {
       "localizations": {
         "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Charge · %@"
+          }
+        },
+        "fr": {
           "stringUnit": {
             "state": "translated",
             "value": "Charge · %@"
@@ -180,12 +252,24 @@
             "state": "translated",
             "value": "Charge · cal"
           }
+        },
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Charge · cal"
+          }
         }
       }
     },
     "Charge –": {
       "localizations": {
         "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Charge –"
+          }
+        },
+        "fr": {
           "stringUnit": {
             "state": "translated",
             "value": "Charge –"
@@ -276,6 +360,12 @@
             "state": "translated",
             "value": "NOOP 能量"
           }
+        },
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Charge NOOP"
+          }
         }
       }
     },
@@ -286,12 +376,24 @@
             "state": "translated",
             "value": "NOOP · open on iPhone"
           }
+        },
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "NOOP · ouvrir sur iPhone"
+          }
         }
       }
     },
     "NOOP. %@, %@, %@.": {
       "localizations": {
         "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "NOOP. %@, %@, %@."
+          }
+        },
+        "fr": {
           "stringUnit": {
             "state": "translated",
             "value": "NOOP. %@, %@, %@."
@@ -306,6 +408,12 @@
             "state": "translated",
             "value": "NOOP. No data yet, open NOOP on your iPhone to sync."
           }
+        },
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "NOOP. Pas encore de données, ouvrez NOOP sur votre iPhone pour synchroniser."
+          }
         }
       }
     },
@@ -315,6 +423,12 @@
           "stringUnit": {
             "state": "translated",
             "value": "NOOP. Scores out of date, last synced %@. Open NOOP on iPhone to refresh."
+          }
+        },
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "NOOP. Scores non à jour, dernière synchro %@. Ouvrez NOOP sur iPhone pour actualiser."
           }
         }
       }
@@ -326,6 +440,12 @@
             "state": "translated",
             "value": "No data, open NOOP on iPhone"
           }
+        },
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Pas de données, ouvrez NOOP sur iPhone"
+          }
         }
       }
     },
@@ -335,6 +455,12 @@
           "stringUnit": {
             "state": "translated",
             "value": "Open NOOP"
+          }
+        },
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Ouvrir NOOP"
           }
         }
       }
@@ -422,6 +548,12 @@
             "state": "translated",
             "value": "錶面上顯示你的能量（恢復），矩形卡片中則是消耗與休息。"
           }
+        },
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Votre Charge (récupération) sur le cadran, avec Effort et Repos dans la carte rectangulaire."
+          }
         }
       }
     },
@@ -432,12 +564,24 @@
             "state": "translated",
             "value": "a while ago"
           }
+        },
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "il y a un moment"
+          }
         }
       }
     },
     "cal": {
       "localizations": {
         "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "cal"
+          }
+        },
+        "fr": {
           "stringUnit": {
             "state": "translated",
             "value": "cal"
@@ -452,6 +596,12 @@
             "state": "translated",
             "value": "old"
           }
+        },
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "ancien"
+          }
         }
       }
     },
@@ -462,6 +612,12 @@
             "state": "translated",
             "value": "open iPhone"
           }
+        },
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "ouvrir iPhone"
+          }
         }
       }
     },
@@ -471,6 +627,12 @@
           "stringUnit": {
             "state": "translated",
             "value": "stale"
+          }
+        },
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "obsolète"
           }
         }
       }
