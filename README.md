@@ -80,8 +80,8 @@ Pre-built apps you can run right now:
 
 | Platform | Build | Notes |
 |---|---|---|
-| **macOS** | `NOOP-vX-macos.zip` (see [Releases](https://github.com/ParthJadhav/noop/releases)) | Apple Silicon + Intel. Unzip and drag `NOOP.app` to Applications. Not notarized — see **First launch on macOS** below. |
-| **Android** | `NOOP-vX.apk` (see [Releases](https://github.com/ParthJadhav/noop/releases)) | The full app. `minSdk 26` (Android 8+). Sideload — enable "install unknown apps". Blocked by Play Protect? See **Installing on Android** below. |
+| **macOS** | `NOOP-vX-macos.zip` (see [Releases](https://github.com/MatB57/noop/releases)) | Apple Silicon + Intel. Unzip and drag `NOOP.app` to Applications. Not notarized — see **First launch on macOS** below. |
+| **Android** | `NOOP-vX.apk` (see [Releases](https://github.com/MatB57/noop/releases)) | The full app. `minSdk 26` (Android 8+). Sideload — enable "install unknown apps". Blocked by Play Protect? See **Installing on Android** below. |
 | **iOS** | `NOOP-vX-ios.ipa` (see [Releases](https://github.com/ParthJadhav/noop/releases)) — sideload with AltStore/SideStore | Now a **direct download**. The `.ipa` is unsigned; **you** sign it on your iPhone with your own free Apple ID (no App Store, no developer account — NOOP stays anonymous). Re-signs every 7 days (AltStore automates it); Apple Health + Live Activity widgets may be limited under a free signing identity. See [docs/IOS.md](docs/IOS.md). Or build from source in Xcode. |
 
 > **First launch on macOS.** NOOP is **not notarized** by Apple — notarization needs a paid Apple

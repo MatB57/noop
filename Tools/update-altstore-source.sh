@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 #
 # update-altstore-source.sh <version> <ipa> [desc] — refresh altstore-source.json with a new iOS release.
-# The downloadURL points at the canonical GitHub release asset (github.com/ParthJadhav/noop/releases);
+# The downloadURL points at the canonical GitHub release asset (github.com/MatB57/noop/releases);
 # noop.fans stays a mirror. Everything else reads CFBundleVersion + size from the IPA,
 # prepends/replaces apps[0].versions[0], and mirrors legacy top-level fields.
 #
@@ -12,7 +12,7 @@ set -euo pipefail
 HERE="$(cd "$(dirname "$0")" && pwd)"
 [ -f "$HERE/../deploy.env" ] && source "$HERE/../deploy.env"
 DOMAIN="${FORGE_DOMAIN:-${NOOP_DOMAIN:-noop.fans}}"
-ORG="${FORGE_ORG:-NoopApp}"; REPO="${FORGE_REPO:-noop}"
+ORG="${FORGE_ORG:-MatB57}"; REPO="${FORGE_REPO:-noop}"
 
 VERSION="${1:?usage: $0 <version> <ipa> [desc]}"
 IPA="${2:?usage: $0 <version> <ipa> [desc]}"
