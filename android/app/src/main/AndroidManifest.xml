@@ -49,6 +49,8 @@
          service overnight, the strap link drops, no overnight R-R/HRV is banked, and the recovery
          baseline never leaves "calibrating". Play permits this for a continuous companion-device link. -->
     <uses-permission android:name="android.permission.REQUEST_IGNORE_BATTERY_OPTIMIZATIONS" />
+    <!-- Sideloaded-APK in-app update: hand a downloaded release APK to the system package installer. -->
+    <uses-permission android:name="android.permission.REQUEST_INSTALL_PACKAGES" />
     <uses-permission
         android:name="android.permission.FOREGROUND_SERVICE_CONNECTED_DEVICE"
         tools:targetApi="34" />
