@@ -45,10 +45,6 @@
 
     <!-- Keep the BLE link alive while collecting/offloading in the background. -->
     <uses-permission android:name="android.permission.FOREGROUND_SERVICE" />
-    <!-- Ask to be exempt from Doze/battery optimisation: without it Android freezes the foreground
-         service overnight, the strap link drops, no overnight R-R/HRV is banked, and the recovery
-         baseline never leaves "calibrating". Play permits this for a continuous companion-device link. -->
-    <uses-permission android:name="android.permission.REQUEST_IGNORE_BATTERY_OPTIMIZATIONS" />
     <uses-permission
         android:name="android.permission.FOREGROUND_SERVICE_CONNECTED_DEVICE"
         tools:targetApi="34" />

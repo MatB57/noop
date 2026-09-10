@@ -43,7 +43,6 @@ import androidx.compose.material.icons.filled.Download
 import androidx.compose.material.icons.filled.Edit
 import androidx.compose.material.icons.filled.Favorite
 import androidx.compose.material.icons.filled.Info
-import androidx.compose.material.icons.filled.Warning
 import androidx.compose.material.icons.filled.IosShare
 import androidx.compose.material.icons.filled.KeyboardArrowDown
 import androidx.compose.material.icons.filled.MenuBook
@@ -94,7 +93,6 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.noop.BuildConfig
 import com.noop.analytics.Baselines
 import com.noop.analytics.Zones
-import com.noop.ble.BatteryOptimization
 import com.noop.ble.PuffinExperiment
 import com.noop.ble.WhoopModel
 import com.noop.data.DataBackup
@@ -1096,53 +1094,6 @@ fun SettingsScreen(vm: AppViewModel, onOpenTestCentre: () -> Unit = {}) {
                             uncheckedBorderColor = Palette.hairline,
                         ),
                     )
-                }
-
-                // Doze / battery-optimisation exemption. Without it Android freezes the foreground
-                // service overnight — the strap link drops, no overnight R-R/HRV is banked, and Charge
-                // can sit on "calibrating" forever. Only shown while background connection is on and the
-                // exemption isn't already granted. No iOS/macOS counterpart.
-                if (backgroundConnection && !BatteryOptimization.isExempt(context)) {
-                    Row(
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .clip(RoundedCornerShape(12.dp))
-                            .background(Palette.statusWarning.copy(alpha = 0.12f))
-                            .padding(14.dp),
-                        verticalAlignment = Alignment.CenterVertically,
-                        horizontalArrangement = Arrangement.spacedBy(12.dp),
-                    ) {
-                        Icon(
-                            Icons.Filled.Warning,
-                            contentDescription = null,
-                            tint = Palette.statusWarning,
-                            modifier = Modifier.size(22.dp),
-                        )
-                        Column(modifier = Modifier.weight(1f)) {
-                            Text(
-                                "Allow background running",
-                                style = NoopType.subhead,
-                                color = Palette.textPrimary,
-                            )
-                            Text(
-                                "Android is limiting NOOP in the background, which stops overnight syncing — your scores can stay stuck on “calibrating”. Tap Allow so it can keep the strap connected.",
-                                style = NoopType.footnote,
-                                color = Palette.textTertiary,
-                            )
-                        }
-                        Button(
-                            onClick = {
-                                runCatching { context.startActivity(BatteryOptimization.requestIntent(context)) }
-                                    .onFailure {
-                                        runCatching { context.startActivity(BatteryOptimization.settingsIntent()) }
-                                    }
-                            },
-                            colors = ButtonDefaults.buttonColors(
-                                containerColor = Palette.accent,
-                                contentColor = Palette.surfaceBase,
-                            ),
-                        ) { Text("Allow") }
-                    }
                 }
 
                 // Continuous HRV capture: keep the dense beat-to-beat (R-R) stream armed even with no Live
