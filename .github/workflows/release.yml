@@ -127,6 +127,32 @@ jobs:
       - name: Set up Gradle
         uses: gradle/actions/setup-gradle@v4
 
+      # A STABLE signing key is what lets an in-app update install over the previous version
+      # (same key = "update"; a different key = Android refuses and forces an uninstall → data loss).
+      # The key lives ONLY in repo secrets (never in git). One-time setup:
+      #   keytool -genkeypair -v -keystore noop-release.jks -alias noop -keyalg RSA -keysize 2048 \
+      #     -validity 10000 -storepass <PW> -keypass <PW> -dname "CN=NOOP, O=NoopApp, C=US"
+      #   base64 -w0 noop-release.jks           # -> paste as secret ANDROID_KEYSTORE_B64
+      # then add secrets ANDROID_KEYSTORE_PASSWORD / ANDROID_KEY_ALIAS (noop) / ANDROID_KEY_PASSWORD.
+      # Until the secret is set, the APK falls back to an ephemeral debug key (updates need a reinstall).
+      - name: Prepare release signing keystore
+        working-directory: android
+        env:
+          KS_B64: ${{ secrets.ANDROID_KEYSTORE_B64 }}
+          KS_PASS: ${{ secrets.ANDROID_KEYSTORE_PASSWORD }}
+          KEY_ALIAS: ${{ secrets.ANDROID_KEY_ALIAS }}
+          KEY_PASS: ${{ secrets.ANDROID_KEY_PASSWORD }}
+        run: |
+          set -euo pipefail
+          if [ -n "${KS_B64:-}" ]; then
+            echo "$KS_B64" | base64 -d > noop-release.jks
+            printf 'storeFile=noop-release.jks\nstorePassword=%s\nkeyAlias=%s\nkeyPassword=%s\n' \
+              "$KS_PASS" "$KEY_ALIAS" "$KEY_PASS" > keystore.properties
+            echo "Signing with the stable release keystore from repo secrets."
+          else
+            echo "::warning::ANDROID_KEYSTORE_B64 secret is not set — this APK is signed with an ephemeral debug key, so installing it needs the previous version uninstalled first (data loss). Add the secret for seamless in-app updates."
+          fi
+
       - name: Build full release APK
         run: ./gradlew assembleFullRelease
         working-directory: android
