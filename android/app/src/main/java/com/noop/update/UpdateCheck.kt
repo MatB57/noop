@@ -7,11 +7,11 @@ import java.net.HttpURLConnection
 import java.net.URL
 
 /**
- * Update check against the project's PUBLIC releases API (GitHub): reads the latest version and
- * compares it to the installed one. Called both from the Settings "Check for updates" button and,
- * throttled, at launch by [com.noop.ui.UpdateGate] to prompt a one-tap in-app APK update. Nothing
- * about the user is sent; it just reads a version number and the release's APK asset URL.
- * (Android already holds INTERNET for the opt-in AI Coach, so this adds no new capability.)
+ * User-initiated "Check for updates": a single call to the project's PUBLIC releases API (GitHub) that reads the
+ * latest version and compares it to the installed one. It runs ONLY when the user taps the button —
+ * there is no background polling and no auto-update. Nothing about the user is sent; it just reads a
+ * version number. (Android already holds INTERNET for the opt-in AI Coach, so this adds no new
+ * capability.)
  */
 object UpdateCheck {
 
@@ -19,20 +19,7 @@ object UpdateCheck {
 
     sealed interface Result {
         data class UpToDate(val version: String) : Result
-
-        /**
-         * A newer release is available. [url] is the release page (browser fallback); [apkUrl] is the
-         * direct `.apk` asset for an in-app download+install, or null when the release has no APK
-         * attached (then only the browser path is offered). [apkSize] is bytes, 0 if unknown.
-         */
-        data class Available(
-            val version: String,
-            val url: String,
-            val notes: String,
-            val apkUrl: String? = null,
-            val apkSize: Long = 0L,
-        ) : Result
-
+        data class Available(val version: String, val url: String, val notes: String) : Result
         object Failed : Result
     }
 
@@ -52,22 +39,8 @@ object UpdateCheck {
                 val latest = json.getString("tag_name").removePrefix("v")
                 val url = json.getString("html_url")
                 val notes = cleanNotes(json.optString("body", ""))
-                if (!isNewer(latest, currentVersion)) return@runCatching Result.UpToDate(latest)
-
-                // First `.apk` asset on the release → the in-app download target.
-                var apkUrl: String? = null
-                var apkSize = 0L
-                json.optJSONArray("assets")?.let { assets ->
-                    for (i in 0 until assets.length()) {
-                        val a = assets.optJSONObject(i) ?: continue
-                        if (a.optString("name").endsWith(".apk", ignoreCase = true)) {
-                            apkUrl = a.optString("browser_download_url").ifBlank { null }
-                            apkSize = a.optLong("size", 0L)
-                            break
-                        }
-                    }
-                }
-                Result.Available(latest, url, notes, apkUrl, apkSize)
+                if (isNewer(latest, currentVersion)) Result.Available(latest, url, notes)
+                else Result.UpToDate(latest)
             } finally {
                 conn.disconnect()
             }

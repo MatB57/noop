@@ -199,14 +199,6 @@ object NoopPrefs {
 
     const val KEY_ANALYZE_WATERMARK = "noop.analyzeWatermark"
 
-    /** Wall-clock ms of the last launch-time update check ([com.noop.ui.UpdateGate]), so the releases
-     *  API is hit at most once per ~6 h across launches. 0 / absent = never checked. */
-    const val KEY_LAST_UPDATE_CHECK_MS = "noop.lastUpdateCheckMs"
-
-    /** Version string the user tapped "Later" on in the launch update prompt, so the same version
-     *  isn't re-prompted every launch. The Settings "Check for updates" button ignores this. */
-    const val KEY_UPDATE_SNOOZED_VERSION = "noop.updateSnoozedVersion"
-
     fun of(context: Context): SharedPreferences =
         context.getSharedPreferences(NAME, Context.MODE_PRIVATE)
 
@@ -763,10 +755,6 @@ fun NoopRoot() {
     // Existing, onboarded user: render the app, and if they've updated since last launch
     // (stored version behind current), show "What's New" once over the top.
     AppRoot(viewModel = appViewModel)
-
-    // Sideloaded-APK update prompt: throttled launch check against the public GitHub release, with a
-    // one-tap in-app download + install. Only for onboarded users (past Terms + onboarding gates).
-    UpdateGate()
 
     if (lastSeenChangelog != AppChangelog.CURRENT_VERSION) {
         Dialog(

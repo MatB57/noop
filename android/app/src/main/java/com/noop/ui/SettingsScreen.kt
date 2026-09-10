@@ -61,7 +61,6 @@ import androidx.compose.material.icons.outlined.Person
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.CircularProgressIndicator
-import androidx.compose.material3.LinearProgressIndicator
 import androidx.compose.material3.Icon
 import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.OutlinedTextField
@@ -101,7 +100,6 @@ import com.noop.ble.WhoopModel
 import com.noop.data.DataBackup
 import com.noop.ingest.RawSensorExport
 import com.noop.ingest.WhoopCsvExporter
-import com.noop.update.InAppUpdate
 import com.noop.update.UpdateCheck
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -2071,9 +2069,6 @@ fun SettingsScreen(vm: AppViewModel, onOpenTestCentre: () -> Unit = {}) {
                 // is sent. Android already holds INTERNET (for the opt-in Coach), so this adds nothing.
                 var updChecking by remember { mutableStateOf(false) }
                 var updResult by remember { mutableStateOf<UpdateCheck.Result?>(null) }
-                // Non-null while an in-app APK download is running (0..1), so the card shows progress
-                // instead of the Download button.
-                var updDownloadPct by remember { mutableStateOf<Float?>(null) }
                 Column(verticalArrangement = Arrangement.spacedBy(8.dp)) {
                     Row(
                         verticalAlignment = Alignment.CenterVertically,
@@ -2136,60 +2131,13 @@ fun SettingsScreen(vm: AppViewModel, onOpenTestCentre: () -> Unit = {}) {
                                     style = NoopType.subhead, color = Palette.textPrimary,
                                     modifier = Modifier.weight(1f),
                                 )
-                                val pct = updDownloadPct
-                                if (pct != null) {
-                                    Text(
-                                        "Downloading… ${(pct * 100).toInt()}%",
-                                        style = NoopType.footnote, color = Palette.textSecondary,
-                                    )
-                                } else {
-                                    NoopButton(
-                                        text = "Update",
-                                        leadingIcon = Icons.Filled.Download,
-                                        kind = NoopButtonKind.Primary,
-                                        onClick = {
-                                            val apk = avail.apkUrl
-                                            when {
-                                                apk == null ->
-                                                    InAppUpdate.openReleasePage(context, avail.url)
-                                                !InAppUpdate.canInstall(context) -> {
-                                                    InAppUpdate.requestInstallPermission(context)
-                                                    Toast.makeText(
-                                                        context,
-                                                        "Allow installing apps, then tap Update again.",
-                                                        Toast.LENGTH_LONG,
-                                                    ).show()
-                                                }
-                                                else -> {
-                                                    updDownloadPct = 0f
-                                                    scope.launch {
-                                                        runCatching {
-                                                            InAppUpdate.download(context, avail.version, apk) {
-                                                                updDownloadPct = it
-                                                            }
-                                                        }.onSuccess { file ->
-                                                            updDownloadPct = null
-                                                            InAppUpdate.install(context, file)
-                                                        }.onFailure {
-                                                            updDownloadPct = null
-                                                            Toast.makeText(
-                                                                context,
-                                                                "Download failed — opening the release page.",
-                                                                Toast.LENGTH_LONG,
-                                                            ).show()
-                                                            InAppUpdate.openReleasePage(context, avail.url)
-                                                        }
-                                                    }
-                                                }
-                                            }
-                                        },
-                                    )
-                                }
-                            }
-                            updDownloadPct?.let { p ->
-                                LinearProgressIndicator(
-                                    progress = p,
-                                    modifier = Modifier.fillMaxWidth(),
+                                NoopButton(
+                                    text = "Download",
+                                    leadingIcon = Icons.Filled.Download,
+                                    kind = NoopButtonKind.Primary,
+                                    onClick = {
+                                        context.startActivity(Intent(Intent.ACTION_VIEW, Uri.parse(avail.url)))
+                                    },
                                 )
                             }
                             if (avail.notes.isNotEmpty()) {
