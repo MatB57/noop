@@ -151,8 +151,8 @@ fun FullDayChartScreen(vm: AppViewModel, onBack: () -> Unit) {
     }
 
     ScreenScaffold(
-        title = "Deep Timeline",
-        subtitle = "Every second of your day. Drag back up to 3 days.",
+        title = tr("Deep Timeline"),
+        subtitle = tr("Every second of your day. Drag back up to 3 days."),
     ) {
         // METRIC PILLS — horizontally scrollable so all six fit on a phone.
         Row(modifier = Modifier.horizontalScroll(rememberScrollState())) {
@@ -166,12 +166,12 @@ fun FullDayChartScreen(vm: AppViewModel, onBack: () -> Unit) {
 
         // SOURCE PILL — the owned strap, with the #574 owned/all scope toggle.
         Row(verticalAlignment = Alignment.CenterVertically) {
-            Text("My WHOOP", style = NoopType.footnote, color = Palette.textSecondary)
+            Text(tr("My WHOOP"), style = NoopType.footnote, color = Palette.textSecondary)
             Spacer(Modifier.weight(1f))
             SegmentedPillControl(
                 items = listOf(true, false),
                 selection = ownedOnly,
-                label = { if (it) "Owned" else "All" },
+                label = { if (it) tr("Owned") else tr("All") },
                 onSelect = { ownedOnly = it },
             )
         }
@@ -216,7 +216,7 @@ fun FullDayChartScreen(vm: AppViewModel, onBack: () -> Unit) {
                 Box(modifier = Modifier.fillMaxWidth().height(280.dp), contentAlignment = Alignment.Center) {
                     when {
                         loading && points.isEmpty() ->
-                            Text("Loading the day…", style = NoopType.footnote, color = Palette.textTertiary)
+                            Text(tr("Loading the day…"), style = NoopType.footnote, color = Palette.textTertiary)
                         points.isEmpty() -> EmptyTimelineState(metric, ownedOnly)
                         else -> TimelineChart(
                             points = points,
@@ -244,13 +244,13 @@ fun FullDayChartScreen(vm: AppViewModel, onBack: () -> Unit) {
         // ZOOM HINT + reset.
         Row(verticalAlignment = Alignment.CenterVertically) {
             Text(
-                if (window == null) "Pinch to zoom · drag to pan" else "Zoomed in - drag to pan",
+                if (window == null) tr("Pinch to zoom · drag to pan") else tr("Zoomed in - drag to pan"),
                 style = NoopType.footnote, color = Palette.textTertiary,
             )
             Spacer(Modifier.weight(1f))
             if (window != null) {
                 Text(
-                    "Reset",
+                    tr("Reset"),
                     style = NoopType.footnote,
                     color = Palette.accent,
                     modifier = Modifier.clickable { window = null },
@@ -270,8 +270,8 @@ private fun EmptyTimelineState(metric: TimelineMetric, ownedOnly: Boolean) {
         Text("No ${metric.title.lowercase(Locale.US)} here",
             style = NoopType.body, color = Palette.textSecondary)
         Text(
-            if (ownedOnly) "Nothing offloaded for this window yet."
-            else "Other sources don’t offload raw per-second data on-device.",
+            if (ownedOnly) tr("Nothing offloaded for this window yet.")
+            else tr("Other sources don’t offload raw per-second data on-device."),
             style = NoopType.footnote, color = Palette.textTertiary, textAlign = TextAlign.Center,
         )
     }

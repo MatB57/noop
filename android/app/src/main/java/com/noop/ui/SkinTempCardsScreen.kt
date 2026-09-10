@@ -127,9 +127,9 @@ fun CycleAwarenessCard(
             // Header: overline + confidence pill.
             Row(modifier = Modifier.fillMaxWidth(), verticalAlignment = Alignment.Top) {
                 Column(modifier = Modifier.weight(1f)) {
-                    Overline("Cycle awareness")
+                    Overline(tr("Cycle awareness"))
                     Text(
-                        "From your nightly temperature",
+                        tr("From your nightly temperature"),
                         style = NoopType.footnote,
                         color = Palette.textTertiary,
                     )
@@ -170,17 +170,17 @@ fun CycleAwarenessCard(
             if (onLogPeriod != null || onOpenDetail != null || onTurnOff != null) {
                 Row(horizontalArrangement = Arrangement.spacedBy(Metrics.gap)) {
                     if (onLogPeriod != null) {
-                        OutlinedButton(onClick = onLogPeriod) { Text("Log period start") }
+                        OutlinedButton(onClick = onLogPeriod) { Text(tr("Log period start")) }
                     }
                     if (onOpenDetail != null) {
                         OutlinedButton(
                             onClick = onOpenDetail,
                             colors = ButtonDefaults.outlinedButtonColors(contentColor = Palette.accent),
-                        ) { Text("View detail") }
+                        ) { Text(tr("View detail")) }
                     }
                     // #801: symmetric off-control (turn cycle awareness off where it was turned on).
                     if (onTurnOff != null) {
-                        OutlinedButton(onClick = onTurnOff) { Text("Turn off") }
+                        OutlinedButton(onClick = onTurnOff) { Text(tr("Turn off")) }
                     }
                 }
             }
@@ -204,17 +204,17 @@ fun CycleAwarenessOptInCard(onEnable: () -> Unit) {
         Column(verticalArrangement = Arrangement.spacedBy(Metrics.gap)) {
             Row(verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.spacedBy(8.dp)) {
                 Icon(Icons.Filled.Thermostat, contentDescription = null, tint = Palette.restColor, modifier = Modifier.size(18.dp))
-                Text("Cycle awareness", style = NoopType.headline, color = Palette.textPrimary)
+                Text(tr("Cycle awareness"), style = NoopType.headline, color = Palette.textPrimary)
             }
             Text(
-                "NOOP can read a coarse menstrual-cycle phase from your nightly skin temperature, " +
-                    "entirely on your device. It is awareness only: not contraception, not a fertility " +
-                    "predictor, not a medical service.",
+                tr("NOOP can read a coarse menstrual-cycle phase from your nightly skin temperature, ") +
+                    tr("entirely on your device. It is awareness only: not contraception, not a fertility ") +
+                    tr("predictor, not a medical service."),
                 style = NoopType.subhead,
                 color = Palette.textSecondary,
             )
             PrivacyNote()
-            OutlinedButton(onClick = onEnable) { Text("Turn on cycle awareness") }
+            OutlinedButton(onClick = onEnable) { Text(tr("Turn on cycle awareness")) }
         }
     }
 }
@@ -236,8 +236,8 @@ fun BodyClockCard(
         Column(verticalArrangement = Arrangement.spacedBy(Metrics.gap)) {
             Row(modifier = Modifier.fillMaxWidth(), verticalAlignment = Alignment.Top) {
                 Column(modifier = Modifier.weight(1f)) {
-                    Overline("Body clock")
-                    Text("Light + sleep timing only", style = NoopType.footnote, color = Palette.textTertiary)
+                    Overline(tr("Body clock"))
+                    Text(tr("Light + sleep timing only"), style = NoopType.footnote, color = Palette.textTertiary)
                 }
                 StatePill(bodyClockConfidenceLabel(estimate.confidence), tone = bodyClockConfidenceTone(estimate.confidence))
             }
@@ -275,7 +275,7 @@ fun BodyClockCard(
                 OutlinedButton(
                     onClick = onOpenPlanner,
                     colors = ButtonDefaults.outlinedButtonColors(contentColor = Palette.accent),
-                ) { Text(if (plan == null) "Plan a trip or shift" else "View the full plan") }
+                ) { Text(if (plan == null) tr("Plan a trip or shift") else tr("View the full plan")) }
             }
         }
     }
@@ -317,11 +317,11 @@ fun HeadsUpCard(
 
             // The visible "why": which signals fired.
             if (result.firedSignals.isNotEmpty()) {
-                WhyRow("Signals up", result.firedSignals, hue)
+                WhyRow(tr("Signals up"), result.firedSignals, hue)
             }
             // ...and what was ruled out (the differentiating part vs a black-box warning).
             if (result.suppressedBy.isNotEmpty()) {
-                WhyRow("Explained by", result.suppressedBy, Palette.textTertiary)
+                WhyRow(tr("Explained by"), result.suppressedBy, Palette.textTertiary)
             }
             // Optional confidence read from the parallel Mahalanobis distance, only when the level is
             // raised. Subtle by design: it augments, never gates (the engine already decided to raise).
@@ -385,11 +385,11 @@ private fun WhyRow(label: String, values: List<String>, tint: Color) {
 // MARK: - Derived copy / presentation (mirror the Swift card exactly)
 
 private fun cyclePhaseTitle(phase: CyclePhaseEngine.Phase): String = when (phase) {
-    CyclePhaseEngine.Phase.FOLLICULAR -> "Follicular"
-    CyclePhaseEngine.Phase.PERI_OVULATORY -> "Mid-cycle shift"
-    CyclePhaseEngine.Phase.LUTEAL -> "Luteal"
-    CyclePhaseEngine.Phase.UNKNOWN -> "No clear pattern"
-    CyclePhaseEngine.Phase.LEARNING -> "Learning your pattern"
+    CyclePhaseEngine.Phase.FOLLICULAR -> tr("Follicular")
+    CyclePhaseEngine.Phase.PERI_OVULATORY -> tr("Mid-cycle shift")
+    CyclePhaseEngine.Phase.LUTEAL -> tr("Luteal")
+    CyclePhaseEngine.Phase.UNKNOWN -> tr("No clear pattern")
+    CyclePhaseEngine.Phase.LEARNING -> tr("Learning your pattern")
 }
 
 /** "~day 18–22" — always a RANGE, never a single point. */
@@ -400,9 +400,9 @@ private fun cycleDayText(r: CyclePhaseEngine.Result): String? {
 }
 
 private fun cycleConfidenceLabel(c: CyclePhaseEngine.Confidence): String = when (c) {
-    CyclePhaseEngine.Confidence.LEARNING -> "Learning"
-    CyclePhaseEngine.Confidence.BUILDING -> "Building"
-    CyclePhaseEngine.Confidence.SOLID -> "Solid"
+    CyclePhaseEngine.Confidence.LEARNING -> tr("Learning")
+    CyclePhaseEngine.Confidence.BUILDING -> tr("Building")
+    CyclePhaseEngine.Confidence.SOLID -> tr("Solid")
 }
 
 private fun cycleConfidenceTone(c: CyclePhaseEngine.Confidence): StrandTone = when (c) {
@@ -413,17 +413,17 @@ private fun cycleConfidenceTone(c: CyclePhaseEngine.Confidence): StrandTone = wh
 
 /** "About 25 min later than your schedule" — a plain, skimmable headline. */
 private fun bodyClockOffsetTitle(e: CircadianEngine.PhaseEstimate): String {
-    if (e.confidence == CircadianEngine.PhaseConfidence.UNREADABLE) return "Hard to read right now"
+    if (e.confidence == CircadianEngine.PhaseConfidence.UNREADABLE) return tr("Hard to read right now")
     val mins = abs(e.offsetVsScheduleMinutes).roundToInt()
-    if (mins <= 20) return "About in sync with your schedule"
+    if (mins <= 20) return tr("About in sync with your schedule")
     val dir = if (e.offsetVsScheduleMinutes > 0) "later" else "earlier"
     return "About $mins min $dir than your schedule"
 }
 
 private fun bodyClockConfidenceLabel(c: CircadianEngine.PhaseConfidence): String = when (c) {
-    CircadianEngine.PhaseConfidence.UNREADABLE -> "Calibrating"
-    CircadianEngine.PhaseConfidence.WIDE -> "Building"
-    CircadianEngine.PhaseConfidence.SOLID -> "Solid"
+    CircadianEngine.PhaseConfidence.UNREADABLE -> tr("Calibrating")
+    CircadianEngine.PhaseConfidence.WIDE -> tr("Building")
+    CircadianEngine.PhaseConfidence.SOLID -> tr("Solid")
 }
 
 private fun bodyClockConfidenceTone(c: CircadianEngine.PhaseConfidence): StrandTone = when (c) {
@@ -448,11 +448,11 @@ private fun headsUpGlyph(level: IllnessSignalEngine.Level): ImageVector = when (
 }
 
 private fun headsUpTitle(level: IllnessSignalEngine.Level): String = when (level) {
-    IllnessSignalEngine.Level.RAISED -> "Heads-up"
-    IllnessSignalEngine.Level.ALREADY_UNWELL -> "Rest up"
-    IllnessSignalEngine.Level.SUPPRESSED -> "Probably not illness"
-    IllnessSignalEngine.Level.MILD -> "A few signals are up"
-    IllnessSignalEngine.Level.QUIET -> "Nothing notable"
+    IllnessSignalEngine.Level.RAISED -> tr("Heads-up")
+    IllnessSignalEngine.Level.ALREADY_UNWELL -> tr("Rest up")
+    IllnessSignalEngine.Level.SUPPRESSED -> tr("Probably not illness")
+    IllnessSignalEngine.Level.MILD -> tr("A few signals are up")
+    IllnessSignalEngine.Level.QUIET -> tr("Nothing notable")
 }
 
 // MARK: - Formatting helpers (locale-free, matching the engine's own helpers)

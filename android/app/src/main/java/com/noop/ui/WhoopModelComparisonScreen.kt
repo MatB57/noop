@@ -125,10 +125,10 @@ fun WhoopModelComparisonScreen(onClose: () -> Unit) {
 private fun IntroCard() {
     NoopCard(padding = 20.dp, tint = Palette.accent) {
         Column(verticalArrangement = Arrangement.spacedBy(10.dp)) {
-            Text("Both straps are supported", style = NoopType.headline, color = Palette.textPrimary)
+            Text(tr("Both straps are supported"), style = NoopType.headline, color = Palette.textPrimary)
             Text(
-                "NOOP pairs with the WHOOP 4.0 and the WHOOP 5.0/MG. They share most of what matters (live " +
-                    "heart rate, your scores, buzzing the strap), but a few firmware features differ. Here's " +
+                tr("NOOP pairs with the WHOOP 4.0 and the WHOOP 5.0/MG. They share most of what matters (live ") +
+                    tr("heart rate, your scores, buzzing the strap), but a few firmware features differ. Here's ") +
                     "what each can do, and why.",
                 style = NoopType.subhead,
                 color = Palette.textSecondary,
@@ -141,10 +141,10 @@ private fun IntroCard() {
 private fun CapabilityTableCard() {
     NoopCard(padding = 20.dp) {
         Column(verticalArrangement = Arrangement.spacedBy(14.dp)) {
-            Overline("Feature by strap")
+            Overline(tr("Feature by strap"))
             // Column header.
             Row(modifier = Modifier.fillMaxWidth(), verticalAlignment = Alignment.CenterVertically) {
-                Text("Feature", style = NoopType.caption, color = Palette.textTertiary, modifier = Modifier.weight(1f))
+                Text(tr("Feature"), style = NoopType.caption, color = Palette.textTertiary, modifier = Modifier.weight(1f))
                 Text("4.0", style = NoopType.caption, color = Palette.textTertiary, textAlign = TextAlign.Center, modifier = Modifier.width(48.dp))
                 Text("5/MG", style = NoopType.caption, color = Palette.textTertiary, textAlign = TextAlign.Center, modifier = Modifier.width(48.dp))
             }
@@ -191,10 +191,10 @@ private fun SupportGlyph(icon: ImageVector, tint: Color, label: String) {
 private fun ReassuranceCard() {
     NoopCard(padding = 20.dp, tint = Palette.metricCyan) {
         Column(verticalArrangement = Arrangement.spacedBy(10.dp)) {
-            Text("On a WHOOP 4.0?", style = NoopType.headline, color = Palette.textPrimary)
+            Text(tr("On a WHOOP 4.0?"), style = NoopType.headline, color = Palette.textPrimary)
             Text(
-                "You're not missing the broadcast feature. To share your heart rate with a gym machine, " +
-                    "Zwift, Peloton or a Garmin, open Data Sources and turn on \"Broadcast heart rate\": " +
+                tr("You're not missing the broadcast feature. To share your heart rate with a gym machine, ") +
+                    tr("Zwift, Peloton or a Garmin, open Data Sources and turn on \"Broadcast heart rate\": ") +
                     "your phone becomes a standard Bluetooth HR sensor using your strap's live reading. The " +
                     "firmware-only flag a 5/MG has just does the same job from the strap instead of the phone.",
                 style = NoopType.subhead,
@@ -214,12 +214,12 @@ private fun Header(onClose: () -> Unit) {
         horizontalArrangement = Arrangement.spacedBy(12.dp),
     ) {
         Column(modifier = Modifier.weight(1f), verticalArrangement = Arrangement.spacedBy(4.dp)) {
-            Overline("Your strap", color = Palette.textTertiary)
-            Text("4.0 vs 5.0/MG", style = NoopType.display(26f), color = Palette.textPrimary)
-            Text("What each can read, and why", style = NoopType.caption, color = Palette.textSecondary)
+            Overline(tr("Your strap"), color = Palette.textTertiary)
+            Text(tr("4.0 vs 5.0/MG"), style = NoopType.display(26f), color = Palette.textPrimary)
+            Text(tr("What each can read, and why"), style = NoopType.caption, color = Palette.textSecondary)
         }
         IconButton(onClick = onClose, modifier = Modifier.size(36.dp)) {
-            Icon(Icons.Filled.Close, contentDescription = "Close", tint = Palette.textTertiary, modifier = Modifier.size(22.dp))
+            Icon(Icons.Filled.Close, contentDescription = tr("Close"), tint = Palette.textTertiary, modifier = Modifier.size(22.dp))
         }
     }
 }
@@ -231,7 +231,7 @@ private fun Footer(onClose: () -> Unit) {
             onClick = onClose,
             colors = ButtonDefaults.buttonColors(containerColor = Palette.accent, contentColor = Palette.surfaceBase),
         ) {
-            Text("Done", modifier = Modifier.padding(horizontal = 24.dp))
+            Text(tr("Done"), modifier = Modifier.padding(horizontal = 24.dp))
         }
     }
 }

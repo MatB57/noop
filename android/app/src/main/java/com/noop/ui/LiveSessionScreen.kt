@@ -193,7 +193,7 @@ private fun LiveSessionBody(
             verticalAlignment = Alignment.CenterVertically,
             horizontalArrangement = Arrangement.spacedBy(10.dp),
         ) {
-            Text("Live Session", style = NoopType.title1, color = Palette.textPrimary)
+            Text(tr("Live Session"), style = NoopType.title1, color = Palette.textPrimary)
             StatePill("BETA", tone = StrandTone.Accent, showsDot = false)
         }
 
@@ -213,8 +213,8 @@ private fun LiveSessionBody(
         // The one line of copy. STALE says so honestly (coaching paused, nothing accrues); otherwise the
         // guarding promise — the whole design is that this screen has nothing to watch.
         Text(
-            if (stale) "Signal lost — coaching paused."
-            else "Guarding your session. Silence means you're on track.",
+            if (stale) tr("Signal lost — coaching paused.")
+            else tr("Guarding your session. Silence means you're on track."),
             style = NoopType.subhead,
             color = if (stale) Palette.textTertiary else Palette.textSecondary,
             textAlign = TextAlign.Center,
@@ -246,7 +246,7 @@ private fun LiveSessionBody(
             colors = ButtonDefaults.buttonColors(
                 containerColor = Palette.statusCritical, contentColor = Palette.surfaceBase,
             ),
-        ) { Text("End session", style = NoopType.headline) }
+        ) { Text(tr("End session"), style = NoopType.headline) }
     }
 }
 
@@ -412,8 +412,8 @@ private fun LiveSessionSummary(
             horizontalArrangement = Arrangement.spacedBy(10.dp),
         ) {
             Column(modifier = Modifier.weight(1f), verticalArrangement = Arrangement.spacedBy(2.dp)) {
-                Overline("Live Session", color = teal)
-                Text("Session summary", style = NoopType.title1, color = Palette.textPrimary)
+                Overline(tr("Live Session"), color = teal)
+                Text(tr("Session summary"), style = NoopType.title1, color = Palette.textPrimary)
             }
             StatePill("BETA", tone = StrandTone.Accent, showsDot = false)
         }
@@ -421,7 +421,7 @@ private fun LiveSessionSummary(
         // The stale auto-end declares itself — an unexplained early end would read as a bug.
         if (snap.endedAutomatically) {
             Text(
-                "The strap signal was gone for 10 minutes, so the session ended itself.",
+                tr("The strap signal was gone for 10 minutes, so the session ended itself."),
                 style = NoopType.footnote,
                 color = Palette.statusWarning,
             )
@@ -442,15 +442,15 @@ private fun LiveSessionSummary(
         // Where the time went — the three accrued buckets, on the shared StatTile.
         Row(horizontalArrangement = Arrangement.spacedBy(Metrics.gap), modifier = Modifier.fillMaxWidth()) {
             StatTile(
-                modifier = Modifier.weight(1f), label = "In band",
+                modifier = Modifier.weight(1f), label = tr("In band"),
                 value = elapsedClock(inBandSec.toLong()), accent = teal,
             )
             StatTile(
-                modifier = Modifier.weight(1f), label = "Below",
+                modifier = Modifier.weight(1f), label = tr("Below"),
                 value = elapsedClock(snap.belowSec.toLong()), accent = Palette.textSecondary,
             )
             StatTile(
-                modifier = Modifier.weight(1f), label = "Above",
+                modifier = Modifier.weight(1f), label = tr("Above"),
                 value = elapsedClock(snap.aboveSec.toLong()), accent = Palette.statusCritical,
             )
         }
@@ -478,7 +478,7 @@ private fun LiveSessionSummary(
             colors = ButtonDefaults.buttonColors(
                 containerColor = Palette.accent, contentColor = Palette.surfaceBase,
             ),
-        ) { Text("Done", style = NoopType.headline) }
+        ) { Text(tr("Done"), style = NoopType.headline) }
     }
 }
 

@@ -121,7 +121,7 @@ fun LiveWorkoutScreen(vm: AppViewModel, onClose: () -> Unit) {
             // Header — sport + elapsed clock.
             Row(verticalAlignment = Alignment.CenterVertically, modifier = Modifier.fillMaxWidth()) {
                 Column(modifier = Modifier.weight(1f), verticalArrangement = Arrangement.spacedBy(2.dp)) {
-                    Overline("Recording workout", color = Palette.effortColor)
+                    Overline(tr("Recording workout"), color = Palette.effortColor)
                     Text(w.sport.name, style = NoopType.title1, color = Palette.textPrimary)
                 }
                 Text(
@@ -142,11 +142,11 @@ fun LiveWorkoutScreen(vm: AppViewModel, onClose: () -> Unit) {
 
             // Live stats grid — avg / peak / effort, from the captured window.
             Row(horizontalArrangement = Arrangement.spacedBy(Metrics.gap), modifier = Modifier.fillMaxWidth()) {
-                StatTile(modifier = Modifier.weight(1f), label = "Avg", value = if (w.avgHr > 0) "${w.avgHr}" else "—",
+                StatTile(modifier = Modifier.weight(1f), label = tr("Avg"), value = if (w.avgHr > 0) "${w.avgHr}" else "—",
                     accent = if (w.avgHr > 0) Palette.metricRose else Palette.textPrimary)
-                StatTile(modifier = Modifier.weight(1f), label = "Peak", value = if (w.peakHr > 0) "${w.peakHr}" else "—",
+                StatTile(modifier = Modifier.weight(1f), label = tr("Peak"), value = if (w.peakHr > 0) "${w.peakHr}" else "—",
                     accent = if (w.peakHr > 0) Palette.metricRose else Palette.textPrimary)
-                StatTile(modifier = Modifier.weight(1f), label = "Effort", value = UnitFormatter.effortDisplay(w.liveStrain, effortScale),
+                StatTile(modifier = Modifier.weight(1f), label = tr("Effort"), value = UnitFormatter.effortDisplay(w.liveStrain, effortScale),
                     accent = Palette.strainColor(w.liveStrain))
             }
 
@@ -166,7 +166,7 @@ fun LiveWorkoutScreen(vm: AppViewModel, onClose: () -> Unit) {
                 colors = ButtonDefaults.buttonColors(
                     containerColor = Palette.statusCritical, contentColor = Palette.surfaceBase,
                 ),
-            ) { Text("End workout", style = NoopType.headline) }
+            ) { Text(tr("End workout"), style = NoopType.headline) }
         }
     }
 }
@@ -186,16 +186,16 @@ private fun SensorRow(sensor: StandardHrSource.SensorMetrics) {
     val power = StandardHrSource.formatPowerWatts(sensor.powerWatts)
     if (speed == null && cadence == null && power == null) return
     Column(verticalArrangement = Arrangement.spacedBy(8.dp)) {
-        Overline("Sensor")
+        Overline(tr("Sensor"))
         Row(horizontalArrangement = Arrangement.spacedBy(Metrics.gap), modifier = Modifier.fillMaxWidth()) {
             if (speed != null) {
-                StatTile(modifier = Modifier.weight(1f), label = "Speed", value = "$speed km/h", accent = Palette.effortColor)
+                StatTile(modifier = Modifier.weight(1f), label = tr("Speed"), value = "$speed km/h", accent = Palette.effortColor)
             }
             if (cadence != null) {
-                StatTile(modifier = Modifier.weight(1f), label = "Cadence", value = "$cadence/min", accent = Palette.effortColor)
+                StatTile(modifier = Modifier.weight(1f), label = tr("Cadence"), value = "$cadence/min", accent = Palette.effortColor)
             }
             if (power != null) {
-                StatTile(modifier = Modifier.weight(1f), label = "Power", value = "$power W", accent = Palette.effortColor)
+                StatTile(modifier = Modifier.weight(1f), label = tr("Power"), value = "$power W", accent = Palette.effortColor)
             }
         }
     }
@@ -209,7 +209,7 @@ private fun EffortGauge(liveStrain: Double, effortScale: EffortScale) {
             horizontalAlignment = Alignment.CenterHorizontally,
             verticalArrangement = Arrangement.spacedBy(10.dp),
         ) {
-            Overline("Effort building", color = Palette.effortColor)
+            Overline(tr("Effort building"), color = Palette.effortColor)
             StrainGauge(
                 strain = UnitFormatter.effortValue(liveStrain, effortScale),
                 outOf = if (effortScale == EffortScale.WHOOP) 21.0 else 100.0,
@@ -234,7 +234,7 @@ private fun HeroHeartRate(bpm: Int?, zone: Int) {
             horizontalAlignment = Alignment.CenterHorizontally,
             verticalArrangement = Arrangement.spacedBy(6.dp),
         ) {
-            Overline("Heart rate")
+            Overline(tr("Heart rate"))
             Box(contentAlignment = Alignment.Center) {
                 // Soft zone-tinted halo behind the numeral — the Bevel glow.
                 Box(
@@ -245,9 +245,9 @@ private fun HeroHeartRate(bpm: Int?, zone: Int) {
                 )
                 Text(bpm?.toString() ?: "—", style = NoopType.number(80f), color = tint)
             }
-            Text("bpm", style = NoopType.subhead, color = Palette.textSecondary)
+            Text(tr("bpm"), style = NoopType.subhead, color = Palette.textSecondary)
             Text(
-                if (zone >= 1) "Zone $zone · ${zoneName(zone)}" else "Below Zone 1",
+                if (zone >= 1) "Zone $zone · ${zoneName(zone)}" else tr("Below Zone 1"),
                 style = NoopType.captionNumber,
                 color = tint,
                 textAlign = TextAlign.Center,
@@ -259,7 +259,7 @@ private fun HeroHeartRate(bpm: Int?, zone: Int) {
 @Composable
 private fun ZoneRail(zone: Int, zoneSet: com.noop.analytics.HrZoneSet) {
     Column(verticalArrangement = Arrangement.spacedBy(8.dp)) {
-        Overline("HR zone")
+        Overline(tr("HR zone"))
         Row(horizontalArrangement = Arrangement.spacedBy(6.dp), modifier = Modifier.fillMaxWidth()) {
             (1..5).forEach { z ->
                 val active = z == zone
@@ -292,7 +292,7 @@ private fun ZoneRail(zone: Int, zoneSet: com.noop.analytics.HrZoneSet) {
         Text(
             if (band != null)
                 "Zone $zone: ${band.lower.toInt()} - ${band.upper.toInt()} bpm (${(band.lowerPct * 100).toInt()} - ${(band.upperPct * 100).toInt()}% max HR)"
-            else "Warming up - keep moving to climb into Zone 1.",
+            else tr("Warming up - keep moving to climb into Zone 1."),
             style = NoopType.footnote,
             color = Palette.textTertiary,
         )
@@ -300,10 +300,10 @@ private fun ZoneRail(zone: Int, zoneSet: com.noop.analytics.HrZoneSet) {
 }
 
 private fun zoneName(zone: Int): String = when (zone) {
-    1 -> "Recovery"
-    2 -> "Fat burn"
-    3 -> "Aerobic"
-    4 -> "Threshold"
-    5 -> "Maximum"
+    1 -> tr("Recovery")
+    2 -> tr("Fat burn")
+    3 -> tr("Aerobic")
+    4 -> tr("Threshold")
+    5 -> tr("Maximum")
     else -> ""
 }

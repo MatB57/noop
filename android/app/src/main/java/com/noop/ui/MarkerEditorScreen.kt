@@ -145,15 +145,15 @@ fun MarkerEditorScreen(
 
     NoopBottomSheet(onDismiss = onDismiss) {
         Column(verticalArrangement = Arrangement.spacedBy(Metrics.sectionGap)) {
-            Text("Add a reading", style = NoopType.title2, color = Palette.textPrimary)
+            Text(tr("Add a reading"), style = NoopType.title2, color = Palette.textPrimary)
             Text(
-                "Type in a number from your own report. It stays on this phone.",
+                tr("Type in a number from your own report. It stays on this phone."),
                 style = NoopType.subhead,
                 color = Palette.textSecondary,
             )
 
             // --- Marker picker ---
-            SectionHeader("Marker", overline = "what are you logging?")
+            SectionHeader(tr("Marker"), overline = tr("what are you logging?"))
             NoopCard {
                 Column(verticalArrangement = Arrangement.spacedBy(12.dp)) {
                     when {
@@ -181,11 +181,11 @@ fun MarkerEditorScreen(
                             OutlinedTextField(
                                 value = search,
                                 onValueChange = { search = it },
-                                placeholder = { Text("Search markers (e.g. LDL, ferritin)", style = NoopType.body, color = Palette.textTertiary) },
+                                placeholder = { Text(tr("Search markers (e.g. LDL, ferritin)"), style = NoopType.body, color = Palette.textTertiary) },
                                 leadingIcon = { Icon(Icons.Filled.Search, contentDescription = null, tint = Palette.textTertiary) },
                                 singleLine = true,
                                 colors = editorFieldColors(),
-                                modifier = Modifier.fillMaxWidth().semantics { contentDescription = "Search markers" },
+                                modifier = Modifier.fillMaxWidth().semantics { contentDescription = tr("Search markers") },
                             )
                             CatalogList(search) { def ->
                                 selection = def; unitChoice = 0
@@ -198,7 +198,7 @@ fun MarkerEditorScreen(
 
             // --- Reading inputs ---
             if (selection != null || addingCustom) {
-                SectionHeader("Reading", overline = "your number, date and any note")
+                SectionHeader(tr("Reading"), overline = tr("your number, date and any note"))
                 NoopCard {
                     Column(verticalArrangement = Arrangement.spacedBy(14.dp)) {
                         if (isBloodPressure) {
@@ -211,7 +211,7 @@ fun MarkerEditorScreen(
                                 }
                             }
                             Text(
-                                "Entered together; stored as two markers so each lines up cleanly against your signals.",
+                                tr("Entered together; stored as two markers so each lines up cleanly against your signals."),
                                 style = NoopType.footnote,
                                 color = Palette.textTertiary,
                             )
@@ -247,7 +247,7 @@ fun MarkerEditorScreen(
                             EditorTextField(referenceText, { referenceText = it }, "e.g. 2.0-5.0 (your report's own range)")
                         }
                         Text(
-                            "NOOP never fills this in - it only shows back exactly what you type from your own report.",
+                            tr("NOOP never fills this in - it only shows back exactly what you type from your own report."),
                             style = NoopType.footnote,
                             color = Palette.textTertiary,
                         )
@@ -256,8 +256,8 @@ fun MarkerEditorScreen(
             }
 
             Text(
-                "Lab Book keeps your own numbers - it doesn't test, read, or judge them, and it's not medical " +
-                    "advice. Everything stays on this phone.",
+                tr("Lab Book keeps your own numbers - it doesn't test, read, or judge them, and it's not medical ") +
+                    tr("advice. Everything stays on this phone."),
                 style = NoopType.footnote,
                 color = Palette.textTertiary,
             )
@@ -307,7 +307,7 @@ private fun CatalogList(search: String, onPick: (MarkerDefinition) -> Unit) {
             }
         }
         if (filtered.isEmpty()) {
-            Text("No match. Add it as a custom marker below.", style = NoopType.footnote, color = Palette.textTertiary, modifier = Modifier.padding(vertical = 8.dp))
+            Text(tr("No match. Add it as a custom marker below."), style = NoopType.footnote, color = Palette.textTertiary, modifier = Modifier.padding(vertical = 8.dp))
         }
     }
 }
@@ -339,7 +339,7 @@ private fun DateRow(millis: Long, onPick: (Long) -> Unit) {
                 ).apply { datePicker.maxDate = System.currentTimeMillis() }.show()
             }
             .padding(horizontal = 12.dp, vertical = 11.dp)
-            .semantics { contentDescription = "Date taken" },
+            .semantics { contentDescription = tr("Date taken") },
         verticalAlignment = Alignment.CenterVertically,
         horizontalArrangement = Arrangement.spacedBy(8.dp),
     ) {

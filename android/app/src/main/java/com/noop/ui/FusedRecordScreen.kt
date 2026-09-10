@@ -109,13 +109,13 @@ fun FusedRecordScreen(
         "$dayLabel · your record, on $deviceNoun."
     }
 
-    ScreenScaffold(title = "Your Data, Fused", subtitle = subtitle, modifier = modifier) {
+    ScreenScaffold(title = tr("Your Data, Fused"), subtitle = subtitle, modifier = modifier) {
         if (isMultiSource) DayBadgeRow(record.dayOwner)
 
         if (record.rows.isEmpty()) {
             DataPendingNote(
-                title = "Nothing to fuse yet",
-                body = "Import a WHOOP export, Health Connect or a second band and your best-sourced record builds here, on this device.",
+                title = tr("Nothing to fuse yet"),
+                body = tr("Import a WHOOP export, Health Connect or a second band and your best-sourced record builds here, on this device."),
             )
         } else {
             NoopCard(padding = 0.dp) {
@@ -152,7 +152,7 @@ private fun DayBadgeRow(owner: FusionSource?) {
     val text = if (owner != null) {
         "Today's scores owned by ${owner.displayName}"
     } else {
-        "Scores still calibrating, no single day-owner yet"
+        tr("Scores still calibrating, no single day-owner yet")
     }
     Row(
         verticalAlignment = Alignment.CenterVertically,
@@ -203,7 +203,7 @@ private fun PrivacyNote(deviceNoun: String) {
 @Composable
 private fun DisclaimerNote() {
     Text(
-        "NOOP picks the best-sourced number and shows you where each came from. It's for wellness and curiosity. It doesn't diagnose or replace medical advice.",
+        tr("NOOP picks the best-sourced number and shows you where each came from. It's for wellness and curiosity. It doesn't diagnose or replace medical advice."),
         style = NoopType.footnote,
         color = Palette.textTertiary,
         modifier = Modifier.padding(horizontal = 4.dp),
@@ -353,9 +353,9 @@ private fun ConflictCompareDialog(row: FusedRow, onDismiss: () -> Unit) {
                     .verticalScroll(rememberScrollState()),
                 verticalArrangement = Arrangement.spacedBy(Metrics.gap),
             ) {
-                SectionHeader(title = row.label, overline = "Sources differ")
+                SectionHeader(title = row.label, overline = tr("Sources differ"))
                 Text(
-                    "Your bands report different numbers. Here's every source, and the one NOOP is using.",
+                    tr("Your bands report different numbers. Here's every source, and the one NOOP is using."),
                     style = NoopType.subhead,
                     color = Palette.textSecondary,
                 )
@@ -397,7 +397,7 @@ private fun ConflictCompareDialog(row: FusedRow, onDismiss: () -> Unit) {
                     horizontalArrangement = Arrangement.End,
                 ) {
                     TextButton(onClick = onDismiss) {
-                        Text("Done", style = NoopType.headline, color = Palette.accent)
+                        Text(tr("Done"), style = NoopType.headline, color = Palette.accent)
                     }
                 }
             }
@@ -418,7 +418,7 @@ private fun ContributorRow(
             .semantics {
                 contentDescription =
                     "${contrib.source.displayName}, ${FusionFormat.value(contrib.value, metricKey)}" +
-                    if (isWinner) ", in use" else ""
+                    if (isWinner) tr(", in use") else ""
             },
         verticalAlignment = Alignment.CenterVertically,
         horizontalArrangement = Arrangement.spacedBy(12.dp),

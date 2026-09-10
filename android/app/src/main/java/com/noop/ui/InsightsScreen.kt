@@ -100,7 +100,7 @@ private enum class Outcome(
     val format: (Double) -> String,
 ) {
     Recovery(
-        label = "Charge", outcomeName = "Charge", higherIsBetter = true, domain = DomainTheme.Charge,
+        label = tr("Charge"), outcomeName = "Charge", higherIsBetter = true, domain = DomainTheme.Charge,
         pick = { it.recovery }, format = { "${it.roundToInt()}%" },
     ),
     Hrv(
@@ -108,7 +108,7 @@ private enum class Outcome(
         pick = { it.avgHrv }, format = { "${it.roundToInt()} ms" },
     ),
     Sleep(
-        label = "Rest", outcomeName = "Rest", higherIsBetter = true, domain = DomainTheme.Rest,
+        label = tr("Rest"), outcomeName = "Rest", higherIsBetter = true, domain = DomainTheme.Rest,
         pick = { it.efficiency }, format = { "${it.roundToInt()}%" },
     ),
     Rhr(
@@ -312,8 +312,8 @@ fun InsightsScreen(vm: AppViewModel, onOpenInsightsHub: () -> Unit = {}) {
     // `ScreenScaffold(topBackground: liquidScaffoldSky())`; reuses the shared LiquidScreenSky() slot verbatim.
     // Insights has no day-cycle gate of its own, so the sky is always drawn (matching the liquid explorer).
     LazyScreenScaffold(
-        title = "Insights",
-        subtitle = "Interrogate what affects what.",
+        title = tr("Insights"),
+        subtitle = tr("Interrogate what affects what."),
         topBackground = { LiquidScreenSky() },
     ) {
 
@@ -328,7 +328,7 @@ fun InsightsScreen(vm: AppViewModel, onOpenInsightsHub: () -> Unit = {}) {
         if (preFilledFromYesterday) {
             item {
             Text(
-                "Pre-filled from last night. Tap to confirm or change.",
+                tr("Pre-filled from last night. Tap to confirm or change."),
                 style = NoopType.footnote,
                 color = Palette.textTertiary,
                 modifier = Modifier.fillMaxWidth(),
@@ -478,7 +478,7 @@ fun InsightsScreen(vm: AppViewModel, onOpenInsightsHub: () -> Unit = {}) {
         if (!journalLoaded) {
             NoopCard {
                 Text(
-                    "Reading your journal and outcomes…",
+                    tr("Reading your journal and outcomes…"),
                     style = NoopType.subhead,
                     color = Palette.textTertiary,
                 )
@@ -486,10 +486,10 @@ fun InsightsScreen(vm: AppViewModel, onOpenInsightsHub: () -> Unit = {}) {
         } else if (behaviours.isEmpty()) {
             // No journal yet, explain, without dead-ending on a paid export.
             DataPendingNote(
-                title = "Insights read your journal and outcomes",
-                body = "Log behaviours above. After a few days of answers, NOOP ranks how each " +
-                    "one moves your recovery, HRV and sleep. Importing a WHOOP export (which " +
-                    "includes its journal) backfills history instantly.",
+                title = tr("Insights read your journal and outcomes"),
+                body = tr("Log behaviours above. After a few days of answers, NOOP ranks how each ") +
+                    tr("one moves your recovery, HRV and sleep. Importing a WHOOP export (which ") +
+                    tr("includes its journal) backfills history instantly."),
             )
         } else {
             BehaviourSection(
@@ -533,7 +533,7 @@ private fun WhatMovesYouLink(onOpen: () -> Unit) {
             .liquidPress(interaction)
             .semantics {
                 contentDescription =
-                    "What moves you. Ranked patterns in your own data, and your dose-response."
+                    tr("What moves you. Ranked patterns in your own data, and your dose-response.")
             },
     ) {
         Row(
@@ -557,10 +557,10 @@ private fun WhatMovesYouLink(onOpen: () -> Unit) {
             Column(modifier = Modifier.weight(1f), verticalArrangement = Arrangement.spacedBy(4.dp)) {
                 // WHOOP tappable-card title: UPPERCASE tracked WHITE label + a trailing "›" chevron
                 // glyph (mirrors the iOS "WHAT MOVES YOU ›" overline). The descriptive line sits beneath.
-                Overline("What moves you ›", color = Palette.textPrimary)
+                Overline(tr("What moves you ›"), color = Palette.textPrimary)
                 Text(
-                    "Ranked, lag-aware: which of your habits actually move your Charge, plus your " +
-                        "personal alcohol/caffeine dose-response.",
+                    tr("Ranked, lag-aware: which of your habits actually move your Charge, plus your ") +
+                        tr("personal alcohol/caffeine dose-response."),
                     style = NoopType.footnote,
                     color = Palette.textTertiary,
                 )
@@ -619,11 +619,11 @@ internal fun computeActivityCosts(
 @Composable
 private fun ActivityCostSection(costs: List<com.noop.analytics.ActivityCost>) {
     Column(verticalArrangement = Arrangement.spacedBy(Metrics.gap)) {
-        SectionHeader("Activity Cost", overline = "What each activity costs your recovery")
+        SectionHeader(tr("Activity Cost"), overline = tr("What each activity costs your recovery"))
         if (costs.isEmpty()) {
             NoopCard {
                 Text(
-                    "Tag a few sessions of the same activity and NOOP will learn its personal recovery cost.",
+                    tr("Tag a few sessions of the same activity and NOOP will learn its personal recovery cost."),
                     style = NoopType.subhead,
                     color = Palette.textSecondary,
                 )
@@ -681,32 +681,32 @@ private fun ActivityCostCard(cost: com.noop.analytics.ActivityCost) {
             Row(horizontalArrangement = Arrangement.spacedBy(Metrics.gap)) {
                 StatTile(
                     modifier = Modifier.weight(1f),
-                    label = "Next morning",
+                    label = tr("Next morning"),
                     value = "${cost.meanNextMorning.roundToInt()}",
                     caption = "Charge · $pointsLabel pts",
                     accent = accent,
                 )
                 StatTile(
                     modifier = Modifier.weight(1f),
-                    label = "Rest baseline",
+                    label = tr("Rest baseline"),
                     value = "${cost.baselineMean.roundToInt()}",
-                    caption = "untouched days",
+                    caption = tr("untouched days"),
                     accent = Palette.textPrimary,
                 )
             }
             Row(horizontalArrangement = Arrangement.spacedBy(Metrics.gap)) {
                 StatTile(
                     modifier = Modifier.weight(1f),
-                    label = "Bounce back",
+                    label = tr("Bounce back"),
                     value = cost.daysToBaseline?.let { "${it}d" } ?: "—",
-                    caption = if (cost.daysToBaseline != null) "to baseline" else "not within 7d",
+                    caption = if (cost.daysToBaseline != null) tr("to baseline") else tr("not within 7d"),
                     accent = Palette.chargeColor,
                 )
                 StatTile(
                     modifier = Modifier.weight(1f),
-                    label = "Sessions",
+                    label = tr("Sessions"),
                     value = "${cost.n}",
-                    caption = if (solid) "solid" else "building",
+                    caption = if (solid) tr("solid") else tr("building"),
                     accent = Palette.textPrimary,
                 )
             }
@@ -729,7 +729,7 @@ private fun BehaviourSection(
         ) {
             Box(modifier = Modifier.weight(1f)) {
                 SectionHeader(
-                    "Behaviour Effects",
+                    tr("Behaviour Effects"),
                     overline = "What moves your ${outcome.outcomeName.lowercase(Locale.US)}",
                 )
             }
@@ -744,9 +744,9 @@ private fun BehaviourSection(
         if (ranked.isEmpty()) {
             NoopCard {
                 Text(
-                    "Not enough overlap between your journal answers and " +
+                    tr("Not enough overlap between your journal answers and ") +
                         "${outcome.outcomeName.lowercase(Locale.US)} to measure an effect yet. " +
-                        "Keep logging. Effects need days both with and without each behaviour.",
+                        tr("Keep logging. Effects need days both with and without each behaviour."),
                     style = NoopType.subhead,
                     color = Palette.textTertiary,
                 )
@@ -821,7 +821,7 @@ private fun EffectCard(e: BehaviorEffect, outcome: Outcome) {
             Row(horizontalArrangement = Arrangement.spacedBy(Metrics.gap)) {
                 StatTile(
                     modifier = Modifier.weight(1f),
-                    label = "With",
+                    label = tr("With"),
                     value = outcome.format(e.meanWith),
                     caption = "n = ${e.nWith}",
                     accent = tintColor,
@@ -830,7 +830,7 @@ private fun EffectCard(e: BehaviorEffect, outcome: Outcome) {
                 )
                 StatTile(
                     modifier = Modifier.weight(1f),
-                    label = "Without",
+                    label = tr("Without"),
                     value = outcome.format(e.meanWithout),
                     caption = "n = ${e.nWithout}",
                     accent = Palette.textPrimary,
@@ -844,7 +844,7 @@ private fun EffectCard(e: BehaviorEffect, outcome: Outcome) {
                 modifier = Modifier.fillMaxWidth(),
                 verticalAlignment = Alignment.CenterVertically,
             ) {
-                Overline("Effect size", modifier = Modifier.weight(1f))
+                Overline(tr("Effect size"), modifier = Modifier.weight(1f))
                 Text(
                     String.format(Locale.US, "d = %.2f", e.cohensD),
                     style = NoopType.captionNumber,
@@ -910,7 +910,7 @@ private data class ExperimentSnapshot(
         return i - b
     }
     val deltaCaption: String get() =
-        if (delta == null) "needs baseline + logged days" else "vs behaviour-free baseline"
+        if (delta == null) tr("needs baseline + logged days") else tr("vs behaviour-free baseline")
 }
 
 private data class ExperimentConfidence(val label: String, val tone: StrandTone)
@@ -931,8 +931,8 @@ private fun ExperimentSection(
 ) {
     Column(verticalArrangement = Arrangement.spacedBy(Metrics.gap)) {
         SectionHeader(
-            "Personal Experiment",
-            overline = "N-of-1 protocol",
+            tr("Personal Experiment"),
+            overline = tr("N-of-1 protocol"),
             trailing = snapshot?.phaseLabel ?: "Setup",
         )
         NoopCard {
@@ -971,12 +971,12 @@ private fun ExperimentSetupCard(
             verticalAlignment = Alignment.Top,
         ) {
             Column(modifier = Modifier.weight(1f)) {
-                Text("Run a clean personal test", style = NoopType.headline, color = Palette.textPrimary)
+                Text(tr("Run a clean personal test"), style = NoopType.headline, color = Palette.textPrimary)
                 Spacer(Modifier.height(4.dp))
                 Text(
-                    "Pick one behaviour you log, one outcome, and a short window. NOOP " +
-                        "compares the days you log the behaviour against your behaviour-free " +
-                        "days before the start.",
+                    tr("Pick one behaviour you log, one outcome, and a short window. NOOP ") +
+                        tr("compares the days you log the behaviour against your behaviour-free ") +
+                        tr("days before the start."),
                     style = NoopType.subhead,
                     color = Palette.textSecondary,
                 )
@@ -987,7 +987,7 @@ private fun ExperimentSetupCard(
 
         if (candidates.isEmpty()) {
             Text(
-                "Log at least one behaviour above before starting an experiment.",
+                tr("Log at least one behaviour above before starting an experiment."),
                 style = NoopType.subhead,
                 color = Palette.textTertiary,
             )
@@ -1018,13 +1018,13 @@ private fun ExperimentSetupCard(
 
             // Unified button system (mirrors iOS NoopButton("Start experiment", flask, .primary, fullWidth)).
             NoopButton(
-                text = "Start experiment",
+                text = tr("Start experiment"),
                 leadingIcon = Icons.Filled.Science,
                 kind = NoopButtonKind.Primary,
                 fullWidth = true,
                 enabled = resolvedBehaviour != null,
                 onClick = onStart,
-                modifier = Modifier.semantics { contentDescription = "Start experiment" },
+                modifier = Modifier.semantics { contentDescription = tr("Start experiment") },
             )
         }
     }
@@ -1074,14 +1074,14 @@ private fun ActiveExperimentCard(
         Row(horizontalArrangement = Arrangement.spacedBy(Metrics.gap)) {
             ExperimentMeasure(
                 modifier = Modifier.weight(1f),
-                label = "Baseline",
+                label = tr("Baseline"),
                 value = snapshot.baselineMean?.let { snapshot.outcome.format(it) } ?: "—",
                 caption = "${snapshot.baselineCount} days without it",
                 tint = Palette.textSecondary,
             )
             ExperimentMeasure(
                 modifier = Modifier.weight(1f),
-                label = "Intervention",
+                label = tr("Intervention"),
                 value = snapshot.interventionMean?.let { snapshot.outcome.format(it) } ?: "—",
                 caption = "${snapshot.interventionCount} logged days",
                 tint = Palette.accent,
@@ -1090,16 +1090,16 @@ private fun ActiveExperimentCard(
         Row(horizontalArrangement = Arrangement.spacedBy(Metrics.gap)) {
             ExperimentMeasure(
                 modifier = Modifier.weight(1f),
-                label = "Change",
+                label = tr("Change"),
                 value = formatExperimentDelta(snapshot.delta, snapshot.outcome),
                 caption = snapshot.deltaCaption,
                 tint = experimentDeltaColor(snapshot),
             )
             ExperimentMeasure(
                 modifier = Modifier.weight(1f),
-                label = "Compliance",
+                label = tr("Compliance"),
                 value = "${snapshot.compliance.roundToInt()}%",
-                caption = if (snapshot.loggedToday) "logged today" else "not logged today",
+                caption = if (snapshot.loggedToday) tr("logged today") else tr("not logged today"),
                 tint = if (snapshot.loggedToday) Palette.statusPositive else Palette.statusWarning,
             )
         }
@@ -1144,30 +1144,30 @@ private fun ActiveExperimentCard(
             verticalAlignment = Alignment.CenterVertically,
         ) {
             NoopButton(
-                text = "Mark done",
+                text = tr("Mark done"),
                 leadingIcon = Icons.Filled.CheckCircle,
                 kind = NoopButtonKind.Primary,
                 enabled = !snapshot.loggedToday,
                 onClick = { onMark(true) },
                 modifier = Modifier
                     .weight(1f)
-                    .semantics { contentDescription = "Mark done today" },
+                    .semantics { contentDescription = tr("Mark done today") },
             )
             NoopButton(
-                text = "Skip",
+                text = tr("Skip"),
                 leadingIcon = Icons.Filled.Close,
                 kind = NoopButtonKind.Secondary,
                 onClick = { onMark(false) },
                 modifier = Modifier
                     .weight(1f)
-                    .semantics { contentDescription = "Skip today" },
+                    .semantics { contentDescription = tr("Skip today") },
             )
             NoopButton(
-                text = "End",
+                text = tr("End"),
                 leadingIcon = Icons.Filled.Stop,
                 kind = NoopButtonKind.Destructive,
                 onClick = onEnd,
-                modifier = Modifier.semantics { contentDescription = "End experiment" },
+                modifier = Modifier.semantics { contentDescription = tr("End experiment") },
             )
         }
     }
@@ -1441,12 +1441,12 @@ private fun saveExperimentInt(context: Context, key: String, value: Int) {
 @Composable
 private fun RelationshipsSection(rels: List<Relationship>) {
     Column(verticalArrangement = Arrangement.spacedBy(Metrics.gap)) {
-        SectionHeader("Metric Relationships", overline = "Pearson r")
+        SectionHeader(tr("Metric Relationships"), overline = tr("Pearson r"))
 
         if (rels.isEmpty()) {
             NoopCard {
                 Text(
-                    "Not enough overlapping history to correlate your metrics yet.",
+                    tr("Not enough overlapping history to correlate your metrics yet."),
                     style = NoopType.subhead,
                     color = Palette.textTertiary,
                 )
@@ -1499,7 +1499,7 @@ private fun RelationshipRow(rel: Relationship) {
                 color = strength,
             )
             StatePill(
-                if (rel.significant) "p < 0.05" else "n.s.",
+                if (rel.significant) tr("p < 0.05") else tr("n.s."),
                 tone = if (rel.significant) StrandTone.Accent else StrandTone.Neutral,
                 showsDot = false,
             )
@@ -1758,7 +1758,7 @@ private fun strengthWord(r: Double): String {
 }
 
 private fun relationshipSentence(rel: Relationship): String {
-    val dir = if (rel.r > 0) "positive" else if (rel.r < 0) "negative" else "flat"
+    val dir = if (rel.r > 0) tr("positive") else if (rel.r < 0) tr("negative") else tr("flat")
     return "${strengthWord(rel.r)} $dir relationship " +
         "(r = ${String.format(Locale.US, "%.2f", rel.r)}, n = ${rel.n})."
 }

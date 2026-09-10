@@ -143,8 +143,8 @@ fun TrendsScreen(vm: AppViewModel) {
     val recAvg = recovery.values.averageOrNull()
 
     LazyScreenScaffold(
-        title = "Trends",
-        subtitle = "The thread of you over time.",
+        title = tr("Trends"),
+        subtitle = tr("The thread of you over time."),
         // LIQUID SKY BACKDROP (the pilot pattern — LiquidScreenSky.kt): the time-of-day liquid sky settles
         // into the theme canvas behind the header + top rows, full-bleed via the scaffold's topBackground
         // plumbing. Static (LiquidSkyStatic, inside the helper) — never an animated sky behind a scrolling
@@ -217,7 +217,7 @@ fun TrendsScreen(vm: AppViewModel) {
         item {
             ChartCard(
                 modifier = Modifier.staggeredAppear(index = 3),
-                title = "Charge",
+                title = tr("Charge"),
                 // The range bar above already prints the authoritative reading-count caption;
                 // the hero only names its window so the count isn't doubled in one card height.
                 subtitle = range.subtitle,
@@ -256,9 +256,9 @@ fun TrendsScreen(vm: AppViewModel) {
                 modifier = Modifier.staggeredAppear(index = 4),
                 verticalArrangement = Arrangement.spacedBy(Metrics.gap),
             ) {
-                SectionHeader("Daily signals", overline = "Trends")
+                SectionHeader(tr("Daily signals"), overline = tr("Trends"))
                 MetricTrendCard(
-                    title = "Heart rate variability", unit = "ms",
+                    title = tr("Heart rate variability"), unit = "ms",
                     color = Palette.metricPurple,
                     tint = Palette.chargeColor,
                     higherIsBetter = true,
@@ -266,7 +266,7 @@ fun TrendsScreen(vm: AppViewModel) {
                     fmt = { "${it.roundToInt()}" },
                 )
                 MetricTrendCard(
-                    title = "Resting heart rate", unit = "bpm",
+                    title = tr("Resting heart rate"), unit = "bpm",
                     color = Palette.metricRose,
                     tint = Palette.chargeColor,
                     higherIsBetter = false,
@@ -276,7 +276,7 @@ fun TrendsScreen(vm: AppViewModel) {
                 MetricTrendCard(
                     // Plotted values stay on the stored 0–100 scale (line shape unchanged); only the displayed
                     // numbers + unit follow the Effort-scale toggle, converted inside `fmt`. (#268)
-                    title = "Effort", unit = "/ ${UnitFormatter.effortScaleMax(effortScale)}",
+                    title = tr("Effort"), unit = "/ ${UnitFormatter.effortScaleMax(effortScale)}",
                     // WHOOP: Effort/Strain is always BLUE , a deep→bright blue line, not the amber ramp.
                     color = Palette.effortColor,
                     tint = Palette.effortColor,
@@ -357,8 +357,8 @@ private fun WeeklyDigestNav(
         WeekNavBar(weekOffset = weekOffset, minWeekOffset = minWeekOffset, onStep = onStep)
         if (digest.isEmpty) {
             DataPendingNote(
-                title = "No readings this week",
-                body = "Step to another week with the arrows above to see its review.",
+                title = tr("No readings this week"),
+                body = tr("Step to another week with the arrows above to see its review."),
             )
         } else {
             NoopCard { WeeklyDigestContent(digest = digest, compact = true) }
@@ -395,7 +395,7 @@ private fun WeekNavBar(weekOffset: Int, minWeekOffset: Int, onStep: (Int) -> Uni
         ) {
             Icon(
                 Icons.Filled.ChevronLeft,
-                contentDescription = "Previous week",
+                contentDescription = tr("Previous week"),
                 tint = if (atOldest) Palette.textTertiary else Palette.accent,
             )
         }
@@ -405,7 +405,7 @@ private fun WeekNavBar(weekOffset: Int, minWeekOffset: Int, onStep: (Int) -> Uni
             verticalArrangement = Arrangement.spacedBy(2.dp),
         ) {
             Text(label, style = NoopType.headline, color = Palette.textPrimary)
-            Overline("Week in review", color = Palette.textSecondary)
+            Overline(tr("Week in review"), color = Palette.textSecondary)
         }
         Spacer(Modifier.weight(1f))
         IconButton(
@@ -416,7 +416,7 @@ private fun WeekNavBar(weekOffset: Int, minWeekOffset: Int, onStep: (Int) -> Uni
         ) {
             Icon(
                 Icons.Filled.ChevronRight,
-                contentDescription = "Next week",
+                contentDescription = tr("Next week"),
                 tint = if (atNewest) Palette.textTertiary else Palette.accent,
             )
         }
@@ -445,10 +445,10 @@ private fun WeekInReviewCard(
 
     NoopCard(modifier = modifier, tint = Palette.chargeColor) {
         Column(verticalArrangement = Arrangement.spacedBy(12.dp)) {
-            SectionHeader("Week in review", overline = "Charge · Effort · Rest")
+            SectionHeader(tr("Week in review"), overline = tr("Charge · Effort · Rest"))
             if (chargeAvg != null) {
                 PipScoreRow(
-                    label = "Charge", value = chargeAvg, range = 0f..100f,
+                    label = tr("Charge"), value = chargeAvg, range = 0f..100f,
                     tint = Palette.chargeColor, format = { "${it.roundToInt()}" },
                 )
             }
@@ -460,14 +460,14 @@ private fun WeekInReviewCard(
                 val maxV = UnitFormatter.effortValue(100.0, effortScale)
                 val oneDecimal = effortScale == EffortScale.WHOOP
                 PipScoreRow(
-                    label = "Effort", value = display, range = 0f..maxV.toFloat(),
+                    label = tr("Effort"), value = display, range = 0f..maxV.toFloat(),
                     tint = Palette.effortColor,
                     format = { if (oneDecimal) String.format(Locale.US, "%.1f", it) else "${it.roundToInt()}" },
                 )
             }
             if (restAvg != null) {
                 PipScoreRow(
-                    label = "Rest", value = restAvg, range = 0f..100f,
+                    label = tr("Rest"), value = restAvg, range = 0f..100f,
                     tint = Palette.restColor, format = { "${it.roundToInt()}" },
                 )
             }
@@ -595,7 +595,7 @@ private fun windowPoints(
 
 /** Caption text, mirroring TrendsView.caption(count:eff:). */
 private fun caption(count: Int, eff: TrendsRange, selected: TrendsRange): String {
-    val unit = if (count == 1) "reading" else "readings"
+    val unit = if (count == 1) tr("reading") else tr("readings")
     return if (eff != selected) {
         "$count $unit · sparse , widened to ${eff.longName}"
     } else {
@@ -917,14 +917,14 @@ private fun RecoveryHistoryCard(days: List<DailyMetric>, range: TrendsRange) {
         days.takeLast(span).mapNotNull { it.recovery }
     }
     val title = if (range == TrendsRange.All && days.size > 365) {
-        "Charge , all history"
+        tr("Charge , all history")
     } else {
-        "Charge , past year"
+        tr("Charge , past year")
     }
 
     NoopCard(tint = Palette.chargeColor) {
         Column(verticalArrangement = Arrangement.spacedBy(12.dp)) {
-            SectionHeader(title, overline = "Calendar", trailing = "${recovery.size} days")
+            SectionHeader(title, overline = tr("Calendar"), trailing = "${recovery.size} days")
             if (recovery.size >= 2) {
                 BarChart(
                     values = recovery,
@@ -936,8 +936,8 @@ private fun RecoveryHistoryCard(days: List<DailyMetric>, range: TrendsRange) {
             }
             HorizontalDivider(color = Palette.hairline)
             Text(
-                "Each bar is one day's Charge score, low to high. The 53-week calendar " +
-                    "heat-grid is part of the desktop app.",
+                tr("Each bar is one day's Charge score, low to high. The 53-week calendar ") +
+                    tr("heat-grid is part of the desktop app."),
                 style = NoopType.footnote,
                 color = Palette.textTertiary,
             )
@@ -987,7 +987,7 @@ private fun SparsePlaceholder(height: Dp = Metrics.chartHeight) {
         contentAlignment = Alignment.Center,
     ) {
         Text(
-            "Not enough data for this window.",
+            tr("Not enough data for this window."),
             style = NoopType.subhead,
             color = Palette.textTertiary,
             textAlign = TextAlign.Center,
@@ -998,9 +998,9 @@ private fun SparsePlaceholder(height: Dp = Metrics.chartHeight) {
 @Composable
 private fun EmptyTrends() {
     DataPendingNote(
-        title = "Trends need history to draw",
-        body = "Trends need history to draw. Import your WHOOP export in Data Sources " +
-            "to see weeks, months and years instantly.",
+        title = tr("Trends need history to draw"),
+        body = tr("Trends need history to draw. Import your WHOOP export in Data Sources ") +
+            tr("to see weeks, months and years instantly."),
     )
 }
 

@@ -130,8 +130,8 @@ fun StressScreen(vm: AppViewModel, onBreathe: () -> Unit = {}) {
     val model = remember(days, stored) { StressModel.build(days, stored) }
 
     LazyScreenScaffold(
-        title = "Stress",
-        subtitle = "Autonomic load from HRV and resting heart rate",
+        title = tr("Stress"),
+        subtitle = tr("Autonomic load from HRV and resting heart rate"),
         // LIQUID SKY BACKDROP (the pilot pattern — LiquidScreenSky.kt): the time-of-day liquid sky settles
         // into the theme canvas behind the header + hero vessel, full-bleed (full-width, up behind the
         // status bar via the scaffold's topBackground plumbing), and the cards float OVER it on the flat
@@ -217,7 +217,7 @@ private fun androidx.compose.foundation.lazy.LazyListScope.StressContent(
             modifier = Modifier.staggeredAppear(1),
             verticalArrangement = Arrangement.spacedBy(Metrics.gap),
         ) {
-            SectionHeader("Today", overline = "Markers", trailing = "vs 30-day baseline")
+            SectionHeader(tr("Today"), overline = tr("Markers"), trailing = tr("vs 30-day baseline"))
             StressTiles(model)
         }
     }
@@ -274,7 +274,7 @@ private fun StressHeroCard(model: StressModel, modifier: Modifier = Modifier) {
                 modifier = Modifier.fillMaxWidth(),
                 verticalAlignment = Alignment.CenterVertically,
             ) {
-                Overline("Stress monitor", modifier = Modifier.weight(1f))
+                Overline(tr("Stress monitor"), modifier = Modifier.weight(1f))
                 StatePill(model.band.title, tone = model.band.tone, showsDot = true)
             }
 
@@ -324,14 +324,14 @@ private fun StressHeroCard(model: StressModel, modifier: Modifier = Modifier) {
                             color = bandColor,
                         )
                         Text(
-                            "of 3",
+                            tr("of 3"),
                             style = NoopType.number(14f, FontWeight.Medium),
                             color = Palette.textTertiary,
                             modifier = Modifier.padding(start = 6.dp, bottom = 5.dp),
                         )
                     }
                     Text(
-                        "on the 0-3 autonomic-load scale",
+                        tr("on the 0-3 autonomic-load scale"),
                         style = NoopType.footnote,
                         color = Palette.textTertiary,
                     )
@@ -380,9 +380,9 @@ private fun StressAdvancedCard(
                 modifier = Modifier.fillMaxWidth(),
                 verticalAlignment = Alignment.CenterVertically,
             ) {
-                Overline("Advanced HRV", modifier = Modifier.weight(1f))
+                Overline(tr("Advanced HRV"), modifier = Modifier.weight(1f))
                 Text(
-                    "on demand · today's R-R",
+                    tr("on demand · today's R-R"),
                     style = NoopType.footnote,
                     color = Palette.textTertiary,
                 )
@@ -395,9 +395,9 @@ private fun StressAdvancedCard(
                 tiles.add { m ->
                     StatTile(
                         modifier = m,
-                        label = "Baevsky Stress Index",
+                        label = tr("Baevsky Stress Index"),
                         value = "${stressIndex.si.roundToInt()}",
-                        caption = "Autonomic rigidity from your heart-rate rhythm. Higher means a more rigid, stressed rhythm.",
+                        caption = tr("Autonomic rigidity from your heart-rate rhythm. Higher means a more rigid, stressed rhythm."),
                         accent = StressRamp.TENSE,
                     )
                 }
@@ -410,9 +410,9 @@ private fun StressAdvancedCard(
                     tiles.add { m ->
                         StatTile(
                             modifier = m,
-                            label = "Autonomic balance (LF/HF)",
+                            label = tr("Autonomic balance (LF/HF)"),
                             value = String.format(Locale.US, "%.1f", ratio),
-                            caption = "Sympathetic vs parasympathetic tone from frequency-domain HRV. Higher leans sympathetic (stress-ward).",
+                            caption = tr("Sympathetic vs parasympathetic tone from frequency-domain HRV. Higher leans sympathetic (stress-ward)."),
                             accent = StressRamp.STEADY,
                         )
                     }
@@ -420,9 +420,9 @@ private fun StressAdvancedCard(
                     tiles.add { m ->
                         StatTile(
                             modifier = m,
-                            label = "HF power",
+                            label = tr("HF power"),
                             value = "${freqHrv.hf.roundToInt()}",
-                            caption = "Parasympathetic (rest) band of your HRV.",
+                            caption = tr("Parasympathetic (rest) band of your HRV."),
                             accent = StressRamp.STEADY,
                         )
                     }
@@ -439,8 +439,8 @@ private fun StressAdvancedCard(
             }
 
             Text(
-                "These are extra, on-demand HRV lenses computed from today's R-R intervals. They " +
-                    "are informational and do not change the stress score above.",
+                tr("These are extra, on-demand HRV lenses computed from today's R-R intervals. They ") +
+                    tr("are informational and do not change the stress score above."),
                 style = NoopType.footnote,
                 color = Palette.textTertiary,
             )
@@ -457,7 +457,7 @@ private fun StressDaytimeSection(
     modifier: Modifier = Modifier,
 ) {
     Column(modifier = modifier, verticalArrangement = Arrangement.spacedBy(Metrics.gap)) {
-        SectionHeader("Today's Timeline", overline = "Intraday", trailing = timelineTrailing(day))
+        SectionHeader(tr("Today's Timeline"), overline = tr("Intraday"), trailing = timelineTrailing(day))
 
         NoopCard(tint = Palette.stressColor) {
             Column(verticalArrangement = Arrangement.spacedBy(14.dp)) {
@@ -465,7 +465,7 @@ private fun StressDaytimeSection(
                     modifier = Modifier.fillMaxWidth(),
                     verticalAlignment = Alignment.CenterVertically,
                 ) {
-                    Overline("Stress through the day", modifier = Modifier.weight(1f))
+                    Overline(tr("Stress through the day"), modifier = Modifier.weight(1f))
                     val peak = day.peak
                     val peakLevel = peak?.level
                     if (peak != null && peakLevel != null) {
@@ -496,9 +496,9 @@ private fun StressDaytimeSection(
                 }
 
                 Text(
-                    "The line traces your autonomic load across the waking day, scored " +
-                        "against your own calm hours today (the same 0-3 proxy as the score " +
-                        "above, read hour by hour). Hours without enough data are skipped.",
+                    tr("The line traces your autonomic load across the waking day, scored ") +
+                        tr("against your own calm hours today (the same 0-3 proxy as the score ") +
+                        tr("above, read hour by hour). Hours without enough data are skipped."),
                     style = NoopType.footnote,
                     color = Palette.textTertiary,
                 )
@@ -720,9 +720,9 @@ private fun DaytimeStressLine(hours: List<DaytimeStress.HourPoint>) {
 
 private fun daytimeLineDescription(hours: List<DaytimeStress.HourPoint>): String {
     val scored = hours.mapNotNull { p -> p.level?.let { p.hour to it } }
-    if (scored.isEmpty()) return "No intraday stress data yet today."
+    if (scored.isEmpty()) return tr("No intraday stress data yet today.")
     val parts = scored.map { "${it.first}:00 ${String.format(Locale.US, "%.1f", it.second)}" }
-    return "Hourly stress today: " + parts.joinToString(", ")
+    return tr("Hourly stress today: ") + parts.joinToString(", ")
 }
 
 // MARK: - Time-in-band — Calm / Moderate / High split of the scored waking hours (liquid tubes)
@@ -746,7 +746,7 @@ private fun StressTotalsBar(day: DaytimeStress.Result) {
 
     NoopCard(tint = Palette.stressColor) {
         Column(verticalArrangement = Arrangement.spacedBy(14.dp)) {
-            Overline("Time in band")
+            Overline(tr("Time in band"))
 
             TimeInBandRow(StressTotalsBand.Calm, calm, total)
             TimeInBandRow(StressTotalsBand.Moderate, moderate, total)
@@ -822,7 +822,7 @@ private fun SustainedBreatheCard(day: DaytimeStress.Result, onBreathe: () -> Uni
                 verticalAlignment = Alignment.CenterVertically,
                 horizontalArrangement = Arrangement.spacedBy(10.dp),
             ) {
-                Overline("Sustained high stress", modifier = Modifier.weight(1f))
+                Overline(tr("Sustained high stress"), modifier = Modifier.weight(1f))
                 StatePill("${day.sustainedRun}h elevated", tone = StrandTone.Warning, showsDot = true)
             }
             Text(
@@ -832,7 +832,7 @@ private fun SustainedBreatheCard(day: DaytimeStress.Result, onBreathe: () -> Uni
                 color = Palette.textSecondary,
             )
             NoopButton(
-                text = "Start a Breathe session",
+                text = tr("Start a Breathe session"),
                 leadingIcon = Icons.Filled.Air,
                 kind = NoopButtonKind.Primary,
                 fullWidth = true,
@@ -860,7 +860,7 @@ private fun StressTiles(model: StressModel) {
             // Today's stress value, with its band as the caption.
             StatTile(
                 modifier = m,
-                label = "Stress",
+                label = tr("Stress"),
                 value = String.format(Locale.US, "%.1f", model.score),
                 caption = "of 3 · ${model.band.title}",
                 accent = StressRamp.color(model.score),
@@ -870,7 +870,7 @@ private fun StressTiles(model: StressModel) {
             // Resting HR — an INCREASE is the stressful direction.
             MarkerTile(
                 modifier = m,
-                label = "Resting HR",
+                label = tr("Resting HR"),
                 value = model.rhrToday?.let { "$it bpm" } ?: "—",
                 delta = model.rhrDelta,
                 accent = Palette.metricRose,
@@ -881,7 +881,7 @@ private fun StressTiles(model: StressModel) {
             // HRV — a DECREASE is the stressful direction.
             MarkerTile(
                 modifier = m,
-                label = "HRV",
+                label = tr("HRV"),
                 value = model.hrvToday?.let { "${it.roundToInt()} ms" } ?: "—",
                 delta = model.hrvDelta,
                 accent = Palette.metricPurple,
@@ -892,7 +892,7 @@ private fun StressTiles(model: StressModel) {
             // Estimated calm time — share of recent days spent in the LOW band.
             StatTile(
                 modifier = m,
-                label = "Calm time",
+                label = tr("Calm time"),
                 value = model.calmTimeValue,
                 caption = model.calmTimeCaption,
                 accent = StressRamp.CALM,
@@ -930,7 +930,7 @@ private fun MarkerTile(
         deltaText = "${if (up) "+" else "−"}${kotlin.math.abs(delta).roundToInt()} vs base"
         deltaColor = if (isStressful) Palette.statusWarning else Palette.statusPositive
     } else {
-        deltaText = "at baseline"
+        deltaText = tr("at baseline")
         deltaColor = Palette.textTertiary
     }
     StatTile(
@@ -951,7 +951,7 @@ private fun StressTrendSection(model: StressModel, modifier: Modifier = Modifier
     val points = remember(model, range) { model.windowedTrend(range) }
 
     Column(modifier = modifier, verticalArrangement = Arrangement.spacedBy(Metrics.gap)) {
-        SectionHeader("Stress Trend", overline = "History", trailing = range.label)
+        SectionHeader(tr("Stress Trend"), overline = tr("History"), trailing = range.label)
         if (points.size >= 2) {
             val avg = points.average()
             NoopCard(tint = Palette.stressColor) {
@@ -963,7 +963,7 @@ private fun StressTrendSection(model: StressModel, modifier: Modifier = Modifier
                         Column(modifier = Modifier.weight(1f)) {
                             Overline("Stress · ${range.label}")
                             Text(
-                                "Daily 0-3 proxy",
+                                tr("Daily 0-3 proxy"),
                                 style = NoopType.footnote,
                                 color = Palette.textTertiary,
                             )
@@ -983,9 +983,9 @@ private fun StressTrendSection(model: StressModel, modifier: Modifier = Modifier
                     )
                     HorizontalDivider(color = Palette.hairline)
                     Row(modifier = Modifier.fillMaxWidth()) {
-                        TrendFooterItem("Today", String.format(Locale.US, "%.1f", model.score))
-                        TrendFooterItem("Average", String.format(Locale.US, "%.1f", avg))
-                        TrendFooterItem("Days", points.size.toString())
+                        TrendFooterItem(tr("Today"), String.format(Locale.US, "%.1f", model.score))
+                        TrendFooterItem(tr("Average"), String.format(Locale.US, "%.1f", avg))
+                        TrendFooterItem(tr("Days"), points.size.toString())
                     }
                 }
             }
@@ -1008,7 +1008,7 @@ private fun StressTrendSection(model: StressModel, modifier: Modifier = Modifier
                     contentAlignment = Alignment.Center,
                 ) {
                     Text(
-                        "Not enough recent days to chart a trend yet. Keep wearing your strap to populate it.",
+                        tr("Not enough recent days to chart a trend yet. Keep wearing your strap to populate it."),
                         style = NoopType.subhead,
                         color = Palette.textTertiary,
                         textAlign = TextAlign.Center,
@@ -1033,22 +1033,22 @@ private fun androidx.compose.foundation.layout.RowScope.TrendFooterItem(label: S
 private fun StressMethodologyCard(model: StressModel, modifier: Modifier = Modifier) {
     NoopCard(tint = Palette.stressColor, modifier = modifier) {
         Column(verticalArrangement = Arrangement.spacedBy(8.dp)) {
-            Overline("How this is computed")
+            Overline(tr("How this is computed"))
             Text(
                 if (model.usingStored) {
-                    "Today's value is your recorded daily stress score (0-3)."
+                    tr("Today's value is your recorded daily stress score (0-3).")
                 } else {
-                    "Stress is derived from two autonomic signals."
+                    tr("Stress is derived from two autonomic signals.")
                 },
                 style = NoopType.body,
                 color = Palette.textPrimary,
             )
             Text(
-                "We compare today's resting heart rate and HRV to your own 30-day " +
-                    "baseline. A higher-than-usual resting HR and a lower-than-usual HRV " +
-                    "both push the score up, classic signs the body is activated. The " +
-                    "combined shift is mapped onto a 0-3 scale: 0 is calm, 1.5 sits at " +
-                    "your baseline, 3 is highly activated.",
+                tr("We compare today's resting heart rate and HRV to your own 30-day ") +
+                    tr("baseline. A higher-than-usual resting HR and a lower-than-usual HRV ") +
+                    tr("both push the score up, classic signs the body is activated. The ") +
+                    tr("combined shift is mapped onto a 0-3 scale: 0 is calm, 1.5 sits at ") +
+                    tr("your baseline, 3 is highly activated."),
                 style = NoopType.subhead,
                 color = Palette.textSecondary,
             )
@@ -1094,7 +1094,7 @@ private fun StressLoading() {
             contentAlignment = Alignment.Center,
         ) {
             Text(
-                "Reading your heart-rate variability and resting heart rate…",
+                tr("Reading your heart-rate variability and resting heart rate…"),
                 style = NoopType.subhead,
                 color = Palette.textTertiary,
                 textAlign = TextAlign.Center,
@@ -1106,8 +1106,8 @@ private fun StressLoading() {
 @Composable
 private fun StressEmpty() {
     DataPendingNote(
-        title = "No stress history yet",
-        body = "No stress history yet. Import your WHOOP export in Data Sources to see it.",
+        title = tr("No stress history yet"),
+        body = tr("No stress history yet. Import your WHOOP export in Data Sources to see it."),
     )
 }
 
@@ -1253,7 +1253,7 @@ internal class StressModel private constructor(
             val calmCaption: String
             if (recent.isEmpty()) {
                 calmValue = "—"
-                calmCaption = "needs history"
+                calmCaption = tr("needs history")
             } else {
                 val calm = recent.count { it.value < 1.0 }
                 val pct = (calm.toDouble() / recent.size * 100).roundToInt()
@@ -1314,19 +1314,19 @@ internal class StressModel private constructor(
             val rhrDn = (rhrDelta ?: 0.0) < -1.0
             return when (band) {
                 StressBand.High -> when {
-                    rhrUp && hrvDn -> "Resting HR is elevated and HRV is below your baseline, both classic signs of high activation. Prioritise rest, hydration and an easy day."
-                    hrvDn -> "HRV has dropped well below your baseline, pointing to elevated stress or fatigue. Ease off and give your body time to recover."
-                    rhrUp -> "Resting heart rate is running high versus your norm. Your body is under load today. Keep effort light."
-                    else -> "Your autonomic markers are skewed toward stress today. Treat it as a recovery-focused day."
+                    rhrUp && hrvDn -> tr("Resting HR is elevated and HRV is below your baseline, both classic signs of high activation. Prioritise rest, hydration and an easy day.")
+                    hrvDn -> tr("HRV has dropped well below your baseline, pointing to elevated stress or fatigue. Ease off and give your body time to recover.")
+                    rhrUp -> tr("Resting heart rate is running high versus your norm. Your body is under load today. Keep effort light.")
+                    else -> tr("Your autonomic markers are skewed toward stress today. Treat it as a recovery-focused day.")
                 }
                 StressBand.Medium -> when {
                     rhrUp || hrvDn -> "Slightly off baseline (${if (rhrUp) "resting HR is a touch high" else "HRV is a little low"}), so you're moderately activated. Nothing alarming; just don't overreach."
-                    else -> "You're sitting around your typical autonomic baseline: moderate stress, a normal, balanced day."
+                    else -> tr("You're sitting around your typical autonomic baseline: moderate stress, a normal, balanced day.")
                 }
                 StressBand.Low -> when {
-                    rhrDn && hrvUp -> "Resting heart rate is low and HRV is up. Your nervous system looks well-recovered and calm. A great day to push if you want to."
-                    hrvUp -> "HRV is above baseline, a sign of a relaxed, well-recovered nervous system. Stress is low."
-                    else -> "Resting heart rate and HRV are sitting at or below baseline: low physiological stress. You're in a calm, recovered state."
+                    rhrDn && hrvUp -> tr("Resting heart rate is low and HRV is up. Your nervous system looks well-recovered and calm. A great day to push if you want to.")
+                    hrvUp -> tr("HRV is above baseline, a sign of a relaxed, well-recovered nervous system. Stress is low.")
+                    else -> tr("Resting heart rate and HRV are sitting at or below baseline: low physiological stress. You're in a calm, recovered state.")
                 }
             }
         }

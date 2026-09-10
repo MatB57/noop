@@ -75,7 +75,7 @@ fun BackupSyncScreen() {
             busy = false
             when (r) {
                 is DataBackup.ImportResult.NeedsRestart -> {
-                    Toast.makeText(context, "Restored — reloading NOOP…", Toast.LENGTH_SHORT).show()
+                    Toast.makeText(context, tr("Restored — reloading NOOP…"), Toast.LENGTH_SHORT).show()
                     AppRestart.relaunch(context)
                 }
                 is DataBackup.ImportResult.Failed ->
@@ -111,26 +111,26 @@ fun BackupSyncScreen() {
     }
 
     LazyScreenScaffold(
-        title = "Backup & Sync",
-        subtitle = "Save a full backup to a folder you choose - point it at Google Drive / Dropbox for off-device sync.",
+        title = tr("Backup & Sync"),
+        subtitle = tr("Save a full backup to a folder you choose - point it at Google Drive / Dropbox for off-device sync."),
     ) {
         // 1 · Destination folder
         item {
             NoopCard(padding = 20.dp) {
                 Column(verticalArrangement = Arrangement.spacedBy(10.dp)) {
-                    Text("Backup folder", style = NoopType.headline, color = Palette.textPrimary)
+                    Text(tr("Backup folder"), style = NoopType.headline, color = Palette.textPrimary)
                     Text(
                         treeUri?.let { "Saving to: ${folderLabel(it)}" }
-                            ?: "No folder chosen yet. Pick one your cloud app already syncs, or any local folder.",
+                            ?: tr("No folder chosen yet. Pick one your cloud app already syncs, or any local folder."),
                         style = NoopType.footnote, color = Palette.textTertiary,
                     )
                     Text(
-                        "Tip: a desktop Drive / Dropbox app auto-syncs a chosen folder. On the phone, save to a " +
-                            "folder a sync app (e.g. FolderSync / Autosync) keeps in your cloud.",
+                        tr("Tip: a desktop Drive / Dropbox app auto-syncs a chosen folder. On the phone, save to a ") +
+                            tr("folder a sync app (e.g. FolderSync / Autosync) keeps in your cloud."),
                         style = NoopType.caption, color = Palette.accent,
                     )
                     NoopButton(
-                        text = if (treeUri == null) "Choose folder" else "Change folder",
+                        text = if (treeUri == null) tr("Choose folder") else tr("Change folder"),
                         leadingIcon = Icons.Filled.FolderOpen,
                         kind = NoopButtonKind.Secondary,
                         enabled = !busy,
@@ -149,9 +149,9 @@ fun BackupSyncScreen() {
                             modifier = Modifier.weight(1f),
                             verticalArrangement = Arrangement.spacedBy(2.dp),
                         ) {
-                            Text("Daily auto-backup", style = NoopType.body, color = Palette.textPrimary)
+                            Text(tr("Daily auto-backup"), style = NoopType.body, color = Palette.textPrimary)
                             Text(
-                                "Writes a fresh backup to your folder about once a day (keeps the latest " +
+                                tr("Writes a fresh backup to your folder about once a day (keeps the latest ") +
                                     "${BackupSyncPrefs.keepCount(context)}). Off by default - flip it on if you want it.",
                                 style = NoopType.footnote, color = Palette.textTertiary,
                             )
@@ -178,12 +178,12 @@ fun BackupSyncScreen() {
                         if (lastMs > 0L) {
                             "Last backup: ${DateUtils.getRelativeTimeSpanString(lastMs)}"
                         } else {
-                            "No backup yet."
+                            tr("No backup yet.")
                         },
                         style = NoopType.caption, color = Palette.textTertiary,
                     )
                     NoopButton(
-                        text = if (busy) "Working…" else "Back up now",
+                        text = if (busy) tr("Working…") else tr("Back up now"),
                         leadingIcon = Icons.Filled.CloudUpload,
                         fullWidth = true,
                         enabled = treeUri != null && !busy,
@@ -196,9 +196,9 @@ fun BackupSyncScreen() {
                                 Toast.makeText(
                                     context,
                                     if (ok) {
-                                        "Backed up to your folder."
+                                        tr("Backed up to your folder.")
                                     } else {
-                                        "Backup failed - re-pick the folder and try again."
+                                        tr("Backup failed - re-pick the folder and try again.")
                                     },
                                     Toast.LENGTH_LONG,
                                 ).show()
@@ -213,14 +213,14 @@ fun BackupSyncScreen() {
         item {
             NoopCard(padding = 20.dp) {
                 Column(verticalArrangement = Arrangement.spacedBy(10.dp)) {
-                    Text("Restore", style = NoopType.headline, color = Palette.textPrimary)
+                    Text(tr("Restore"), style = NoopType.headline, color = Palette.textPrimary)
                     Text(
-                        "Replace this device's data with one of your backups. This overwrites current data, " +
-                            "so back up first if unsure.",
+                        tr("Replace this device's data with one of your backups. This overwrites current data, ") +
+                            tr("so back up first if unsure."),
                         style = NoopType.footnote, color = Palette.textTertiary,
                     )
                     NoopButton(
-                        text = "Restore from a backup…",
+                        text = tr("Restore from a backup…"),
                         leadingIcon = Icons.Filled.Restore,
                         kind = NoopButtonKind.Secondary,
                         enabled = !busy,
@@ -257,12 +257,12 @@ fun BackupSyncScreen() {
             onDismissRequest = { showSnapshotPicker = false },
             containerColor = Palette.surfaceOverlay,
             title = {
-                Text("Choose a backup", style = NoopType.title2, color = Palette.textPrimary)
+                Text(tr("Choose a backup"), style = NoopType.title2, color = Palette.textPrimary)
             },
             text = {
                 Column(verticalArrangement = Arrangement.spacedBy(4.dp)) {
                     Text(
-                        "Newest first. Restoring replaces this device's data.",
+                        tr("Newest first. Restoring replaces this device's data."),
                         style = NoopType.footnote, color = Palette.textSecondary,
                     )
                     snapshots.forEach { snap ->
@@ -296,7 +296,7 @@ fun BackupSyncScreen() {
             },
             confirmButton = {
                 TextButton(onClick = { showSnapshotPicker = false }) {
-                    Text("Cancel", style = NoopType.body, color = Palette.textSecondary)
+                    Text(tr("Cancel"), style = NoopType.body, color = Palette.textSecondary)
                 }
             },
         )
@@ -308,7 +308,7 @@ fun BackupSyncScreen() {
             onDismissRequest = { pendingRestore = null },
             containerColor = Palette.surfaceOverlay,
             title = {
-                Text("Replace all current data?", style = NoopType.title2, color = Palette.textPrimary)
+                Text(tr("Replace all current data?"), style = NoopType.title2, color = Palette.textPrimary)
             },
             text = {
                 Text(
@@ -321,12 +321,12 @@ fun BackupSyncScreen() {
                     pendingRestore = null
                     runRestore(uri)
                 }) {
-                    Text("Replace", style = NoopType.body, color = Palette.statusCritical)
+                    Text(tr("Replace"), style = NoopType.body, color = Palette.statusCritical)
                 }
             },
             dismissButton = {
                 TextButton(onClick = { pendingRestore = null }) {
-                    Text("Cancel", style = NoopType.body, color = Palette.textSecondary)
+                    Text(tr("Cancel"), style = NoopType.body, color = Palette.textSecondary)
                 }
             },
         )
@@ -347,6 +347,6 @@ private val RESTORE_MIME_TYPES = arrayOf(
 
 /** A short, human label for a SAF tree Uri (the part after the volume colon). */
 private fun folderLabel(treeUri: Uri): String {
-    val seg = treeUri.lastPathSegment ?: return "selected folder"
+    val seg = treeUri.lastPathSegment ?: return tr("selected folder")
     return seg.substringAfterLast(':').ifBlank { seg }
 }

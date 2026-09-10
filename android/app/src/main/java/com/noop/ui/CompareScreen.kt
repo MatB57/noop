@@ -170,7 +170,7 @@ private object CompareCatalog {
         CompareMetric("lean_mass", "Lean Body Mass", "Health", "kg", "apple-health", 1),
         CompareMetric(
             "bmi", "BMI", "Health", "", "apple-health", 1,
-            note = "From Health Connect this is derived from your weight and profile height.",
+            note = tr("From Health Connect this is derived from your weight and profile height."),
         ),
         // Nutrition (imported from a food-tracker CSV — calories-in next to calories-out).
         // Mirrors the macOS MetricCatalog entries exactly (same keys + sources, v2.2.0 parity).
@@ -403,14 +403,14 @@ fun CompareScreen(vm: AppViewModel) {
 
     val rangeCaption: String = run {
         val total = activeSeries.sumOf { it.rows.size }
-        val unit = if (total == 1) "reading" else "readings"
+        val unit = if (total == 1) tr("reading") else tr("readings")
         val base = "$total $unit across ${activeSeries.size} · ${range.phrase}"
         if (anyWidened) "$base · sparse widened" else base
     }
 
     LazyScreenScaffold(
-        title = "Compare",
-        subtitle = "Overlay signals, draw conclusions.",
+        title = tr("Compare"),
+        subtitle = tr("Overlay signals, draw conclusions."),
         // Liquid sky backdrop (LiquidScreenSky.kt) in the scaffold's topBackground slot, gated on the
         // day-cycle preference — the same pilot plumbing the liquid Today uses.
         topBackground = if (showDayCycleBackground) { { LiquidScreenSky() } } else null,
@@ -419,7 +419,7 @@ fun CompareScreen(vm: AppViewModel) {
         // ── Metric picker section (chips + range control)
         item {
         Column(verticalArrangement = Arrangement.spacedBy(Metrics.gap)) {
-            SectionHeader("Metrics", overline = "Overlay 2-4 signals")
+            SectionHeader(tr("Metrics"), overline = tr("Overlay 2-4 signals"))
             NoopCard {
                 Column(verticalArrangement = Arrangement.spacedBy(Metrics.gap)) {
                     Row(verticalAlignment = Alignment.CenterVertically) {
@@ -455,7 +455,7 @@ fun CompareScreen(vm: AppViewModel) {
 
                     if (selected.isEmpty()) {
                         Text(
-                            "Nothing selected yet.",
+                            tr("Nothing selected yet."),
                             style = NoopType.subhead,
                             color = Palette.textTertiary,
                         )
@@ -476,7 +476,7 @@ fun CompareScreen(vm: AppViewModel) {
 
         if (selected.size < minSelection) {
             item {
-                EmptyNote("Pick at least two metrics above to overlay them and read how they move together.")
+                EmptyNote(tr("Pick at least two metrics above to overlay them and read how they move together."))
             }
         } else {
             val nonEmpty = activeSeries.filter { it.rows.isNotEmpty() }
@@ -484,13 +484,13 @@ fun CompareScreen(vm: AppViewModel) {
                 if (loadedOnce) {
                     item {
                         DataPendingNote(
-                            title = "Compare needs at least two metrics with history",
-                            body = "Compare needs at least two metrics with history. Import your " +
-                                "WHOOP export in Data Sources first.",
+                            title = tr("Compare needs at least two metrics with history"),
+                            body = tr("Compare needs at least two metrics with history. Import your ") +
+                                tr("WHOOP export in Data Sources first."),
                         )
                     }
                 } else {
-                    item { EmptyNote("Reading your history…") }
+                    item { EmptyNote(tr("Reading your history…")) }
                 }
             } else {
                 item { OverlaySection(nonEmpty, range, anyWidened) }
@@ -557,12 +557,12 @@ private fun AddMetricMenu(
         ) {
             Icon(
                 Icons.Filled.Add,
-                contentDescription = "Add a metric to compare",
+                contentDescription = tr("Add a metric to compare"),
                 tint = tint,
                 modifier = Modifier.size(16.dp),
             )
             Text(
-                if (atMax) "Max 4" else "Add metric",
+                if (atMax) tr("Max 4") else tr("Add metric"),
                 style = NoopType.subhead,
                 color = tint,
             )
@@ -713,12 +713,12 @@ private fun OverlaySection(
     anyWidened: Boolean,
 ) {
     Column(verticalArrangement = Arrangement.spacedBy(Metrics.gap)) {
-        SectionHeader("Overlay", overline = range.phrase, trailing = "${series.size} series")
+        SectionHeader(tr("Overlay"), overline = range.phrase, trailing = "${series.size} series")
         // Anchor the overlay card to the brand-green chrome world; each line keeps its own categorical
         // series colour so the overlaid lines stay distinguishable against the wash.
         NoopCard(tint = Palette.accent) {
             Column(verticalArrangement = Arrangement.spacedBy(12.dp)) {
-                Overline("Normalized overlay")
+                Overline(tr("Normalized overlay"))
                 Text(
                     if (anyWidened) {
                         "Each line min-max normalized · sparse series widened past ${range.phrase}"
@@ -738,9 +738,9 @@ private fun OverlaySection(
 
                 // Endpoint axis labels (low / high), mirroring the normalized macOS y-axis.
                 Row(modifier = Modifier.fillMaxWidth()) {
-                    Text("low", style = NoopType.footnote, color = Palette.textTertiary)
+                    Text(tr("low"), style = NoopType.footnote, color = Palette.textTertiary)
                     Spacer(Modifier.weight(1f))
-                    Text("high", style = NoopType.footnote, color = Palette.textTertiary)
+                    Text(tr("high"), style = NoopType.footnote, color = Palette.textTertiary)
                 }
 
                 HorizontalDivider(color = Palette.hairline)
@@ -948,7 +948,7 @@ private fun CorrelationSection(series: List<CompareSeries>, range: CompareRange)
 
     Column(verticalArrangement = Arrangement.spacedBy(Metrics.gap)) {
         SectionHeader(
-            "How They Move Together",
+            tr("How They Move Together"),
             overline = "Pearson r · ${range.phrase}",
             trailing = if (pairs.isEmpty()) null else "${pairs.size} pairs",
         )
@@ -1037,7 +1037,7 @@ private fun insightSentence(p: PairResult): String {
     }
     val aT = p.a.metric.title.lowercase()
     val bT = p.b.metric.title.lowercase()
-    val verb = if (p.r < 0) "tends to fall" else "tends to rise"
+    val verb = if (p.r < 0) tr("tends to fall") else tr("tends to rise")
     return "$head When $aT rises, $bT $verb - a ${strengthWord(p.r)} ${directionWord(p.r)} link."
 }
 
@@ -1059,7 +1059,7 @@ private fun strengthWord(r: Double): String {
 
 private fun directionWord(r: Double): String {
     if (abs(r) < 0.1) return ""
-    return if (r >= 0) "positive" else "negative"
+    return if (r >= 0) tr("positive") else tr("negative")
 }
 
 private fun correlationColor(r: Double): Color {

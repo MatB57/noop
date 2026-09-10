@@ -78,12 +78,12 @@ fun StartWorkoutSheet(vm: AppViewModel, onDismiss: () -> Unit) {
 
     AlertDialog(
         onDismissRequest = onDismiss,
-        title = { Text("Start a workout") },
+        title = { Text(tr("Start a workout")) },
         text = {
             Column {
                 OutlinedTextField(
                     value = query, onValueChange = { query = it },
-                    label = { Text("Search sport") }, singleLine = true,
+                    label = { Text(tr("Search sport")) }, singleLine = true,
                     modifier = Modifier.fillMaxWidth(),
                 )
                 Column(
@@ -113,7 +113,7 @@ fun StartWorkoutSheet(vm: AppViewModel, onDismiss: () -> Unit) {
                     verticalAlignment = Alignment.CenterVertically,
                     modifier = Modifier.fillMaxWidth().padding(top = 8.dp),
                 ) {
-                    Text("Track GPS route", style = NoopType.body, color = Palette.textPrimary)
+                    Text(tr("Track GPS route"), style = NoopType.body, color = Palette.textPrimary)
                     Spacer(Modifier.weight(1f))
                     Switch(checked = gpsOn, onCheckedChange = { gpsOn = it })
                 }
@@ -132,7 +132,7 @@ fun StartWorkoutSheet(vm: AppViewModel, onDismiss: () -> Unit) {
             }
         },
         dismissButton = {
-            OutlinedButton(onClick = onDismiss) { Text("Cancel") }
+            OutlinedButton(onClick = onDismiss) { Text(tr("Cancel")) }
         },
     )
 }
@@ -174,7 +174,7 @@ fun WorkoutStartSection(vm: AppViewModel) {
                     onClick = { showLiveWorkout = true },
                     contentPadding = PaddingValues(horizontal = 14.dp, vertical = 8.dp),
                     colors = ButtonDefaults.outlinedButtonColors(contentColor = Palette.accent),
-                ) { Text("Open", style = NoopType.captionNumber) }
+                ) { Text(tr("Open"), style = NoopType.captionNumber) }
                 Spacer(Modifier.width(8.dp))
                 Button(
                     onClick = { vm.endWorkout() },
@@ -182,7 +182,7 @@ fun WorkoutStartSection(vm: AppViewModel) {
                     colors = ButtonDefaults.buttonColors(
                         containerColor = Palette.statusCritical, contentColor = Palette.surfaceBase,
                     ),
-                ) { Text("End", style = NoopType.captionNumber) }
+                ) { Text(tr("End"), style = NoopType.captionNumber) }
             }
         }
     } else if (live.bonded) {
@@ -193,7 +193,7 @@ fun WorkoutStartSection(vm: AppViewModel) {
             colors = ButtonDefaults.buttonColors(
                 containerColor = Palette.accent, contentColor = Palette.surfaceBase,
             ),
-        ) { Text("Start workout", style = NoopType.captionNumber) }
+        ) { Text(tr("Start workout"), style = NoopType.captionNumber) }
     }
 
     if (showSportPicker) {

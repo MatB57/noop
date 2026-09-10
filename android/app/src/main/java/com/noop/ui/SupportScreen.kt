@@ -30,8 +30,8 @@ import androidx.compose.ui.unit.dp
 private data class Attribution(val repo: String, val note: String)
 
 private val attributions = listOf(
-    Attribution("my-whoop", "BLE protocol reverse-engineering"),
-    Attribution("goose", "historical-data decode + offload format"),
+    Attribution("my-whoop", tr("BLE protocol reverse-engineering")),
+    Attribution("goose", tr("historical-data decode + offload format")),
 )
 
 /**
@@ -40,19 +40,19 @@ private val attributions = listOf(
 @Composable
 fun SupportScreen() {
     ScreenScaffold(
-        title = "Support",
-        subtitle = "Project information, attribution, and contact details.",
+        title = tr("Support"),
+        subtitle = tr("Project information, attribution, and contact details."),
     ) {
-        SectionHeader("Help & Contact", overline = "Get in touch")
+        SectionHeader(tr("Help & Contact"), overline = tr("Get in touch"))
 
         // Contact — a frosted row with a tinted glyph chip.
         NoopCard(padding = 18.dp) {
             Row(horizontalArrangement = Arrangement.spacedBy(12.dp), verticalAlignment = Alignment.CenterVertically) {
                 GlyphChip(Icons.Filled.Email, Palette.accent)
                 Column(verticalArrangement = Arrangement.spacedBy(2.dp)) {
-                    Text("Get in touch", style = NoopType.headline, color = Palette.textPrimary)
+                    Text(tr("Project home"), style = NoopType.headline, color = Palette.textPrimary)
                     Text(
-                        "Questions, feedback, bugs - thenoopapp@gmail.com",
+                        tr("Code, releases, and where to report an issue: github.com/MatB57/noop"),
                         style = NoopType.subhead, color = Palette.textSecondary,
                     )
                 }
@@ -64,10 +64,10 @@ fun SupportScreen() {
             Column(verticalArrangement = Arrangement.spacedBy(12.dp)) {
                 Row(horizontalArrangement = Arrangement.spacedBy(10.dp), verticalAlignment = Alignment.CenterVertically) {
                     GlyphChip(Icons.Filled.VolunteerActivism, Palette.accent)
-                    Text("Built on", style = NoopType.headline, color = Palette.textPrimary)
+                    Text(tr("Built on"), style = NoopType.headline, color = Palette.textPrimary)
                 }
                 Text(
-                    "This stands on community reverse-engineering. Huge thanks:",
+                    tr("This stands on community reverse-engineering. Huge thanks:"),
                     style = NoopType.subhead, color = Palette.textSecondary,
                 )
                 attributions.forEachIndexed { idx, a ->
@@ -100,7 +100,7 @@ fun SupportScreen() {
             Row(horizontalArrangement = Arrangement.spacedBy(10.dp), verticalAlignment = Alignment.Top) {
                 Icon(Icons.Filled.Info, contentDescription = null, tint = Palette.textTertiary)
                 Text(
-                    "Not affiliated with, endorsed by, or connected to WHOOP. Interoperability software for your own device and data. Not a medical device.",
+                    tr("Not affiliated with, endorsed by, or connected to WHOOP. Interoperability software for your own device and data. Not a medical device."),
                     style = NoopType.footnote, color = Palette.textTertiary,
                 )
             }

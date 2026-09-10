@@ -97,11 +97,11 @@ fun InsightsHubScreen(vm: AppViewModel) {
     // PERF (#707): lazy scaffold — each section (and its standalone Spacer, a real child of the eager
     // `spacedBy(20.dp)` Column) becomes one `item { }`, so the LazyColumn's matching `spacedBy(20.dp)`
     // reproduces identical spacing and only on-screen sections compose + are semantics-walked.
-    LazyScreenScaffold(title = "Insights", subtitle = "Patterns in your own data: association, not cause.") {
+    LazyScreenScaffold(title = tr("Insights"), subtitle = tr("Patterns in your own data: association, not cause.")) {
         if (!state.loaded) {
             item {
             NoopCard {
-                Text("Reading your journal and outcomes…", style = NoopType.subhead, color = Palette.textTertiary)
+                Text(tr("Reading your journal and outcomes…"), style = NoopType.subhead, color = Palette.textTertiary)
             }
             }
             return@LazyScreenScaffold
@@ -121,11 +121,11 @@ fun InsightsHubScreen(vm: AppViewModel) {
         item {
         NoopCard {
             Column(verticalArrangement = Arrangement.spacedBy(6.dp)) {
-                Overline("How to read this", color = Palette.textTertiary)
+                Overline(tr("How to read this"), color = Palette.textTertiary)
                 Text(
-                    "Everything here is a pattern in your own logged days: an association with an " +
-                        "effect size and confidence, never a cause or a diagnosis. Population patterns " +
-                        "are shown as “typical” and are always overridden by your own data once " +
+                    tr("Everything here is a pattern in your own logged days: an association with an ") +
+                        tr("effect size and confidence, never a cause or a diagnosis. Population patterns ") +
+                        tr("are shown as “typical” and are always overridden by your own data once ") +
                         "you have enough of it. Approximations, not WHOOP’s scores; not a medical device.",
                     style = NoopType.footnote,
                     color = Palette.textTertiary,
@@ -149,7 +149,7 @@ private fun MoversSection(
         // control can't share a row with the weighted header without compressing (matches macOS).
         SectionHeader(
             "What moves your ${outcome.outcomeName.lowercase(Locale.US)}",
-            overline = "Ranked · your data",
+            overline = tr("Ranked · your data"),
         )
         SegmentedPillControl(
             items = InsightsOutcome.entries.toList(),
@@ -161,9 +161,9 @@ private fun MoversSection(
         if (ranked.isEmpty()) {
             NoopCard {
                 Text(
-                    "Not enough overlap between your journal answers and " +
+                    tr("Not enough overlap between your journal answers and ") +
                         "${outcome.outcomeName.lowercase(Locale.US)} yet. Keep logging. Each behaviour " +
-                        "needs days both with and without it before NOOP can read its effect.",
+                        tr("needs days both with and without it before NOOP can read its effect."),
                     style = NoopType.subhead,
                     color = Palette.textTertiary,
                 )
@@ -228,7 +228,7 @@ private fun MoverCard(r: RankedEffect, outcome: InsightsOutcome) {
             Row(horizontalArrangement = Arrangement.spacedBy(Metrics.gap)) {
                 StatTile(
                     modifier = Modifier.weight(1f),
-                    label = "With",
+                    label = tr("With"),
                     value = outcome.format(e.meanWith),
                     caption = "n = ${e.nWith}",
                     accent = tintColor,
@@ -237,7 +237,7 @@ private fun MoverCard(r: RankedEffect, outcome: InsightsOutcome) {
                 )
                 StatTile(
                     modifier = Modifier.weight(1f),
-                    label = "Without",
+                    label = tr("Without"),
                     value = outcome.format(e.meanWithout),
                     caption = "n = ${e.nWithout}",
                     accent = Palette.textPrimary,
@@ -247,7 +247,7 @@ private fun MoverCard(r: RankedEffect, outcome: InsightsOutcome) {
             HorizontalDivider(color = Palette.hairline)
 
             Row(modifier = Modifier.fillMaxWidth(), verticalAlignment = Alignment.CenterVertically) {
-                Overline("Effect size", modifier = Modifier.weight(1f))
+                Overline(tr("Effect size"), modifier = Modifier.weight(1f))
                 Text(
                     String.format(Locale.US, "d = %.2f", e.cohensD),
                     style = NoopType.captionNumber,
@@ -265,13 +265,13 @@ private fun MoverCard(r: RankedEffect, outcome: InsightsOutcome) {
 @Composable
 private fun DoseSection(cards: List<DoseCardData>) {
     Column(verticalArrangement = Arrangement.spacedBy(Metrics.gap)) {
-        SectionHeader("Dose-response", overline = "Personal curve · prior-shrunk")
+        SectionHeader(tr("Dose-response"), overline = tr("Personal curve · prior-shrunk"))
         if (cards.isEmpty()) {
             NoopCard {
                 Text(
-                    "Log alcohol or late caffeine with an amount and NOOP fits a personal dose curve: " +
-                        "how much each extra unit tends to move your numbers. Until then it shows " +
-                        "typical patterns, clearly labelled as not yet yours.",
+                    tr("Log alcohol or late caffeine with an amount and NOOP fits a personal dose curve: ") +
+                        tr("how much each extra unit tends to move your numbers. Until then it shows ") +
+                        tr("typical patterns, clearly labelled as not yet yours."),
                     style = NoopType.subhead,
                     color = Palette.textSecondary,
                 )
@@ -329,7 +329,7 @@ private fun DoseResponseCard(card: DoseCardData) {
 
             if (card.timingProxy) {
                 Text(
-                    "“Dose” here is timing (later in the day = stronger), not milligrams.",
+                    tr("“Dose” here is timing (later in the day = stronger), not milligrams."),
                     style = NoopType.footnote,
                     color = Palette.textTertiary,
                 )
@@ -353,7 +353,7 @@ private fun DamageForecast(
     val fromDose = 1
     val delta = r.delta(fromDose, previewDose)
     val projected = card.latestOutcome?.let { max(0.0, min(card.outcomeCeiling, it + delta)) }
-    val stepLabel = if (previewDose <= 1) "no extra" else "$previewDose${card.dosePlusSuffix(previewDose)}"
+    val stepLabel = if (previewDose <= 1) tr("no extra") else "$previewDose${card.dosePlusSuffix(previewDose)}"
 
     Column(verticalArrangement = Arrangement.spacedBy(Metrics.gap)) {
         // Overline then the dose stepper on its own row — the choices (0…max+) overflow a ~360dp
@@ -377,14 +377,14 @@ private fun DamageForecast(
                 modifier = Modifier.weight(1f),
                 label = "Per extra ${card.unitNoun}",
                 value = signed(r.perUnit, card.outcomeSuffix),
-                caption = if (r.priorDominated) "typical" else "your data",
+                caption = if (r.priorDominated) tr("typical") else tr("your data"),
                 accent = if (r.perUnit < 0) Palette.statusCritical else Palette.statusPositive,
             )
             StatTile(
                 modifier = Modifier.weight(1f),
                 label = "Tomorrow’s ${card.outcomeName}",
                 value = projected?.let { "${it.roundToInt()}${card.outcomeSuffix}" } ?: "—",
-                caption = if (projected != null) "projected · $stepLabel" else "needs a recent day",
+                caption = if (projected != null) "projected · $stepLabel" else tr("needs a recent day"),
                 accent = domain.color,
             )
         }
@@ -504,15 +504,15 @@ internal data class DoseCardData(
 ) {
     val id: String get() = behavior.raw
     val outcomeName: String get() = response.outcome
-    val title: String get() = if (behavior == DosedBehavior.ALCOHOL) "Alcohol" else "Caffeine"
+    val title: String get() = if (behavior == DosedBehavior.ALCOHOL) tr("Alcohol") else tr("Caffeine")
     val icon get() = if (behavior == DosedBehavior.ALCOHOL) Icons.Filled.LocalBar else Icons.Filled.Coffee
-    val unitNoun: String get() = if (behavior == DosedBehavior.ALCOHOL) "drink" else "later step"
-    val unitLabel: String get() = if (behavior == DosedBehavior.ALCOHOL) "drink" else "late-caffeine"
+    val unitNoun: String get() = if (behavior == DosedBehavior.ALCOHOL) tr("drink") else tr("later step")
+    val unitLabel: String get() = if (behavior == DosedBehavior.ALCOHOL) tr("drink") else tr("late-caffeine")
     val timingProxy: Boolean get() = behavior == DosedBehavior.CAFFEINE
     val outcomeSuffix: String get() = if (outcomeName == "HRV") " ms" else "%"
     val outcomeCeiling: Double get() = if (outcomeName == "HRV") 400.0 else 100.0
     val forecastOverline: String
-        get() = if (behavior == DosedBehavior.ALCOHOL) "Tonight’s forecast" else "Timing forecast"
+        get() = if (behavior == DosedBehavior.ALCOHOL) tr("Tonight’s forecast") else tr("Timing forecast")
 
     val doseChoices: List<Int> get() = (0..DoseResponseEngine.maxCurveDose).toList()
 
@@ -528,7 +528,7 @@ internal data class DoseCardData(
 
     fun dosePlusSuffix(d: Int): String =
         if (behavior == DosedBehavior.ALCOHOL) {
-            if (d >= DoseResponseEngine.maxCurveDose) "+ drinks" else " drinks"
+            if (d >= DoseResponseEngine.maxCurveDose) tr("+ drinks") else tr(" drinks")
         } else ""
 }
 
@@ -633,9 +633,9 @@ private fun forecastSentence(card: DoseCardData, previewDose: Int, delta: Double
         return "No extra tonight. Your ${card.outcomeName.lowercase(Locale.US)} forecast stays where it is."
     }
     val mag = abs(delta).roundToInt()
-    val dir = if (delta <= 0) "lower" else "higher"
+    val dir = if (delta <= 0) tr("lower") else tr("higher")
     val basis = if (card.response.priorDominated) {
-        "based on typical patterns"
+        tr("based on typical patterns")
     } else {
         "based on ${card.response.nUser} of your ${card.unitLabel.lowercase(Locale.US)} days"
     }
@@ -646,7 +646,7 @@ private fun forecastSentence(card: DoseCardData, previewDose: Int, delta: Double
 private fun curveDescription(card: DoseCardData, r: DoseResponse): String =
     "Dose-response curve. Each extra ${card.unitNoun} lines up with about " +
         "${signed(r.perUnit, card.outcomeSuffix)} on ${card.outcomeName}, " +
-        if (r.priorDominated) "typical patterns." else "your own data."
+        if (r.priorDominated) tr("typical patterns.") else tr("your own data.")
 
 private fun signed(v: Double, suffix: String): String {
     val mag = abs(v)

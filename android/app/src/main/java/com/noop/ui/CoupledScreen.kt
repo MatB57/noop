@@ -158,7 +158,7 @@ fun CoupledScreen(
     var showGuide by remember { mutableStateOf(false) }
 
     ScreenScaffold(
-        title = "Day",
+        title = tr("Day"),
         subtitle = subtitleToday(),
         // LIQUID SKY BACKDROP (the pilot pattern — LiquidScreenSky.kt): the reusable time-of-day liquid sky
         // sits behind the top region, full-bleed up behind the status bar via the scaffold's topBackground
@@ -426,7 +426,7 @@ private fun StrainCard(dayStrain21: Double?, recovery: Double?, calories: Double
                         animated = false,
                         modifier = Modifier.size(148.dp),
                     )
-                    Text("No effort yet", style = NoopType.footnote, color = Palette.textTertiary, modifier = Modifier.padding(top = 6.dp))
+                    Text(tr("No effort yet"), style = NoopType.footnote, color = Palette.textTertiary, modifier = Modifier.padding(top = 6.dp))
                 }
             }
 
@@ -516,7 +516,7 @@ private fun SleepCard(
                     Text("${hoursMinutes(asleepMin)} slept", style = NoopType.headline, color = Palette.textPrimary)
                     Text("${hoursMinutes(needMin)} needed", style = NoopType.subhead, color = Palette.textSecondary)
                 } else {
-                    Text("No sleep tracked last night", style = NoopType.subhead, color = Palette.textSecondary)
+                    Text(tr("No sleep tracked last night"), style = NoopType.subhead, color = Palette.textSecondary)
                 }
                 if (bedWakeSpan != null) {
                     Text(bedWakeSpan, style = NoopType.footnote, color = Palette.textTertiary)

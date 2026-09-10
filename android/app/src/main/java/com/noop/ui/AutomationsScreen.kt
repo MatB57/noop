@@ -109,8 +109,8 @@ fun AutomationsScreen(viewModel: AppViewModel) {
     // reproduced by the LazyColumn), so spacing is byte-identical; only on-screen sections compose + get
     // accessibility-walked on scroll.
     LazyScreenScaffold(
-        title = "Automations",
-        subtitle = "Make the strap do things: tap to act, walk away to lock, train by feel.",
+        title = tr("Automations"),
+        subtitle = tr("Make the strap do things: tap to act, walk away to lock, train by feel."),
     ) {
         // Double-tap (parity since 4.2.8): a real, persisted action picker bound to the ViewModel, with a
         // Test action button. Mirrors AutomationsView.swift's Picker (Apple-applicable subset only; no
@@ -118,12 +118,12 @@ fun AutomationsScreen(viewModel: AppViewModel) {
         item {
         SettingsSection(
             icon = Icons.Filled.TouchApp,
-            title = "Double-tap",
+            title = tr("Double-tap"),
             blurb = "Double-tap the strap to trigger an action on this device. (The strap exposes a single double-tap gesture.)",
             active = doubleTapAction != DoubleTapAction.NONE,
         ) {
             Row(modifier = Modifier.fillMaxWidth(), verticalAlignment = Alignment.CenterVertically) {
-                Text("When I double-tap", style = NoopType.body, color = Palette.textPrimary)
+                Text(tr("When I double-tap"), style = NoopType.body, color = Palette.textPrimary)
                 Spacer(Modifier.weight(1f))
                 DoubleTapActionPicker(
                     selected = doubleTapAction,
@@ -139,11 +139,11 @@ fun AutomationsScreen(viewModel: AppViewModel) {
                 ) {
                     Icon(Icons.Filled.PlayArrow, contentDescription = null, modifier = Modifier.size(18.dp))
                     Spacer(Modifier.width(8.dp))
-                    Text("Test action", style = NoopType.body)
+                    Text(tr("Test action"), style = NoopType.body)
                 }
                 Spacer(Modifier.weight(1f))
                 StatePill(
-                    if (live.bonded) "Strap bonded" else "Not connected",
+                    if (live.bonded) tr("Strap bonded") else tr("Not connected"),
                     tone = if (live.bonded) StrandTone.Positive else StrandTone.Warning,
                 )
             }
@@ -154,12 +154,12 @@ fun AutomationsScreen(viewModel: AppViewModel) {
         item {
         SettingsSection(
             icon = Icons.Filled.Bolt,
-            title = "Haptic coaching",
+            title = tr("Haptic coaching"),
             blurb = "Train by feel. The strap buzzes so you don't have to watch a screen.",
             active = zoneCoaching || stressNudge,
         ) {
             ToggleRow(
-                label = "HR-zone coaching",
+                label = tr("HR-zone coaching"),
                 help = "A triple-buzz when you climb into your top zone (Zone 5, ≥ $zone5Bpm bpm), a cue to ease off. Max HR comes from Settings.",
                 checked = zoneCoaching,
                 onChange = { viewModel.setZoneCoaching(it) },
@@ -167,7 +167,7 @@ fun AutomationsScreen(viewModel: AppViewModel) {
             if (zoneCoaching) {
                 RowDivider()
                 ToggleRow(
-                    label = "Recovery buzz",
+                    label = tr("Recovery buzz"),
                     help = "Also buzz once when your heart rate drops back to Zone 1, a cue that you've recovered.",
                     checked = zoneCoachRecovery,
                     onChange = { viewModel.setZoneCoachRecovery(it) },
@@ -175,7 +175,7 @@ fun AutomationsScreen(viewModel: AppViewModel) {
             }
             RowDivider()
             ToggleRow(
-                label = "Resting stress nudge (experimental)",
+                label = tr("Resting stress nudge (experimental)"),
                 help = "A gentle buzz when your HRV drops while your heart rate is calm, a cue to take a paced breath. Rate-limited to once every 15 minutes; off by default.",
                 checked = stressNudge,
                 onChange = { stressNudge = it },
@@ -187,12 +187,12 @@ fun AutomationsScreen(viewModel: AppViewModel) {
         item {
         SettingsSection(
             icon = Icons.Filled.TouchApp,
-            title = "Wear & presence",
+            title = tr("Wear & presence"),
             blurb = "React when the strap comes off or goes on.",
             active = autoLockOnWristOff,
         ) {
             ToggleRow(
-                label = "Lock the device when I take the strap off",
+                label = tr("Lock the device when I take the strap off"),
                 help = "Fires the moment the strap leaves your wrist.",
                 checked = autoLockOnWristOff,
                 onChange = { autoLockOnWristOff = it },
@@ -208,12 +208,12 @@ fun AutomationsScreen(viewModel: AppViewModel) {
         item {
         SettingsSection(
             icon = Icons.Filled.Timer,
-            title = "Inactivity reminder",
+            title = tr("Inactivity reminder"),
             blurb = "A gentle wrist buzz when you've been sitting too long, a nudge to get up and move. Inferred from the strap's motion on each history sync, so it lags real time by a sync or two.",
             active = inactivityEnabled,
         ) {
             ToggleRow(
-                label = "Enable inactivity reminder",
+                label = tr("Enable inactivity reminder"),
                 help = "Buzzes after you've been sitting past your threshold.",
                 checked = inactivityEnabled,
                 onChange = {
@@ -225,14 +225,14 @@ fun AutomationsScreen(viewModel: AppViewModel) {
                 if (!notifMasterOn) {
                     RowDivider()
                     Text(
-                        "Notifications are off, so this can't buzz yet. Turn on the master switch in " +
-                            "Settings → Notifications to let it through.",
+                        tr("Notifications are off, so this can't buzz yet. Turn on the master switch in ") +
+                            tr("Settings → Notifications to let it through."),
                         style = NoopType.footnote, color = Palette.statusWarning,
                     )
                 }
                 RowDivider()
                 StepperRow(
-                    label = "Sitting for",
+                    label = tr("Sitting for"),
                     help = "Minutes seated before the first nudge.",
                     value = inactivityThreshold, suffix = "min", range = 15..120, step = 15,
                     onChange = {
@@ -242,7 +242,7 @@ fun AutomationsScreen(viewModel: AppViewModel) {
                 )
                 RowDivider()
                 StepperRow(
-                    label = "Re-nudge every",
+                    label = tr("Re-nudge every"),
                     help = "If you're still seated, buzz again this often.",
                     value = inactivityReNudge, suffix = "min", range = 15..120, step = 15,
                     onChange = {
@@ -252,7 +252,7 @@ fun AutomationsScreen(viewModel: AppViewModel) {
                 )
                 RowDivider()
                 StepperRow(
-                    label = "Buzz strength",
+                    label = tr("Buzz strength"),
                     help = "How strong the buzz is.",
                     value = inactivityBuzzLoops, suffix = "×", range = 1..4, step = 1,
                     onChange = {
@@ -262,7 +262,7 @@ fun AutomationsScreen(viewModel: AppViewModel) {
                 )
                 RowDivider()
                 ToggleRow(
-                    label = "Only when worn",
+                    label = tr("Only when worn"),
                     help = "Don't buzz when the strap is off your wrist.",
                     checked = inactivityOnlyWorn,
                     onChange = {
@@ -273,7 +273,7 @@ fun AutomationsScreen(viewModel: AppViewModel) {
                 )
                 RowDivider()
                 ToggleRow(
-                    label = "Only during active hours",
+                    label = tr("Only during active hours"),
                     help = "Only nudge during your active hours.",
                     checked = inactivityActiveHours,
                     onChange = {
@@ -284,7 +284,7 @@ fun AutomationsScreen(viewModel: AppViewModel) {
                 if (inactivityActiveHours) {
                     RowDivider()
                     Row(modifier = Modifier.fillMaxWidth(), verticalAlignment = Alignment.CenterVertically) {
-                        Text("From", style = NoopType.body, color = Palette.textPrimary)
+                        Text(tr("From"), style = NoopType.body, color = Palette.textPrimary)
                         Spacer(Modifier.weight(1f))
                         TimeChip(
                             minutes = inactivityActiveStart,
@@ -295,7 +295,7 @@ fun AutomationsScreen(viewModel: AppViewModel) {
                             },
                         )
                         Spacer(Modifier.width(8.dp))
-                        Text("to", style = NoopType.body, color = Palette.textSecondary)
+                        Text(tr("to"), style = NoopType.body, color = Palette.textSecondary)
                         Spacer(Modifier.width(8.dp))
                         TimeChip(
                             minutes = inactivityActiveEnd,
@@ -320,12 +320,12 @@ fun AutomationsScreen(viewModel: AppViewModel) {
         item {
         SettingsSection(
             icon = Icons.Filled.MonitorHeart,
-            title = "Illness early-warning",
+            title = tr("Illness early-warning"),
             blurb = "Watches your resting HR, HRV, skin temperature and respiration against your own 28-day baseline. On-device and approximate: informational only, not a diagnosis.",
             active = illnessWatch,
         ) {
             ToggleRow(
-                label = "Watch for early-illness signs",
+                label = tr("Watch for early-illness signs"),
                 help = "Needs at least 14 days of history. When two or more signals drift together you get a banner on Today and a notification, at most once a day.",
                 checked = illnessWatch,
                 onChange = { viewModel.setIllnessWatchEnabled(it) },
@@ -337,12 +337,12 @@ fun AutomationsScreen(viewModel: AppViewModel) {
         item {
         SettingsSection(
             icon = Icons.Filled.BatteryStd,
-            title = "Battery alerts",
+            title = tr("Battery alerts"),
             blurb = "A heads-up when the strap battery gets low so you can recharge before bed, and a note when it's finished charging.",
             active = batteryAlerts,
         ) {
             ToggleRow(
-                label = "Notify on low and full battery",
+                label = tr("Notify on low and full battery"),
                 help = "Sends a notification when the strap drops to 15% or reaches a full charge, at most once per charge cycle.",
                 checked = batteryAlerts,
                 onChange = { viewModel.setBatteryAlertsEnabled(it) },
@@ -369,14 +369,14 @@ private fun NapDetectionSection(viewModel: AppViewModel) {
 
     SettingsSection(
         icon = Icons.Filled.Bedtime,
-        title = "Nap detection",
+        title = tr("Nap detection"),
         blurb = "Spots a likely daytime nap from the strap's motion and heart rate on each history sync, " +
             "then asks you to confirm it. Inferred and approximate: NOOP never adds a nap to your sleep " +
             "without your OK.",
         active = enabled,
     ) {
         ToggleRow(
-            label = "Detect short naps",
+            label = tr("Detect short naps"),
             help = "When a sync shows a quiet, settled stretch in the day, NOOP offers it here for you to keep or skip.",
             checked = enabled,
             onChange = {
@@ -388,7 +388,7 @@ private fun NapDetectionSection(viewModel: AppViewModel) {
             if (pending.isEmpty()) {
                 RowDivider()
                 Text(
-                    "No naps to review. Detected naps show up here after a history sync.",
+                    tr("No naps to review. Detected naps show up here after a history sync."),
                     style = NoopType.footnote, color = Palette.textTertiary,
                 )
             } else {
@@ -446,7 +446,7 @@ private fun napWindowLabel(nap: NapCandidate, ctx: android.content.Context): Str
 }
 
 private fun napDetailLabel(nap: NapCandidate): String =
-    if (nap.meanHr != null) "Quiet and settled, mean HR ~${nap.meanHr} bpm." else "Quiet and settled."
+    if (nap.meanHr != null) "Quiet and settled, mean HR ~${nap.meanHr} bpm." else tr("Quiet and settled.")
 
 // MARK: - Per-weekday wake-time overrides (PR #554 reimpl under NoopApp)
 
@@ -467,7 +467,7 @@ internal fun AlarmDayOverridePicker(
 ) {
     val fireDays = SMART_ALARM_WEEKDAY_ORDER.filter { smartAlarmWeekdayIsSelected(it, enabledDays) }
     Column(modifier = Modifier.fillMaxWidth(), verticalArrangement = Arrangement.spacedBy(8.dp)) {
-        Text("Per-day wake time", style = NoopType.caption, color = Palette.textTertiary)
+        Text(tr("Per-day wake time"), style = NoopType.caption, color = Palette.textTertiary)
         fireDays.forEach { dow ->
             val effective = overrides[dow] ?: defaultMinutes
             val hasOverride = overrides.containsKey(dow)
@@ -476,7 +476,7 @@ internal fun AlarmDayOverridePicker(
                 Spacer(Modifier.weight(1f))
                 if (hasOverride) {
                     Text(
-                        "Reset",
+                        tr("Reset"),
                         style = NoopType.caption,
                         color = Palette.accent,
                         modifier = Modifier
@@ -494,7 +494,7 @@ internal fun AlarmDayOverridePicker(
             }
         }
         Text(
-            "Each day uses the time above unless you set a different one here.",
+            tr("Each day uses the time above unless you set a different one here."),
             style = NoopType.footnote, color = Palette.textTertiary,
         )
     }
@@ -514,7 +514,7 @@ private fun SettingsSection(
         Column(verticalArrangement = Arrangement.spacedBy(16.dp)) {
             Column(verticalArrangement = Arrangement.spacedBy(2.dp)) {
                 Row(verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.spacedBy(8.dp)) {
-                    Overline("Automation")
+                    Overline(tr("Automation"))
                     if (active) Overline("ON", color = Palette.accent)
                 }
                 Row(verticalAlignment = Alignment.CenterVertically) {
@@ -554,7 +554,7 @@ private fun DoubleTapActionPicker(
             Spacer(Modifier.width(4.dp))
             Icon(
                 Icons.Filled.ArrowDropDown,
-                contentDescription = "Choose double-tap action",
+                contentDescription = tr("Choose double-tap action"),
                 tint = Palette.textSecondary,
                 modifier = Modifier.size(18.dp),
             )

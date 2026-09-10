@@ -162,7 +162,7 @@ fun AppleHealthScreen(vm: AppViewModel) {
     // so only on-screen sections compose + are accessibility-walked on scroll (this data view is the long,
     // chart-heavy one). The loading/empty branches stay single items. Order + spacing are unchanged
     // (LazyColumn reproduces the eager `spacedBy(20.dp)` between the six sections).
-    LazyScreenScaffold(title = "Apple Health", subtitle = subtitle) {
+    LazyScreenScaffold(title = tr("Apple Health"), subtitle = subtitle) {
         when {
             !loaded -> item { LoadingCard() }
             !data.hasAnyData -> item { EmptyState() }
@@ -183,12 +183,12 @@ fun AppleHealthScreen(vm: AppViewModel) {
 /** Header subtitle reflects the windowed (visible) per-day span of the steps series. */
 private fun spanSubtitle(loaded: Boolean, data: AppleData, range: AppleRange): String {
     if (!loaded) {
-        return "Steps, heart, sleep, body composition and VO₂ max - synced from the desktop app."
+        return tr("Steps, heart, sleep, body composition and VO₂ max - synced from the desktop app.")
     }
     // Use steps as the canonical per-day series for the span readout.
     val rows = resolve(data.raw("steps"), range).rows
     if (rows.isEmpty()) {
-        return "Steps, heart, sleep, body composition and VO₂ max - synced from the desktop app."
+        return tr("Steps, heart, sleep, body composition and VO₂ max - synced from the desktop app.")
     }
     val lo = rows.first().day
     val hi = rows.last().day
@@ -235,7 +235,7 @@ private fun LoadingCard() {
         Row(verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.spacedBy(10.dp)) {
             ConnectionDot(tone = StrandTone.Accent, pulsing = true)
             Text(
-                "Reading your Apple Health history…",
+                tr("Reading your Apple Health history…"),
                 style = NoopType.subhead,
                 color = Palette.textSecondary,
             )
@@ -246,9 +246,9 @@ private fun LoadingCard() {
 @Composable
 private fun EmptyState() {
     DataPendingNote(
-        title = "Nothing imported yet",
-        body = "Nothing imported yet. On an iPhone: Health app, tap your photo, Export " +
-            "All Health Data, then import the .zip here in Data Sources.",
+        title = tr("Nothing imported yet"),
+        body = tr("Nothing imported yet. On an iPhone: Health app, tap your photo, Export ") +
+            tr("All Health Data, then import the .zip here in Data Sources."),
     )
 }
 
@@ -264,31 +264,31 @@ private fun TileGrid(data: AppleData, range: AppleRange) {
     // Two columns of equal-width fixed-height tiles, mirroring the macOS adaptive grid.
     Column(verticalArrangement = Arrangement.spacedBy(Metrics.gap)) {
         TileRow {
-            MetricTile(Modifier.weight(1f), data, range, "steps", "Steps", Palette.metricCyan) { intString(it) }
-            MetricTile(Modifier.weight(1f), data, range, "resting_hr", "Resting HR", Palette.metricRose, "bpm") {
+            MetricTile(Modifier.weight(1f), data, range, "steps", tr("Steps"), Palette.metricCyan) { intString(it) }
+            MetricTile(Modifier.weight(1f), data, range, "resting_hr", tr("Resting HR"), Palette.metricRose, "bpm") {
                 "${it.roundToInt()}"
             }
         }
         TileRow {
-            MetricTile(Modifier.weight(1f), data, range, "hrv", "HRV", Palette.metricPurple, "ms") { "${it.roundToInt()}" }
-            MetricTile(Modifier.weight(1f), data, range, "vo2max", "VO₂ Max", Palette.accent, "ml/kg") {
+            MetricTile(Modifier.weight(1f), data, range, "hrv", tr("HRV"), Palette.metricPurple, "ms") { "${it.roundToInt()}" }
+            MetricTile(Modifier.weight(1f), data, range, "vo2max", tr("VO₂ Max"), Palette.accent, "ml/kg") {
                 String.format(Locale.US, "%.1f", it)
             }
         }
         TileRow {
-            MetricTile(Modifier.weight(1f), data, range, "weight", "Weight", Palette.accent) {
+            MetricTile(Modifier.weight(1f), data, range, "weight", tr("Weight"), Palette.accent) {
                 UnitFormatter.massFromKilograms(it, unitSystem)
             }
-            MetricTile(Modifier.weight(1f), data, range, "body_fat", "Body Fat", Palette.metricAmber, "%") {
+            MetricTile(Modifier.weight(1f), data, range, "body_fat", tr("Body Fat"), Palette.metricAmber, "%") {
                 String.format(Locale.US, "%.1f", it)
             }
         }
         TileRow {
-            MetricTile(Modifier.weight(1f), data, range, "lean_mass", "Lean Mass", Palette.accent) {
+            MetricTile(Modifier.weight(1f), data, range, "lean_mass", tr("Lean Mass"), Palette.accent) {
                 UnitFormatter.massFromKilograms(it, unitSystem)
             }
             MetricTile(
-                Modifier.weight(1f), data, range, "asleep_min", "Asleep avg", Palette.metricPurple,
+                Modifier.weight(1f), data, range, "asleep_min", tr("Asleep avg"), Palette.metricPurple,
                 aggregate = Aggregate.Mean,
             ) { durationString(it) }
         }
@@ -353,17 +353,17 @@ private fun MetricTile(
 
 @Composable
 private fun HeartSection(data: AppleData, range: AppleRange) {
-    ChartSection("Heart & Vitals", "Cardiac", range) {
-        MetricChartCard(data, range, "resting_hr", "Resting heart rate", Palette.metricRose) {
+    ChartSection(tr("Heart & Vitals"), tr("Cardiac"), range) {
+        MetricChartCard(data, range, "resting_hr", tr("Resting heart rate"), Palette.metricRose) {
             "${it.roundToInt()} bpm"
         }
-        MetricChartCard(data, range, "hrv", "Heart rate variability", Palette.metricPurple) {
+        MetricChartCard(data, range, "hrv", tr("Heart rate variability"), Palette.metricPurple) {
             "${it.roundToInt()} ms"
         }
-        MetricChartCard(data, range, "spo2", "Blood oxygen", Palette.metricCyan) {
+        MetricChartCard(data, range, "spo2", tr("Blood oxygen"), Palette.metricCyan) {
             String.format(Locale.US, "%.1f%%", it)
         }
-        MetricChartCard(data, range, "resp_rate", "Respiratory rate", Palette.accent) {
+        MetricChartCard(data, range, "resp_rate", tr("Respiratory rate"), Palette.accent) {
             String.format(Locale.US, "%.1f rpm", it)
         }
     }
@@ -371,9 +371,9 @@ private fun HeartSection(data: AppleData, range: AppleRange) {
 
 @Composable
 private fun ActivitySection(data: AppleData, range: AppleRange) {
-    ChartSection("Activity & Energy", "Movement", range) {
-        MetricChartCard(data, range, "steps", "Steps", Palette.metricCyan) { intString(it) }
-        MetricChartCard(data, range, "active_kcal", "Active energy", Palette.metricAmber) {
+    ChartSection(tr("Activity & Energy"), tr("Movement"), range) {
+        MetricChartCard(data, range, "steps", tr("Steps"), Palette.metricCyan) { intString(it) }
+        MetricChartCard(data, range, "active_kcal", tr("Active energy"), Palette.metricAmber) {
             "${intString(it)} kcal"
         }
     }
@@ -383,17 +383,17 @@ private fun ActivitySection(data: AppleData, range: AppleRange) {
 private fun BodySection(data: AppleData, range: AppleRange) {
     // Weight + lean mass (stored kg) re-label to lb under the imperial preference.
     val unitSystem = UnitPrefs.system(LocalContext.current)
-    ChartSection("Body Composition", "Slow threads", range) {
-        MetricChartCard(data, range, "weight", "Weight", Palette.accent) {
+    ChartSection(tr("Body Composition"), tr("Slow threads"), range) {
+        MetricChartCard(data, range, "weight", tr("Weight"), Palette.accent) {
             UnitFormatter.massFromKilograms(it, unitSystem)
         }
-        MetricChartCard(data, range, "body_fat", "Body fat", Palette.metricAmber) {
+        MetricChartCard(data, range, "body_fat", tr("Body fat"), Palette.metricAmber) {
             String.format(Locale.US, "%.1f%%", it)
         }
-        MetricChartCard(data, range, "lean_mass", "Lean body mass", Palette.accent) {
+        MetricChartCard(data, range, "lean_mass", tr("Lean body mass"), Palette.accent) {
             UnitFormatter.massFromKilograms(it, unitSystem)
         }
-        MetricChartCard(data, range, "bmi", "BMI", Palette.metricPurple) {
+        MetricChartCard(data, range, "bmi", tr("BMI"), Palette.metricPurple) {
             String.format(Locale.US, "%.1f", it)
         }
     }
@@ -401,8 +401,8 @@ private fun BodySection(data: AppleData, range: AppleRange) {
 
 @Composable
 private fun SleepSection(data: AppleData, range: AppleRange) {
-    ChartSection("Sleep", "Rest", range) {
-        MetricChartCard(data, range, "asleep_min", "Asleep", Palette.metricPurple) { durationString(it) }
+    ChartSection(tr("Sleep"), tr("Rest"), range) {
+        MetricChartCard(data, range, "asleep_min", tr("Asleep"), Palette.metricPurple) { durationString(it) }
     }
 }
 
@@ -475,13 +475,13 @@ private fun MetricChartCard(
             ChartFooterRow(
                 items = if (n > 0) {
                     listOf(
-                        "Avg" to fmt(values.average()),
-                        "Min" to fmt(values.min()),
-                        "Max" to fmt(values.max()),
-                        "Points" to "$n",
+                        tr("Avg") to fmt(values.average()),
+                        tr("Min") to fmt(values.min()),
+                        tr("Max") to fmt(values.max()),
+                        tr("Points") to "$n",
                     )
                 } else {
-                    listOf("Avg" to "—", "Min" to "—", "Max" to "—", "Points" to "0")
+                    listOf(tr("Avg") to "—", tr("Min") to "—", tr("Max") to "—", tr("Points") to "0")
                 },
             )
         }
@@ -496,7 +496,7 @@ private fun SinglePoint(value: Double, accent: Color, fmt: (Double) -> String) {
         contentAlignment = Alignment.CenterStart,
     ) {
         Column(verticalArrangement = Arrangement.spacedBy(6.dp)) {
-            Overline("Latest reading")
+            Overline(tr("Latest reading"))
             Text(fmt(value), style = NoopType.number(34f), color = accent)
         }
     }
@@ -508,7 +508,7 @@ private fun EmptyChart() {
         modifier = Modifier.fillMaxWidth().height(Metrics.chartHeight),
         contentAlignment = Alignment.Center,
     ) {
-        Text("No readings recorded.", style = NoopType.subhead, color = Palette.textTertiary)
+        Text(tr("No readings recorded."), style = NoopType.subhead, color = Palette.textTertiary)
     }
 }
 

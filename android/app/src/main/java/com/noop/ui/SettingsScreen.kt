@@ -479,7 +479,7 @@ fun SettingsScreen(vm: AppViewModel, onOpenTestCentre: () -> Unit = {}) {
                 onSuccess = {
                     Toast.makeText(
                         context,
-                        "Backup exported. Copy this file to your new phone and use Import there to restore everything.",
+                        tr("Backup exported. Copy this file to your new phone and use Import there to restore everything."),
                         Toast.LENGTH_LONG,
                     ).show()
                 },
@@ -527,7 +527,7 @@ fun SettingsScreen(vm: AppViewModel, onOpenTestCentre: () -> Unit = {}) {
             when (result) {
                 is DataBackup.ImportResult.NeedsRestart -> Toast.makeText(
                     context,
-                    "Backup imported. Fully close and reopen NOOP for it to take effect.",
+                    tr("Backup imported. Fully close and reopen NOOP for it to take effect."),
                     Toast.LENGTH_LONG,
                 ).show()
                 is DataBackup.ImportResult.Failed -> Toast.makeText(
@@ -549,14 +549,14 @@ fun SettingsScreen(vm: AppViewModel, onOpenTestCentre: () -> Unit = {}) {
                 ProfileAvatarStore.setAvatarFromUri(context, uri)
             }
             if (!ok) {
-                Toast.makeText(context, "Couldn't use that photo. Try another.", Toast.LENGTH_LONG).show()
+                Toast.makeText(context, tr("Couldn't use that photo. Try another."), Toast.LENGTH_LONG).show()
             }
         }
     }
 
     ScreenScaffold(
-        title = "Settings",
-        subtitle = "Your numbers, your strap, and how NOOP works. All on this phone.",
+        title = tr("Settings"),
+        subtitle = tr("Your numbers, your strap, and how NOOP works. All on this phone."),
         // LIQUID SKY BACKDROP (the pilot pattern — LiquidScreenSky.kt): the static time-of-day sky settles
         // into the theme canvas behind the top of the list, exactly like the liquid Today. This is a long,
         // scroll-heavy list with NO hero gauge, so the liquid finish here is just the sky + liquidPress on
@@ -576,22 +576,22 @@ fun SettingsScreen(vm: AppViewModel, onOpenTestCentre: () -> Unit = {}) {
         // (snapshot state) so the controls update the instant a photo is set or cleared.
         SettingsSection(
             icon = Icons.Outlined.AccountCircle,
-            title = "Profile photo",
-            blurb = "Optional. Add a photo for the avatar in the top-left. Stored only on this phone. NOOP is offline, so it's never uploaded.",
+            title = tr("Profile photo"),
+            blurb = tr("Optional. Add a photo for the avatar in the top-left. Stored only on this phone. NOOP is offline, so it's never uploaded."),
         ) {
             Row(
                 modifier = Modifier.fillMaxWidth().padding(vertical = 4.dp),
                 verticalAlignment = Alignment.CenterVertically,
                 horizontalArrangement = Arrangement.spacedBy(16.dp),
             ) {
-                ProfileAvatar(size = 64.dp, contentDescription = "Profile photo")
+                ProfileAvatar(size = 64.dp, contentDescription = tr("Profile photo"))
                 Column(
                     modifier = Modifier.weight(1f),
                     verticalArrangement = Arrangement.spacedBy(8.dp),
                 ) {
                     Row(horizontalArrangement = Arrangement.spacedBy(12.dp)) {
                         NoopButton(
-                            text = if (ProfileAvatarStore.hasAvatar) "Change photo" else "Choose photo",
+                            text = if (ProfileAvatarStore.hasAvatar) tr("Change photo") else tr("Choose photo"),
                             kind = NoopButtonKind.Secondary,
                             modifier = Modifier.weight(1f),
                             onClick = {
@@ -602,7 +602,7 @@ fun SettingsScreen(vm: AppViewModel, onOpenTestCentre: () -> Unit = {}) {
                         )
                         if (ProfileAvatarStore.hasAvatar) {
                             NoopButton(
-                                text = "Remove photo",
+                                text = tr("Remove photo"),
                                 kind = NoopButtonKind.Tertiary,
                                 modifier = Modifier.weight(1f),
                                 onClick = { ProfileAvatarStore.clearAvatar(context) },
@@ -616,11 +616,11 @@ fun SettingsScreen(vm: AppViewModel, onOpenTestCentre: () -> Unit = {}) {
         // --- Profile ---
         SettingsSection(
             icon = Icons.Outlined.Person,
-            title = "Profile",
-            blurb = "These power your heart-rate zones, calorie estimates and recovery baselines. Keep them accurate.",
+            title = tr("Profile"),
+            blurb = tr("These power your heart-rate zones, calorie estimates and recovery baselines. Keep them accurate."),
         ) {
             Column {
-                FormRow(label = "Age") {
+                FormRow(label = tr("Age")) {
                     StepperField(
                         value = profile.age.toString(),
                         accessibility = "Age, ${profile.age} years",
@@ -632,7 +632,7 @@ fun SettingsScreen(vm: AppViewModel, onOpenTestCentre: () -> Unit = {}) {
                     )
                 }
                 RowDivider()
-                FormRow(label = "Sex") {
+                FormRow(label = tr("Sex")) {
                     SegmentedPillControl(
                         items = SEX_OPTIONS,
                         selection = SEX_OPTIONS.firstOrNull { it.tag == profile.sex } ?: SEX_OPTIONS[0],
@@ -641,7 +641,7 @@ fun SettingsScreen(vm: AppViewModel, onOpenTestCentre: () -> Unit = {}) {
                     )
                 }
                 RowDivider()
-                FormRow(label = "Weight") {
+                FormRow(label = tr("Weight")) {
                     // Imperial mode steps in whole pounds and stores the kg equivalent; metric steps in
                     // 0.5 kg. The profile is always SI — only the entry unit changes.
                     if (unitSystem == UnitSystem.IMPERIAL) {
@@ -657,14 +657,14 @@ fun SettingsScreen(vm: AppViewModel, onOpenTestCentre: () -> Unit = {}) {
                         StepperField(
                             value = "%.1f".format(profile.weightKg),
                             unit = "kg",
-                            accessibility = "Weight in kilograms",
+                            accessibility = tr("Weight in kilograms"),
                             onMinus = { mutate { profile.weightKg -= 0.5 } },
                             onPlus = { mutate { profile.weightKg += 0.5 } },
                         )
                     }
                 }
                 RowDivider()
-                FormRow(label = "Height") {
+                FormRow(label = tr("Height")) {
                     // Imperial mode steps in whole inches and stores the cm equivalent; metric steps in cm.
                     if (unitSystem == UnitSystem.IMPERIAL) {
                         val (ft, inch) = UnitFormatter.cmToFeetInches(profile.heightCm)
@@ -679,7 +679,7 @@ fun SettingsScreen(vm: AppViewModel, onOpenTestCentre: () -> Unit = {}) {
                         StepperField(
                             value = "%.0f".format(profile.heightCm),
                             unit = "cm",
-                            accessibility = "Height in centimetres",
+                            accessibility = tr("Height in centimetres"),
                             onMinus = { mutate { profile.heightCm -= 1 } },
                             onPlus = { mutate { profile.heightCm += 1 } },
                         )
@@ -690,17 +690,17 @@ fun SettingsScreen(vm: AppViewModel, onOpenTestCentre: () -> Unit = {}) {
                 // estimate. Unset (0) by design — the headline Fitness Age never needs it — so it shows
                 // "Add" until entered, then steps like Height (inches in imperial, cm in metric).
                 // First tap from unset seeds a typical adult waist rather than 1 cm.
-                FormRow(label = "Waist (optional)") {
+                FormRow(label = tr("Waist (optional)")) {
                     Column(horizontalAlignment = Alignment.End) {
                         val hasWaist = profile.waistCm > 0.0
                         if (unitSystem == UnitSystem.IMPERIAL) {
                             val totalInches = UnitFormatter.cmToInches(profile.waistCm).roundToInt()
                             StepperField(
-                                value = if (hasWaist) "%d″".format(totalInches) else "Add",
+                                value = if (hasWaist) "%d″".format(totalInches) else tr("Add"),
                                 accessibility = if (hasWaist) {
                                     "Waist, $totalInches inches"
                                 } else {
-                                    "Waist, not set. Optional: adds your VO₂max estimate"
+                                    tr("Waist, not set. Optional: adds your VO₂max estimate")
                                 },
                                 valueColor = if (hasWaist) Palette.textPrimary else Palette.textTertiary,
                                 onMinus = { mutate { profile.waistCm = waistInchesStep(profile.waistCm, up = false) } },
@@ -708,12 +708,12 @@ fun SettingsScreen(vm: AppViewModel, onOpenTestCentre: () -> Unit = {}) {
                             )
                         } else {
                             StepperField(
-                                value = if (hasWaist) "%.0f".format(profile.waistCm) else "Add",
+                                value = if (hasWaist) "%.0f".format(profile.waistCm) else tr("Add"),
                                 unit = if (hasWaist) "cm" else null,
                                 accessibility = if (hasWaist) {
-                                    "Waist in centimetres"
+                                    tr("Waist in centimetres")
                                 } else {
-                                    "Waist, not set. Optional: adds your VO₂max estimate"
+                                    tr("Waist, not set. Optional: adds your VO₂max estimate")
                                 },
                                 valueColor = if (hasWaist) Palette.textPrimary else Palette.textTertiary,
                                 onMinus = { mutate { profile.waistCm = waistCmStep(profile.waistCm, up = false) } },
@@ -722,20 +722,20 @@ fun SettingsScreen(vm: AppViewModel, onOpenTestCentre: () -> Unit = {}) {
                         }
                         Spacer(Modifier.height(6.dp))
                         Text(
-                            text = if (hasWaist) "Adds your VO₂max estimate" else "Optional · adds your VO₂max estimate",
+                            text = if (hasWaist) tr("Adds your VO₂max estimate") else tr("Optional · adds your VO₂max estimate"),
                             style = NoopType.footnote,
                             color = if (hasWaist) Palette.accent else Palette.textTertiary,
                         )
                     }
                 }
                 RowDivider()
-                FormRow(label = "Max heart rate") {
+                FormRow(label = tr("Max heart rate")) {
                     Column(horizontalAlignment = Alignment.End) {
                         StepperField(
-                            value = if (profile.hrMaxOverride > 0) profile.hrMaxOverride.toString() else "Auto",
+                            value = if (profile.hrMaxOverride > 0) profile.hrMaxOverride.toString() else tr("Auto"),
                             unit = "bpm",
                             accessibility = if (profile.hrMaxOverride == 0) {
-                                "Max heart rate override, automatic"
+                                tr("Max heart rate override, automatic")
                             } else {
                                 "Max heart rate override, ${profile.hrMaxOverride} bpm"
                             },
@@ -746,7 +746,7 @@ fun SettingsScreen(vm: AppViewModel, onOpenTestCentre: () -> Unit = {}) {
                         Spacer(Modifier.height(6.dp))
                         Text(
                             text = if (profile.hrMaxOverride > 0) {
-                                "Manual override"
+                                tr("Manual override")
                             } else {
                                 "Auto · ${profile.hrMaxAuto} bpm (Tanaka)"
                             },
@@ -760,7 +760,7 @@ fun SettingsScreen(vm: AppViewModel, onOpenTestCentre: () -> Unit = {}) {
                 // 1.0 = raw pass-through until the true 5/MG tick rate is known. The divisor goes
                 // up to 30 because a 5/MG motion counter can overcount by ~24×; the stepper uses a
                 // variable increment (fine near 1.0, coarse up top) so high values stay reachable.
-                FormRow(label = "Step calibration") {
+                FormRow(label = tr("Step calibration")) {
                     StepperField(
                         value = "%.1f".format(profile.stepTicksPerStep),
                         accessibility = "Step calibration, %.1f counter ticks per step"
@@ -770,7 +770,7 @@ fun SettingsScreen(vm: AppViewModel, onOpenTestCentre: () -> Unit = {}) {
                     )
                 }
                 Text(
-                    "Counter ticks per step. Leave at 1.0 unless your steps run high. On a WHOOP 5/MG they can run very high (10× or more), so this goes up to 30. Walk a known 1,000 steps and divide NOOP's count by the real count to get your value.",
+                    tr("Counter ticks per step. Leave at 1.0 unless your steps run high. On a WHOOP 5/MG they can run very high (10× or more), so this goes up to 30. Walk a known 1,000 steps and divide NOOP's count by the real count to get your value."),
                     style = NoopType.footnote,
                     color = Palette.textTertiary,
                 )
@@ -780,10 +780,10 @@ fun SettingsScreen(vm: AppViewModel, onOpenTestCentre: () -> Unit = {}) {
                 // motion and calibrates that to the phone. Opens the explainer + fit + comparison + manual
                 // override screen. Mirrors the macOS Profile "Steps estimate" row.
                 val stepsSummary = when {
-                    profile.stepsManualCoefficient > 0 -> "Manual"
+                    profile.stepsManualCoefficient > 0 -> tr("Manual")
                     profile.stepsCalibrationCoefficient > 0 ->
                         "Auto · ${StepsCalibrationFormat.confidenceLabel(profile.stepsCalibrationConfidence)} confidence"
-                    else -> "Not calibrated"
+                    else -> tr("Not calibrated")
                 }
                 val stepsRowInteraction = remember { MutableInteractionSource() }
                 Row(
@@ -804,7 +804,7 @@ fun SettingsScreen(vm: AppViewModel, onOpenTestCentre: () -> Unit = {}) {
                     verticalAlignment = Alignment.CenterVertically,
                     horizontalArrangement = Arrangement.spacedBy(16.dp),
                 ) {
-                    Text("Steps estimate", style = NoopType.body, color = Palette.textPrimary, modifier = Modifier.weight(1f))
+                    Text(tr("Steps estimate"), style = NoopType.body, color = Palette.textPrimary, modifier = Modifier.weight(1f))
                     Text(
                         stepsSummary,
                         style = NoopType.footnote,
@@ -818,7 +818,7 @@ fun SettingsScreen(vm: AppViewModel, onOpenTestCentre: () -> Unit = {}) {
                     )
                 }
                 Text(
-                    "For a WHOOP 4.0, which sends no step count: NOOP estimates steps from motion, calibrated to your phone. Tap to see how close it is and adjust it.",
+                    tr("For a WHOOP 4.0, which sends no step count: NOOP estimates steps from motion, calibrated to your phone. Tap to see how close it is and adjust it."),
                     style = NoopType.footnote,
                     color = Palette.textTertiary,
                 )
@@ -831,15 +831,15 @@ fun SettingsScreen(vm: AppViewModel, onOpenTestCentre: () -> Unit = {}) {
         // macOS Settings → Units card.
         SettingsSection(
             icon = Icons.Filled.Straighten,
-            title = "Units",
-            blurb = "Choose how distances, weights, heights, temperatures and Effort are shown. Your data is always stored the same way. This only changes the display.",
+            title = tr("Units"),
+            blurb = tr("Choose how distances, weights, heights, temperatures and Effort are shown. Your data is always stored the same way. This only changes the display."),
         ) {
             Column {
-                FormRow(label = "Measurement system") {
+                FormRow(label = tr("Measurement system")) {
                     SegmentedPillControl(
                         items = listOf(UnitSystem.METRIC, UnitSystem.IMPERIAL),
                         selection = unitSystem,
-                        label = { if (it == UnitSystem.METRIC) "Metric" else "Imperial" },
+                        label = { if (it == UnitSystem.METRIC) tr("Metric") else tr("Imperial") },
                         onSelect = {
                             unitSystem = it
                             NoopPrefs.setUnitSystem(context, it)
@@ -847,7 +847,7 @@ fun SettingsScreen(vm: AppViewModel, onOpenTestCentre: () -> Unit = {}) {
                     )
                 }
                 RowDivider()
-                FormRow(label = "Temperature") {
+                FormRow(label = tr("Temperature")) {
                     // Three-way: "Match" follows the system above; °C / °F pin it explicitly. Stored as an
                     // empty string ("match") or the TemperatureUnit raw value.
                     SegmentedPillControl(
@@ -857,7 +857,7 @@ fun SettingsScreen(vm: AppViewModel, onOpenTestCentre: () -> Unit = {}) {
                             when (it) {
                                 TemperatureUnit.CELSIUS.raw -> "°C"
                                 TemperatureUnit.FAHRENHEIT.raw -> "°F"
-                                else -> "Match"
+                                else -> tr("Match")
                             }
                         },
                         onSelect = {
@@ -869,7 +869,7 @@ fun SettingsScreen(vm: AppViewModel, onOpenTestCentre: () -> Unit = {}) {
                 RowDivider()
                 // Effort scale (#268) — NOOP's native 0–100 Effort or WHOOP's 0–21 Day Strain axis.
                 // Display-only; the stored value never changes, so a flip just re-labels every read-out.
-                FormRow(label = "Effort scale") {
+                FormRow(label = tr("Effort scale")) {
                     SegmentedPillControl(
                         items = listOf(EffortScale.HUNDRED, EffortScale.WHOOP),
                         selection = effortScale,
@@ -886,10 +886,10 @@ fun SettingsScreen(vm: AppViewModel, onOpenTestCentre: () -> Unit = {}) {
         // --- Appearance (Theme) ---
         SettingsSection(
             icon = Icons.Filled.Brightness6,
-            title = "Appearance",
-            blurb = "Choose Light, Dark, or follow your system. Dark is the signature near-black; Light keeps the same clean look on a bright canvas.",
+            title = tr("Appearance"),
+            blurb = tr("Choose Light, Dark, or follow your system. Dark is the signature near-black; Light keeps the same clean look on a bright canvas."),
         ) {
-            FormRow(label = "Theme") {
+            FormRow(label = tr("Theme")) {
                 SegmentedPillControl(
                     items = listOf(AppearanceMode.SYSTEM, AppearanceMode.LIGHT, AppearanceMode.DARK),
                     selection = themeMode,
@@ -900,7 +900,7 @@ fun SettingsScreen(vm: AppViewModel, onOpenTestCentre: () -> Unit = {}) {
                     },
                 )
             }
-            FormRow(label = "Chart colours") {
+            FormRow(label = tr("Chart colours")) {
                 // Titanium = brand gold/amber/blue ramps; Classic = throwback red→green readiness scale
                 // (cool→hot zones, green→red stress). Re-colours every gauge/chart, in both schemes.
                 SegmentedPillControl(
@@ -924,12 +924,12 @@ fun SettingsScreen(vm: AppViewModel, onOpenTestCentre: () -> Unit = {}) {
             ) {
                 Column(modifier = Modifier.weight(1f)) {
                     Text(
-                        "Day-cycle background",
+                        tr("Day-cycle background"),
                         style = NoopType.subhead,
                         color = Palette.textPrimary,
                     )
                     Text(
-                        "Shows a soft sunrise, day, dusk and night scene behind the Today screen. Turn it off for a plain dark canvas. Your cards stay exactly as readable.",
+                        tr("Shows a soft sunrise, day, dusk and night scene behind the Today screen. Turn it off for a plain dark canvas. Your cards stay exactly as readable."),
                         style = NoopType.footnote,
                         color = Palette.textTertiary,
                     )
@@ -957,14 +957,14 @@ fun SettingsScreen(vm: AppViewModel, onOpenTestCentre: () -> Unit = {}) {
         // the launcher may take a beat (or briefly disappear/redraw) while it re-reads the icon.
         SettingsSection(
             icon = Icons.Filled.Palette,
-            title = "App icon",
-            blurb = "Choose how NOOP looks on your home screen. The launcher may take a moment to refresh the icon after you change it.",
+            title = tr("App icon"),
+            blurb = tr("Choose how NOOP looks on your home screen. The launcher may take a moment to refresh the icon after you change it."),
         ) {
-            FormRow(label = "Icon") {
+            FormRow(label = tr("Icon")) {
                 SegmentedPillControl(
                     items = listOf(false, true),
                     selection = appIconNavy,
-                    label = { if (it) "Blue Titanium" else "Titanium" },
+                    label = { if (it) tr("Blue Titanium") else tr("Titanium") },
                     onSelect = { navy ->
                         appIconNavy = navy
                         setAppIcon(context, navy)
@@ -976,8 +976,8 @@ fun SettingsScreen(vm: AppViewModel, onOpenTestCentre: () -> Unit = {}) {
         // --- Strap ---
         SettingsSection(
             icon = Icons.Filled.Sensors,
-            title = "Strap",
-            blurb = "NOOP pairs directly with your WHOOP over Bluetooth: no WHOOP app, no cloud.",
+            title = tr("Strap"),
+            blurb = tr("NOOP pairs directly with your WHOOP over Bluetooth: no WHOOP app, no cloud."),
         ) {
             Column(verticalArrangement = Arrangement.spacedBy(16.dp)) {
                 Row(
@@ -992,7 +992,7 @@ fun SettingsScreen(vm: AppViewModel, onOpenTestCentre: () -> Unit = {}) {
                     live.batteryPct?.let { pct ->
                         StatePill(
                             title = "Battery ${pct.roundToInt()}%" +
-                                if (live.charging == true) " · Charging" else "",
+                                if (live.charging == true) tr(" · Charging") else "",
                             tone = batteryTone(pct),
                             showsDot = false,
                         )
@@ -1005,7 +1005,7 @@ fun SettingsScreen(vm: AppViewModel, onOpenTestCentre: () -> Unit = {}) {
                 )
                 Row(horizontalArrangement = Arrangement.spacedBy(12.dp)) {
                     NoopButton(
-                        text = if (live.scanning) "Searching…" else "Re-scan",
+                        text = if (live.scanning) tr("Searching…") else tr("Re-scan"),
                         leadingIcon = Icons.Filled.Refresh,
                         kind = NoopButtonKind.Primary,
                         enabled = !live.scanning,
@@ -1013,7 +1013,7 @@ fun SettingsScreen(vm: AppViewModel, onOpenTestCentre: () -> Unit = {}) {
                     )
 
                     NoopButton(
-                        text = "Disconnect",
+                        text = tr("Disconnect"),
                         leadingIcon = Icons.Filled.Cancel,
                         kind = NoopButtonKind.Secondary,
                         enabled = live.connected || live.bonded,
@@ -1027,10 +1027,10 @@ fun SettingsScreen(vm: AppViewModel, onOpenTestCentre: () -> Unit = {}) {
                 if (live.connected && !live.whoop5Detected) {
                     var nameDraft by remember(live.advertisingName) { mutableStateOf(live.advertisingName ?: "") }
                     Column(verticalArrangement = Arrangement.spacedBy(8.dp)) {
-                        Text("Strap name", style = NoopType.subhead, color = Palette.textPrimary)
+                        Text(tr("Strap name"), style = NoopType.subhead, color = Palette.textPrimary)
                         Text(
-                            "Rename your strap's Bluetooth name, useful for a second-hand band. The strap " +
-                                "reboots to apply, then reconnects with the new name.",
+                            tr("Rename your strap's Bluetooth name, useful for a second-hand band. The strap ") +
+                                tr("reboots to apply, then reconnects with the new name."),
                             style = NoopType.footnote,
                             color = Palette.textTertiary,
                         )
@@ -1038,7 +1038,7 @@ fun SettingsScreen(vm: AppViewModel, onOpenTestCentre: () -> Unit = {}) {
                             value = nameDraft,
                             onValueChange = { nameDraft = it.take(24) },
                             singleLine = true,
-                            placeholder = { Text("WHOOP", style = NoopType.body, color = Palette.textTertiary) },
+                            placeholder = { Text(tr("WHOOP"), style = NoopType.body, color = Palette.textTertiary) },
                             modifier = Modifier.fillMaxWidth(),
                             colors = OutlinedTextFieldDefaults.colors(
                                 focusedTextColor = Palette.textPrimary,
@@ -1052,7 +1052,7 @@ fun SettingsScreen(vm: AppViewModel, onOpenTestCentre: () -> Unit = {}) {
                         )
                         Row(verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.spacedBy(12.dp)) {
                             NoopButton(
-                                text = "Rename",
+                                text = tr("Rename"),
                                 leadingIcon = Icons.Filled.Edit,
                                 kind = NoopButtonKind.Primary,
                                 enabled = live.bonded && nameDraft.isNotBlank(),
@@ -1074,12 +1074,12 @@ fun SettingsScreen(vm: AppViewModel, onOpenTestCentre: () -> Unit = {}) {
                 ) {
                     Column(modifier = Modifier.weight(1f)) {
                         Text(
-                            "Keep connected in the background",
+                            tr("Keep connected in the background"),
                             style = NoopType.subhead,
                             color = Palette.textPrimary,
                         )
                         Text(
-                            "Keeps streaming from your strap with an ongoing notification, even after you close NOOP. Turn off to disconnect when the app is closed.",
+                            tr("Keeps streaming from your strap with an ongoing notification, even after you close NOOP. Turn off to disconnect when the app is closed."),
                             style = NoopType.footnote,
                             color = Palette.textTertiary,
                         )
@@ -1122,18 +1122,18 @@ fun SettingsScreen(vm: AppViewModel, onOpenTestCentre: () -> Unit = {}) {
                         )
                         Column(modifier = Modifier.weight(1f)) {
                             Text(
-                                "Allow background running",
+                                tr("Allow background running"),
                                 style = NoopType.subhead,
                                 color = Palette.textPrimary,
                             )
                             Text(
-                                "Android is limiting NOOP in the background, which stops overnight syncing — your scores can stay stuck on “calibrating”. Tap Allow so it can keep the strap connected.",
+                                tr("Android is limiting NOOP in the background, which stops overnight syncing — your scores can stay stuck on “calibrating”. Tap Allow so it can keep the strap connected."),
                                 style = NoopType.footnote,
                                 color = Palette.textTertiary,
                             )
                         }
                         NoopButton(
-                            text = "Allow",
+                            text = tr("Allow"),
                             kind = NoopButtonKind.Primary,
                             onClick = {
                                 runCatching { context.startActivity(BatteryOptimization.requestIntent(context)) }
@@ -1156,12 +1156,12 @@ fun SettingsScreen(vm: AppViewModel, onOpenTestCentre: () -> Unit = {}) {
                 ) {
                     Column(modifier = Modifier.weight(1f)) {
                         Text(
-                            "Continuous HRV capture",
+                            tr("Continuous HRV capture"),
                             style = NoopType.subhead,
                             color = Palette.textPrimary,
                         )
                         Text(
-                            "Keeps the detailed beat-to-beat stream running all day and night, not just while a live screen is open, so NOOP captures much more for overnight HRV, recovery and sleep. Uses more battery (your strap streams heart rate continuously). Needs \"Keep connected in the background\" on.",
+                            tr("Keeps the detailed beat-to-beat stream running all day and night, not just while a live screen is open, so NOOP captures much more for overnight HRV, recovery and sleep. Uses more battery (your strap streams heart rate continuously). Needs \"Keep connected in the background\" on."),
                             style = NoopType.footnote,
                             color = Palette.textTertiary,
                         )
@@ -1193,12 +1193,12 @@ fun SettingsScreen(vm: AppViewModel, onOpenTestCentre: () -> Unit = {}) {
                     ) {
                         Column(modifier = Modifier.weight(1f)) {
                             Text(
-                                "Overnight only",
+                                tr("Overnight only"),
                                 style = NoopType.subhead,
                                 color = Palette.textPrimary,
                             )
                             Text(
-                                "Runs the stream only during your quiet hours window (22:00 to 07:00 by default), roughly halving the battery cost. Daytime Stress readings will be sparser, since Stress reads this live stream.",
+                                tr("Runs the stream only during your quiet hours window (22:00 to 07:00 by default), roughly halving the battery cost. Daytime Stress readings will be sparser, since Stress reads this live stream."),
                                 style = NoopType.footnote,
                                 color = Palette.textTertiary,
                             )
@@ -1231,12 +1231,12 @@ fun SettingsScreen(vm: AppViewModel, onOpenTestCentre: () -> Unit = {}) {
                 ) {
                     Column(modifier = Modifier.weight(1f)) {
                         Text(
-                            "Debug logging",
+                            tr("Debug logging"),
                             style = NoopType.subhead,
                             color = Palette.textPrimary,
                         )
                         Text(
-                            "Also write the strap log to the system log (logcat) for development over adb. Off by default; the in-app log and “Share strap log” below work either way.",
+                            tr("Also write the strap log to the system log (logcat) for development over adb. Off by default; the in-app log and “Share strap log” below work either way."),
                             style = NoopType.footnote,
                             color = Palette.textTertiary,
                         )
@@ -1255,14 +1255,14 @@ fun SettingsScreen(vm: AppViewModel, onOpenTestCentre: () -> Unit = {}) {
                             uncheckedBorderColor = Palette.hairline,
                         ),
                         modifier = Modifier.semantics {
-                            contentDescription = "Debug logging"
+                            contentDescription = tr("Debug logging")
                         },
                     )
                 }
 
                 // Diagnostics: export the strap connection log so people can attach it to a bug report.
                 NoopButton(
-                    text = "Share strap log (for bug reports)",
+                    text = tr("Share strap log (for bug reports)"),
                     leadingIcon = Icons.Filled.Upload,
                     kind = NoopButtonKind.Secondary,
                     fullWidth = true,
@@ -1285,7 +1285,7 @@ fun SettingsScreen(vm: AppViewModel, onOpenTestCentre: () -> Unit = {}) {
                             indication = null,
                         ) { showModelComparison = true }
                         .padding(horizontal = 14.dp, vertical = 12.dp)
-                        .semantics { contentDescription = "WHOOP 4.0 versus 5.0: what each can read and why" },
+                        .semantics { contentDescription = tr("WHOOP 4.0 versus 5.0: what each can read and why") },
                 ) {
                     Row(
                         modifier = Modifier.fillMaxWidth(),
@@ -1299,9 +1299,9 @@ fun SettingsScreen(vm: AppViewModel, onOpenTestCentre: () -> Unit = {}) {
                             modifier = Modifier.size(18.dp),
                         )
                         Column(modifier = Modifier.weight(1f)) {
-                            Text("WHOOP 4.0 vs 5.0/MG", style = NoopType.headline, color = Palette.textPrimary)
+                            Text(tr("WHOOP 4.0 vs 5.0/MG"), style = NoopType.headline, color = Palette.textPrimary)
                             Text(
-                                "What each strap can read, and why some features differ.",
+                                tr("What each strap can read, and why some features differ."),
                                 style = NoopType.footnote,
                                 color = Palette.textSecondary,
                             )
@@ -1317,8 +1317,8 @@ fun SettingsScreen(vm: AppViewModel, onOpenTestCentre: () -> Unit = {}) {
         // the experimental probes, diagnostics, raw-capture export and Trends report all stay one tap
         // away. Mirrors the iOS SettingsView "Advanced" disclosure and the Test Centre Advanced group.
         SettingsDisclosure(
-            title = "Advanced",
-            subtitle = "Experimental probes, diagnostics, raw-sensor export, and the Trends report. Tucked away to keep the everyday screen tidy.",
+            title = tr("Advanced"),
+            subtitle = tr("Experimental probes, diagnostics, raw-sensor export, and the Trends report. Tucked away to keep the everyday screen tidy."),
             expanded = advancedOpen,
             onToggle = { advancedOpen = !advancedOpen; SettingsDisclosurePrefs.write(NoopPrefs.of(context), advancedOpen) },
         ) {
@@ -1327,8 +1327,8 @@ fun SettingsScreen(vm: AppViewModel, onOpenTestCentre: () -> Unit = {}) {
         if (showFiveMGControls) {
         SettingsSection(
             icon = Icons.Filled.Science,
-            title = "Experimental · WHOOP 5 / MG",
-            blurb = "Live heart rate already works on a WHOOP 5/MG strap. These probes go further and try to coax more out of it. They are guesses, off by default, and only ever touch a 5/MG strap. WHOOP 4.0 is never affected.",
+            title = tr("Experimental · WHOOP 5 / MG"),
+            blurb = tr("Live heart rate already works on a WHOOP 5/MG strap. These probes go further and try to coax more out of it. They are guesses, off by default, and only ever touch a 5/MG strap. WHOOP 4.0 is never affected."),
         ) {
             Column(verticalArrangement = Arrangement.spacedBy(10.dp)) {
                 Row(
@@ -1337,7 +1337,7 @@ fun SettingsScreen(vm: AppViewModel, onOpenTestCentre: () -> Unit = {}) {
                     horizontalArrangement = Arrangement.spacedBy(16.dp),
                 ) {
                     Text(
-                        "Try WHOOP 5/MG protocol probes",
+                        tr("Try WHOOP 5/MG protocol probes"),
                         style = NoopType.subhead,
                         color = Palette.textPrimary,
                         modifier = Modifier.weight(1f),
@@ -1356,12 +1356,12 @@ fun SettingsScreen(vm: AppViewModel, onOpenTestCentre: () -> Unit = {}) {
                             uncheckedBorderColor = Palette.hairline,
                         ),
                         modifier = Modifier.semantics {
-                            contentDescription = "Try WHOOP 5/MG protocol probes"
+                            contentDescription = tr("Try WHOOP 5/MG protocol probes")
                         },
                     )
                 }
                 Text(
-                    "On a 5/MG connection NOOP will send a puffin realtime-stream request after the handshake, and log what comes back. If you have a 5/MG strap, turning this on and sharing your strap log helps map the protocol. No effect on WHOOP 4.0.",
+                    tr("On a 5/MG connection NOOP will send a puffin realtime-stream request after the handshake, and log what comes back. If you have a 5/MG strap, turning this on and sharing your strap log helps map the protocol. No effect on WHOOP 4.0."),
                     style = NoopType.caption,
                     color = Palette.textTertiary,
                 )
@@ -1373,7 +1373,7 @@ fun SettingsScreen(vm: AppViewModel, onOpenTestCentre: () -> Unit = {}) {
                     horizontalArrangement = Arrangement.spacedBy(16.dp),
                 ) {
                     Text(
-                        "Broadcast heart rate (Garmin/ANT)",
+                        tr("Broadcast heart rate (Garmin/ANT)"),
                         style = NoopType.subhead,
                         color = Palette.textPrimary,
                         modifier = Modifier.weight(1f),
@@ -1393,12 +1393,12 @@ fun SettingsScreen(vm: AppViewModel, onOpenTestCentre: () -> Unit = {}) {
                             uncheckedBorderColor = Palette.hairline,
                         ),
                         modifier = Modifier.semantics {
-                            contentDescription = "Broadcast heart rate"
+                            contentDescription = tr("Broadcast heart rate")
                         },
                     )
                 }
                 Text(
-                    "Makes your WHOOP 5.0/MG advertise its heart rate as a standard Bluetooth HR sensor, so a Garmin (Edge/watch), Zwift or gym equipment can use it during a workout. Applied on the next connection (and immediately if connected); writes the strap's whoop_live_hr_in_adv_ind_pkt flag. Reversible. 5/MG only.",
+                    tr("Makes your WHOOP 5.0/MG advertise its heart rate as a standard Bluetooth HR sensor, so a Garmin (Edge/watch), Zwift or gym equipment can use it during a workout. Applied on the next connection (and immediately if connected); writes the strap's whoop_live_hr_in_adv_ind_pkt flag. Reversible. 5/MG only."),
                     style = NoopType.caption,
                     color = Palette.textTertiary,
                 )
@@ -1410,7 +1410,7 @@ fun SettingsScreen(vm: AppViewModel, onOpenTestCentre: () -> Unit = {}) {
                     horizontalArrangement = Arrangement.spacedBy(16.dp),
                 ) {
                     Text(
-                        "Unlock WHOOP 5/MG deep data (R22)",
+                        tr("Unlock WHOOP 5/MG deep data (R22)"),
                         style = NoopType.subhead,
                         color = Palette.textPrimary,
                         modifier = Modifier.weight(1f),
@@ -1429,34 +1429,34 @@ fun SettingsScreen(vm: AppViewModel, onOpenTestCentre: () -> Unit = {}) {
                             uncheckedBorderColor = Palette.hairline,
                         ),
                         modifier = Modifier.semantics {
-                            contentDescription = "Unlock WHOOP 5/MG deep data"
+                            contentDescription = tr("Unlock WHOOP 5/MG deep data")
                         },
                     )
                 }
                 Text(
-                    "WHOOP 5/MG straps hand a fresh app only live heart rate. The official app switches on the deeper streams (high-rate HR + motion + history) by writing a set of feature flags, a sequence two independent projects have documented. With this on, the button below sends that exact sequence to your strap. Unlike everything else here it does write to the strap, but it's reversible (it only changes which data the strap emits) and is the same thing the official app does. Experimental: it may do nothing on your firmware.",
+                    tr("WHOOP 5/MG straps hand a fresh app only live heart rate. The official app switches on the deeper streams (high-rate HR + motion + history) by writing a set of feature flags, a sequence two independent projects have documented. With this on, the button below sends that exact sequence to your strap. Unlike everything else here it does write to the strap, but it's reversible (it only changes which data the strap emits) and is the same thing the official app does. Experimental: it may do nothing on your firmware."),
                     style = NoopType.caption,
                     color = Palette.textTertiary,
                 )
                 if (deepData) {
                     NoopButton(
-                        text = "Send enable sequence to strap",
+                        text = tr("Send enable sequence to strap"),
                         leadingIcon = Icons.Filled.Bolt,
                         kind = NoopButtonKind.Primary,
                         enabled = live.encryptedBond && live.worn,
                         onClick = { vm.ble.enableWhoop5DeepData() },
                     )
                     Text(
-                        if (!live.encryptedBond) "Needs the full encrypted bond: close the official WHOOP app and pair the strap to NOOP first (a live-HR-only link can't carry the unlock)."
-                        else if (!live.worn) "Put the strap on first. The deep stream is on-wrist only."
-                        else "Wear the strap, tap once, then let it sync and share your strap log.",
+                        if (!live.encryptedBond) tr("Needs the full encrypted bond: close the official WHOOP app and pair the strap to NOOP first (a live-HR-only link can't carry the unlock).")
+                        else if (!live.worn) tr("Put the strap on first. The deep stream is on-wrist only.")
+                        else tr("Wear the strap, tap once, then let it sync and share your strap log."),
                         style = NoopType.caption,
                         color = Palette.textTertiary,
                     )
                     // Live R22 telemetry (#174): proof of what the strap is doing right now.
                     if (live.r22FlagsAccepted > 0) {
                         Text(
-                            if (live.r22FlagsAccepted >= 15) "✓ Strap accepted all 15 R22 flags"
+                            if (live.r22FlagsAccepted >= 15) tr("✓ Strap accepted all 15 R22 flags")
                             else "Strap accepted ${live.r22FlagsAccepted}/15 R22 flags…",
                             style = NoopType.caption,
                             color = if (live.r22FlagsAccepted >= 15) Palette.statusPositive else Palette.textSecondary,
@@ -1470,7 +1470,7 @@ fun SettingsScreen(vm: AppViewModel, onOpenTestCentre: () -> Unit = {}) {
                         )
                     } else if (live.r22FlagsAccepted >= 15) {
                         Text(
-                            "Flags accepted, but the enable sequence doesn't start a separate live stream. The deep records arrive as part of the normal history sync (#494).",
+                            tr("Flags accepted, but the enable sequence doesn't start a separate live stream. The deep records arrive as part of the normal history sync (#494)."),
                             style = NoopType.caption,
                             color = Palette.textTertiary,
                         )
@@ -1483,7 +1483,7 @@ fun SettingsScreen(vm: AppViewModel, onOpenTestCentre: () -> Unit = {}) {
                     horizontalArrangement = Arrangement.spacedBy(16.dp),
                 ) {
                     Text(
-                        "Record 5/MG raw capture (research)",
+                        tr("Record 5/MG raw capture (research)"),
                         style = NoopType.subhead,
                         color = Palette.textPrimary,
                         modifier = Modifier.weight(1f),
@@ -1502,17 +1502,17 @@ fun SettingsScreen(vm: AppViewModel, onOpenTestCentre: () -> Unit = {}) {
                             uncheckedBorderColor = Palette.hairline,
                         ),
                         modifier = Modifier.semantics {
-                            contentDescription = "Record 5/MG raw capture"
+                            contentDescription = tr("Record 5/MG raw capture")
                         },
                     )
                 }
                 Text(
-                    "Records the raw frames of each 5/MG history sync to a file on this phone, so you can share them and help NOOP learn to decode 5/MG sleep, recovery and strain. The file contains raw biometric frames (heart rate, R-R, skin temperature, motion) and the strap's own diagnostic text. Nothing leaves the phone unless you share it. Off by default.",
+                    tr("Records the raw frames of each 5/MG history sync to a file on this phone, so you can share them and help NOOP learn to decode 5/MG sleep, recovery and strain. The file contains raw biometric frames (heart rate, R-R, skin temperature, motion) and the strap's own diagnostic text. Nothing leaves the phone unless you share it. Off by default."),
                     style = NoopType.caption,
                     color = Palette.textTertiary,
                 )
                 NoopButton(
-                    text = "Share 5/MG capture (for the decode effort)",
+                    text = tr("Share 5/MG capture (for the decode effort)"),
                     leadingIcon = Icons.Filled.Upload,
                     kind = NoopButtonKind.Secondary,
                     fullWidth = true,
@@ -1523,7 +1523,7 @@ fun SettingsScreen(vm: AppViewModel, onOpenTestCentre: () -> Unit = {}) {
                 // the strap log together (timestamped, same minute) so a protocol-mapping issue arrives
                 // with the frames AND the context that produced them.
                 NoopButton(
-                    text = "Export raw + log (matched pair)",
+                    text = tr("Export raw + log (matched pair)"),
                     leadingIcon = Icons.Filled.IosShare,
                     kind = NoopButtonKind.Secondary,
                     fullWidth = true,
@@ -1537,8 +1537,8 @@ fun SettingsScreen(vm: AppViewModel, onOpenTestCentre: () -> Unit = {}) {
         // stays available on a WHOOP 4.0 too (#22): a 4.0 owner still needs it to share decoded streams.
         SettingsSection(
             icon = Icons.Filled.Science,
-            title = "Diagnostics",
-            blurb = "A read-only export of the decoded sensor streams NOOP already stores. Works on any strap. Nothing is written to your device, and nothing is uploaded.",
+            title = tr("Diagnostics"),
+            blurb = tr("A read-only export of the decoded sensor streams NOOP already stores. Works on any strap. Nothing is written to your device, and nothing is uploaded."),
         ) {
             Column(verticalArrangement = Arrangement.spacedBy(10.dp)) {
                 // --- Experimental sleep staging (V2) — opt-in, default OFF, every model. (V7 Pillar 3b) ---
@@ -1548,7 +1548,7 @@ fun SettingsScreen(vm: AppViewModel, onOpenTestCentre: () -> Unit = {}) {
                     horizontalArrangement = Arrangement.spacedBy(16.dp),
                 ) {
                     Text(
-                        "Experimental sleep staging (V2)",
+                        tr("Experimental sleep staging (V2)"),
                         style = NoopType.subhead,
                         color = Palette.textPrimary,
                         modifier = Modifier.weight(1f),
@@ -1567,15 +1567,15 @@ fun SettingsScreen(vm: AppViewModel, onOpenTestCentre: () -> Unit = {}) {
                             uncheckedBorderColor = Palette.hairline,
                         ),
                         modifier = Modifier.semantics {
-                            contentDescription = "Experimental sleep staging V2"
+                            contentDescription = tr("Experimental sleep staging V2")
                         },
                     )
                 }
                 Text(
-                    "A transparent cardiorespiratory recipe that recovers deep and REM better than the " +
-                        "default staging. Opt-in and experimental: it only changes how already-detected " +
-                        "nights are split into stages (detection and scores are unchanged), and the default " +
-                        "staging stays in place if you leave this off. Takes effect on the next nights staged.",
+                    tr("A transparent cardiorespiratory recipe that recovers deep and REM better than the ") +
+                        tr("default staging. Opt-in and experimental: it only changes how already-detected ") +
+                        tr("nights are split into stages (detection and scores are unchanged), and the default ") +
+                        tr("staging stays in place if you leave this off. Takes effect on the next nights staged."),
                     style = NoopType.caption,
                     color = Palette.textTertiary,
                 )
@@ -1584,14 +1584,14 @@ fun SettingsScreen(vm: AppViewModel, onOpenTestCentre: () -> Unit = {}) {
                 // CSV so power users / external devs can prototype sleep/activity/VBT algorithms on real
                 // data without a BLE stream (#308/#276/#322). On-device only; plain text, no BLE hex.
                 NoopButton(
-                    text = "Export raw sensor data (CSV)",
+                    text = tr("Export raw sensor data (CSV)"),
                     leadingIcon = Icons.Filled.Upload,
                     kind = NoopButtonKind.Secondary,
                     fullWidth = true,
                     onClick = { scope.launch { RawSensorExport.export(context, vm.repo) } },
                 )
                 Text(
-                    "Saves the last 24h of decoded sensor samples (heart rate, R-R, motion, steps and any 5/MG deep streams you've unlocked) as one CSV you can share, for tinkering with your own data. Nothing leaves the phone unless you share it.",
+                    tr("Saves the last 24h of decoded sensor samples (heart rate, R-R, motion, steps and any 5/MG deep streams you've unlocked) as one CSV you can share, for tinkering with your own data. Nothing leaves the phone unless you share it."),
                     style = NoopType.caption,
                     color = Palette.textTertiary,
                 )
@@ -1601,7 +1601,7 @@ fun SettingsScreen(vm: AppViewModel, onOpenTestCentre: () -> Unit = {}) {
                 // "Share strap log" row above, which also doesn't gate on a live strap). 12/24h follows the
                 // phone's own clock setting.
                 NoopButton(
-                    text = "Buzz the time on your strap",
+                    text = tr("Buzz the time on your strap"),
                     leadingIcon = Icons.Filled.Vibration,
                     kind = NoopButtonKind.Secondary,
                     fullWidth = true,
@@ -1610,7 +1610,7 @@ fun SettingsScreen(vm: AppViewModel, onOpenTestCentre: () -> Unit = {}) {
                     },
                 )
                 Text(
-                    "Feel the current time as a sequence of buzzes (#460). Does nothing unless your strap is connected.",
+                    tr("Feel the current time as a sequence of buzzes (#460). Does nothing unless your strap is connected."),
                     style = NoopType.caption,
                     color = Palette.textTertiary,
                 )
@@ -1624,8 +1624,8 @@ fun SettingsScreen(vm: AppViewModel, onOpenTestCentre: () -> Unit = {}) {
         // default. SharedPreferences isn't reactive, so the Switch + time mirror into local state.
         SettingsSection(
             icon = Icons.Filled.Storage,
-            title = "Scheduled debug export (#510)",
-            blurb = "Once a day at a time you choose, NOOP writes a timestamped strap log (plus the raw 5/MG capture, if you have one) to its export folder. No sharing, nothing leaves the phone. Useful for chasing an intermittent overnight fault. Off by default.",
+            title = tr("Scheduled debug export (#510)"),
+            blurb = tr("Once a day at a time you choose, NOOP writes a timestamped strap log (plus the raw 5/MG capture, if you have one) to its export folder. No sharing, nothing leaves the phone. Useful for chasing an intermittent overnight fault. Off by default."),
         ) {
             Column(verticalArrangement = Arrangement.spacedBy(10.dp)) {
                 Row(
@@ -1635,12 +1635,12 @@ fun SettingsScreen(vm: AppViewModel, onOpenTestCentre: () -> Unit = {}) {
                 ) {
                     Column(modifier = Modifier.weight(1f)) {
                         Text(
-                            "Daily auto-export",
+                            tr("Daily auto-export"),
                             style = NoopType.subhead,
                             color = Palette.textPrimary,
                         )
                         Text(
-                            "Writes a timestamped strap log (and the raw .bin if a 5/MG capture exists) to the app's export folder once a day at the time below.",
+                            tr("Writes a timestamped strap log (and the raw .bin if a 5/MG capture exists) to the app's export folder once a day at the time below."),
                             style = NoopType.footnote,
                             color = Palette.textTertiary,
                         )
@@ -1660,7 +1660,7 @@ fun SettingsScreen(vm: AppViewModel, onOpenTestCentre: () -> Unit = {}) {
                             uncheckedBorderColor = Palette.hairline,
                         ),
                         modifier = Modifier.semantics {
-                            contentDescription = "Daily auto-export"
+                            contentDescription = tr("Daily auto-export")
                         },
                     )
                 }
@@ -1672,16 +1672,16 @@ fun SettingsScreen(vm: AppViewModel, onOpenTestCentre: () -> Unit = {}) {
                         horizontalArrangement = Arrangement.spacedBy(16.dp),
                     ) {
                         Column(modifier = Modifier.weight(1f)) {
-                            Text("Export time", style = NoopType.subhead, color = Palette.textPrimary)
+                            Text(tr("Export time"), style = NoopType.subhead, color = Palette.textPrimary)
                             Text(
-                                "The daily export runs at this time.",
+                                tr("The daily export runs at this time."),
                                 style = NoopType.footnote,
                                 color = Palette.textTertiary,
                             )
                         }
                         TimeChip(
                             minutes = debugExportMinutes,
-                            accessibilityLabel = "Daily export time",
+                            accessibilityLabel = tr("Daily export time"),
                             onPicked = {
                                 debugExportMinutes = it
                                 debugExportSettings.timeMinutes = it
@@ -1695,7 +1695,7 @@ fun SettingsScreen(vm: AppViewModel, onOpenTestCentre: () -> Unit = {}) {
                 // above) and confirms with a Toast naming the folder, so the user sees the feature work
                 // without waiting for the scheduled run.
                 NoopButton(
-                    text = "Export now",
+                    text = tr("Export now"),
                     leadingIcon = Icons.Filled.SaveAlt,
                     kind = NoopButtonKind.Secondary,
                     fullWidth = true,
@@ -1707,7 +1707,7 @@ fun SettingsScreen(vm: AppViewModel, onOpenTestCentre: () -> Unit = {}) {
                             Toast.makeText(
                                 context,
                                 if (files.isNotEmpty()) "Wrote a dated debug export (${files.size} file${if (files.size == 1) "" else "s"}) to the app's export folder."
-                                else "Couldn't write the debug export.",
+                                else tr("Couldn't write the debug export."),
                                 Toast.LENGTH_LONG,
                             ).show()
                         }
@@ -1725,13 +1725,13 @@ fun SettingsScreen(vm: AppViewModel, onOpenTestCentre: () -> Unit = {}) {
         // --- Health & wellness (v5 opt-in toggles) ---
         SettingsSection(
             icon = Icons.Filled.Science,
-            title = "Health & wellness",
-            blurb = "Optional, on-device wellness signals. Each is off by default, computed only on this phone from data you already have, and never a medical diagnosis.",
+            title = tr("Health & wellness"),
+            blurb = tr("Optional, on-device wellness signals. Each is off by default, computed only on this phone from data you already have, and never a medical diagnosis."),
         ) {
             Column(verticalArrangement = Arrangement.spacedBy(16.dp)) {
                 ToggleRow(
-                    title = "Illness heads-up",
-                    detail = "Watches your resting heart rate, HRV and skin temperature for the pattern that often shows up before you feel unwell, and surfaces a gentle heads-up. An observation about your own numbers, not a diagnosis.",
+                    title = tr("Illness heads-up"),
+                    detail = tr("Watches your resting heart rate, HRV and skin temperature for the pattern that often shows up before you feel unwell, and surfaces a gentle heads-up. An observation about your own numbers, not a diagnosis."),
                     checked = illnessWatch,
                     onCheckedChange = {
                         illnessWatch = it
@@ -1746,8 +1746,8 @@ fun SettingsScreen(vm: AppViewModel, onOpenTestCentre: () -> Unit = {}) {
                 // Settings toggle was the one surface that was missed, so a male profile could enable it here.
                 if (cycleTracking || cycleOptInApplies(profile.sex)) {
                     ToggleRow(
-                        title = "Cycle awareness",
-                        detail = "Reads a coarse menstrual-cycle phase from your nightly skin-temperature shift, on this device only. Awareness only: not contraception, not a fertility predictor, not a medical service.",
+                        title = tr("Cycle awareness"),
+                        detail = tr("Reads a coarse menstrual-cycle phase from your nightly skin-temperature shift, on this device only. Awareness only: not contraception, not a fertility predictor, not a medical service."),
                         checked = cycleTracking,
                         onCheckedChange = {
                             cycleTracking = it
@@ -1757,8 +1757,8 @@ fun SettingsScreen(vm: AppViewModel, onOpenTestCentre: () -> Unit = {}) {
                     RowDivider()
                 }
                 ToggleRow(
-                    title = "Hydration tracking",
-                    detail = "Adds a simple fluid log with a daily goal that adjusts to your effort. Tap to add a sip, cup or bottle and watch a progress ring fill. On this phone only. Nothing is synced.",
+                    title = tr("Hydration tracking"),
+                    detail = tr("Adds a simple fluid log with a daily goal that adjusts to your effort. Tap to add a sip, cup or bottle and watch a progress ring fill. On this phone only. Nothing is synced."),
                     checked = hydrationTracking,
                     onCheckedChange = {
                         hydrationTracking = it
@@ -1767,8 +1767,8 @@ fun SettingsScreen(vm: AppViewModel, onOpenTestCentre: () -> Unit = {}) {
                 )
                 RowDivider()
                 ToggleRow(
-                    title = "Auto-detect workouts",
-                    detail = "After a sync, NOOP looks over your recent heart rate for a sustained, raised stretch that looks like exercise and offers to save it. It only ever suggests. Nothing is saved until you tap Save, and you can dismiss any suggestion. Deliberately conservative, so the odd workout may be missed. On this phone only.",
+                    title = tr("Auto-detect workouts"),
+                    detail = tr("After a sync, NOOP looks over your recent heart rate for a sustained, raised stretch that looks like exercise and offers to save it. It only ever suggests. Nothing is saved until you tap Save, and you can dismiss any suggestion. Deliberately conservative, so the odd workout may be missed. On this phone only."),
                     checked = autoDetectWorkouts,
                     onCheckedChange = {
                         autoDetectWorkouts = it
@@ -1777,8 +1777,8 @@ fun SettingsScreen(vm: AppViewModel, onOpenTestCentre: () -> Unit = {}) {
                 )
                 RowDivider()
                 ToggleRow(
-                    title = "Keep screen on during a workout",
-                    detail = "Holds the screen awake while you're recording a workout, so your live heart rate stays visible without the phone dimming. Only applies during a recording. The screen sleeps normally the rest of the time. Leaving it on does use a bit more battery, and means your unlocked screen stays visible for the whole workout, so flip it off if that's a concern.",
+                    title = tr("Keep screen on during a workout"),
+                    detail = tr("Holds the screen awake while you're recording a workout, so your live heart rate stays visible without the phone dimming. Only applies during a recording. The screen sleeps normally the rest of the time. Leaving it on does use a bit more battery, and means your unlocked screen stays visible for the whole workout, so flip it off if that's a concern."),
                     checked = workoutKeepScreenOn,
                     onCheckedChange = {
                         workoutKeepScreenOn = it
@@ -1789,8 +1789,8 @@ fun SettingsScreen(vm: AppViewModel, onOpenTestCentre: () -> Unit = {}) {
                 // BETA + default ON (the one exception to this section's off-by-default rule): the flag
                 // gates the Today entry so anyone can wave the beta away here with one flip.
                 ToggleRow(
-                    title = "Live Sessions (beta)",
-                    detail = "Silence-first strap coaching during workouts.",
+                    title = tr("Live Sessions (beta)"),
+                    detail = tr("Silence-first strap coaching during workouts."),
                     checked = liveSessionsBeta,
                     onCheckedChange = {
                         liveSessionsBeta = it
@@ -1799,8 +1799,8 @@ fun SettingsScreen(vm: AppViewModel, onOpenTestCentre: () -> Unit = {}) {
                 )
                 RowDivider()
                 ToggleRow(
-                    title = "Stress check-ins (haptic)",
-                    detail = "Lets NOOP notice a fresh HRV dip while you're still and offer a minute to breathe. \"Stress\" here is an autonomic proxy from your own baseline, never a diagnosis. The strap gives one light confirming buzz; no push notification.",
+                    title = tr("Stress check-ins (haptic)"),
+                    detail = tr("Lets NOOP notice a fresh HRV dip while you're still and offer a minute to breathe. \"Stress\" here is an autonomic proxy from your own baseline, never a diagnosis. The strap gives one light confirming buzz; no push notification."),
                     checked = stressCheckIn,
                     onCheckedChange = {
                         stressCheckIn = it
@@ -1811,8 +1811,8 @@ fun SettingsScreen(vm: AppViewModel, onOpenTestCentre: () -> Unit = {}) {
                 )
                 if (stressCheckIn) {
                     ToggleRow(
-                        title = "Offer a breath automatically",
-                        detail = "When a dip is detected, surface the check-in card on its own (rate-limited, quiet-hours aware). Off keeps it manual.",
+                        title = tr("Offer a breath automatically"),
+                        detail = tr("When a dip is detected, surface the check-in card on its own (rate-limited, quiet-hours aware). Off keeps it manual."),
                         checked = stressAutoNudge,
                         onCheckedChange = {
                             stressAutoNudge = it
@@ -1822,8 +1822,8 @@ fun SettingsScreen(vm: AppViewModel, onOpenTestCentre: () -> Unit = {}) {
                 }
                 RowDivider()
                 ToggleRow(
-                    title = "Rhythm (experimental)",
-                    detail = "An experimental picture of your beat-to-beat timing: a Poincaré scatter and plain regularity stats from quiet resting windows. Not an ECG and not a diagnosis; you'll read a short disclaimer and accept before it turns on.",
+                    title = tr("Rhythm (experimental)"),
+                    detail = tr("An experimental picture of your beat-to-beat timing: a Poincaré scatter and plain regularity stats from quiet resting windows. Not an ECG and not a diagnosis; you'll read a short disclaimer and accept before it turns on."),
                     checked = rhythmEnabled,
                     onCheckedChange = {
                         // Enabling here just un-gates the experimental item; the screen itself still shows
@@ -1839,8 +1839,8 @@ fun SettingsScreen(vm: AppViewModel, onOpenTestCentre: () -> Unit = {}) {
                 )
                 RowDivider()
                 ToggleRow(
-                    title = "Share on-device signals with the Coach",
-                    detail = "When the opt-in Coach is set up with your own key, also include a short summary of your strongest on-device patterns and Lab Book markers in its context. Summary only; no raw data leaves your phone. Requires the Coach's own data consent first.",
+                    title = tr("Share on-device signals with the Coach"),
+                    detail = tr("When the opt-in Coach is set up with your own key, also include a short summary of your strongest on-device patterns and Lab Book markers in its context. Summary only; no raw data leaves your phone. Requires the Coach's own data consent first."),
                     checked = coachSignals,
                     onCheckedChange = {
                         coachSignals = it
@@ -1856,11 +1856,11 @@ fun SettingsScreen(vm: AppViewModel, onOpenTestCentre: () -> Unit = {}) {
         // on the same bindings, so this is a faster door to the full set without growing this screen.
         SettingsSection(
             icon = Icons.Filled.BugReport,
-            title = "Test Centre",
-            blurb = "Turn on a test for the thing that's wrong, wear the strap, then tap Report. Your strap log, recalibrate, scheduled export and experimental probes all live here too.",
+            title = tr("Test Centre"),
+            blurb = tr("Turn on a test for the thing that's wrong, wear the strap, then tap Report. Your strap log, recalibrate, scheduled export and experimental probes all live here too."),
         ) {
             NoopButton(
-                text = "Open Test Centre",
+                text = tr("Open Test Centre"),
                 leadingIcon = Icons.Filled.BugReport,
                 kind = NoopButtonKind.Secondary,
                 fullWidth = true,
@@ -1877,24 +1877,24 @@ fun SettingsScreen(vm: AppViewModel, onOpenTestCentre: () -> Unit = {}) {
         // foldHistory drops every night before that epoch and re-seeds. Mirrors the iOS/Mac button.
         SettingsSection(
             icon = Icons.Filled.Favorite,
-            title = "Charge",
-            blurb = "Charge is NOOP's daily readiness score, learned from your own HRV, resting heart rate and more over time. Your history stays.",
+            title = tr("Charge"),
+            blurb = tr("Charge is NOOP's daily readiness score, learned from your own HRV, resting heart rate and more over time. Your history stays."),
         ) {
             Column(verticalArrangement = Arrangement.spacedBy(10.dp)) {
                 Column(verticalArrangement = Arrangement.spacedBy(2.dp)) {
-                    Text("Recalibrate Charge baseline", style = NoopType.subhead, color = Palette.textPrimary)
+                    Text(tr("Recalibrate Charge baseline"), style = NoopType.subhead, color = Palette.textPrimary)
                     Text(
-                        "Restarts the roughly 4-night build-up for Charge and your HRV baseline from tonight. Use it if a bad first week set your baseline off. Your history stays.",
+                        tr("Restarts the roughly 4-night build-up for Charge and your HRV baseline from tonight. Use it if a bad first week set your baseline off. Your history stays."),
                         style = NoopType.footnote,
                         color = Palette.textTertiary,
                     )
                 }
                 NoopButton(
-                    text = "Recalibrate Charge baseline",
+                    text = tr("Recalibrate Charge baseline"),
                     leadingIcon = Icons.Filled.Autorenew,
                     kind = NoopButtonKind.Secondary,
                     fullWidth = true,
-                    modifier = Modifier.semantics { contentDescription = "Recalibrate Charge baseline" },
+                    modifier = Modifier.semantics { contentDescription = tr("Recalibrate Charge baseline") },
                     onClick = { showRecalibrateConfirm = true },
                 )
             }
@@ -1904,10 +1904,10 @@ fun SettingsScreen(vm: AppViewModel, onOpenTestCentre: () -> Unit = {}) {
             AlertDialog(
                 onDismissRequest = { showRecalibrateConfirm = false },
                 containerColor = Palette.surfaceOverlay,
-                title = { Text("Recalibrate your Charge baseline?", style = NoopType.title2, color = Palette.textPrimary) },
+                title = { Text(tr("Recalibrate your Charge baseline?"), style = NoopType.title2, color = Palette.textPrimary) },
                 text = {
                     Text(
-                        "This restarts the roughly 4-night build-up for Charge and your HRV baseline. Your history stays. Use it if a bad first week, like wearing it while sick, set your baseline off.",
+                        tr("This restarts the roughly 4-night build-up for Charge and your HRV baseline. Your history stays. Use it if a bad first week, like wearing it while sick, set your baseline off."),
                         style = NoopType.subhead,
                         color = Palette.textSecondary,
                     )
@@ -1932,15 +1932,15 @@ fun SettingsScreen(vm: AppViewModel, onOpenTestCentre: () -> Unit = {}) {
                             vm.syncNow()
                             Toast.makeText(
                                 context,
-                                "Charge baseline reset. NOOP will re-learn it from tonight. Your history stays, and it takes a few nights to settle.",
+                                tr("Charge baseline reset. NOOP will re-learn it from tonight. Your history stays, and it takes a few nights to settle."),
                                 Toast.LENGTH_LONG,
                             ).show()
                         },
-                    ) { Text("Recalibrate", style = NoopType.body, color = Palette.accent) }
+                    ) { Text(tr("Recalibrate"), style = NoopType.body, color = Palette.accent) }
                 },
                 dismissButton = {
                     TextButton(onClick = { showRecalibrateConfirm = false }) {
-                        Text("Cancel", style = NoopType.body, color = Palette.textSecondary)
+                        Text(tr("Cancel"), style = NoopType.body, color = Palette.textSecondary)
                     }
                 },
             )
@@ -1948,8 +1948,8 @@ fun SettingsScreen(vm: AppViewModel, onOpenTestCentre: () -> Unit = {}) {
 
         SettingsSection(
             icon = Icons.Filled.Storage,
-            title = "Backup & restore",
-            blurb = "Move all your NOOP data to another phone. Export saves everything (history, sleeps, workouts, settings) to a single file you can copy across; import replaces this phone's data with a backup.",
+            title = tr("Backup & restore"),
+            blurb = tr("Move all your NOOP data to another phone. Export saves everything (history, sleeps, workouts, settings) to a single file you can copy across; import replaces this phone's data with a backup."),
         ) {
             Column(verticalArrangement = Arrangement.spacedBy(16.dp)) {
                 // Three equal-width buttons share the row (each takes a third via weight) — mirrors the
@@ -1960,7 +1960,7 @@ fun SettingsScreen(vm: AppViewModel, onOpenTestCentre: () -> Unit = {}) {
                     horizontalArrangement = Arrangement.spacedBy(12.dp),
                 ) {
                     NoopButton(
-                        text = "Export…",
+                        text = tr("Export…"),
                         kind = NoopButtonKind.Primary,
                         enabled = !backupBusy,
                         modifier = Modifier.weight(1f),
@@ -1971,7 +1971,7 @@ fun SettingsScreen(vm: AppViewModel, onOpenTestCentre: () -> Unit = {}) {
                     )
 
                     NoopButton(
-                        text = "Import…",
+                        text = tr("Import…"),
                         kind = NoopButtonKind.Secondary,
                         enabled = !backupBusy,
                         modifier = Modifier.weight(1f),
@@ -1982,7 +1982,7 @@ fun SettingsScreen(vm: AppViewModel, onOpenTestCentre: () -> Unit = {}) {
                     )
 
                     NoopButton(
-                        text = "Export CSV…",
+                        text = tr("Export CSV…"),
                         kind = NoopButtonKind.Secondary,
                         enabled = !backupBusy,
                         modifier = Modifier.weight(1f),
@@ -2003,15 +2003,15 @@ fun SettingsScreen(vm: AppViewModel, onOpenTestCentre: () -> Unit = {}) {
                             strokeWidth = 2.dp,
                             modifier = Modifier.size(18.dp),
                         )
-                        Text("Working…", style = NoopType.footnote, color = Palette.textSecondary)
+                        Text(tr("Working…"), style = NoopType.footnote, color = Palette.textSecondary)
                     }
                 }
 
                 NoteRow(
                     icon = Icons.Filled.Info,
                     iconTint = Palette.textTertiary,
-                    text = "Importing overwrites everything currently on this phone. Your old data is kept in a side file just in case. NOOP needs a relaunch for an import to take effect. " +
-                        "Export CSV writes a WHOOP-format zip of your days, sleeps, workouts and journal that re-imports into NOOP on Android or Mac. On-device computed rows are marked APPROXIMATE in its Source column; the .noopbak backup stays the lossless restore path.",
+                    text = tr("Importing overwrites everything currently on this phone. Your old data is kept in a side file just in case. NOOP needs a relaunch for an import to take effect. ") +
+                        tr("Export CSV writes a WHOOP-format zip of your days, sleeps, workouts and journal that re-imports into NOOP on Android or Mac. On-device computed rows are marked APPROXIMATE in its Source column; the .noopbak backup stays the lossless restore path."),
                 )
             }
         }
@@ -2019,15 +2019,15 @@ fun SettingsScreen(vm: AppViewModel, onOpenTestCentre: () -> Unit = {}) {
         // --- About ---
         SettingsSection(
             icon = Icons.Filled.Info,
-            title = "About",
-            blurb = "NOOP: all your data, none of the cloud.",
+            title = tr("About"),
+            blurb = tr("NOOP: all your data, none of the cloud."),
         ) {
             Column(verticalArrangement = Arrangement.spacedBy(16.dp)) {
                 Row(
                     verticalAlignment = Alignment.CenterVertically,
                     horizontalArrangement = Arrangement.spacedBy(10.dp),
                 ) {
-                    Text("NOOP", style = NoopType.title2, color = Palette.textPrimary)
+                    Text(tr("NOOP"), style = NoopType.title2, color = Palette.textPrimary)
                     StatePill("v${BuildConfig.VERSION_NAME}", tone = StrandTone.Neutral, showsDot = false)
                 }
 
@@ -2052,12 +2052,12 @@ fun SettingsScreen(vm: AppViewModel, onOpenTestCentre: () -> Unit = {}) {
                             }
                         }
                         .padding(horizontal = 14.dp, vertical = 12.dp)
-                        .semantics { contentDescription = "Project home and source on GitHub" },
+                        .semantics { contentDescription = tr("Project home and source on GitHub") },
                 ) {
                     Column(verticalArrangement = Arrangement.spacedBy(2.dp)) {
-                        Text("Project home & source", style = NoopType.body, color = Palette.textPrimary)
+                        Text(tr("Project home & source"), style = NoopType.body, color = Palette.textPrimary)
                         Text(
-                            "GitHub: code, releases, issues and the wiki.",
+                            tr("GitHub: code, releases, issues and the wiki."),
                             style = NoopType.caption,
                             color = Palette.textTertiary,
                         )
@@ -2097,9 +2097,9 @@ fun SettingsScreen(vm: AppViewModel, onOpenTestCentre: () -> Unit = {}) {
                                     strokeWidth = 2.dp,
                                     color = Palette.accent,
                                 )
-                                Text("Checking…", style = NoopType.captionNumber)
+                                Text(tr("Checking…"), style = NoopType.captionNumber)
                             } else {
-                                Text("Check for updates", style = NoopType.captionNumber)
+                                Text(tr("Check for updates"), style = NoopType.captionNumber)
                             }
                         }
                         when (val r = updResult) {
@@ -2110,7 +2110,7 @@ fun SettingsScreen(vm: AppViewModel, onOpenTestCentre: () -> Unit = {}) {
                                 )
                             UpdateCheck.Result.Failed ->
                                 Text(
-                                    "Couldn't check. Try again.",
+                                    tr("Couldn't check. Try again."),
                                     style = NoopType.footnote, color = Palette.statusWarning,
                                 )
                             else -> {}
@@ -2142,7 +2142,7 @@ fun SettingsScreen(vm: AppViewModel, onOpenTestCentre: () -> Unit = {}) {
                                     )
                                 } else {
                                     NoopButton(
-                                        text = "Update",
+                                        text = tr("Update"),
                                         leadingIcon = Icons.Filled.Download,
                                         kind = NoopButtonKind.Primary,
                                         onClick = {
@@ -2154,7 +2154,7 @@ fun SettingsScreen(vm: AppViewModel, onOpenTestCentre: () -> Unit = {}) {
                                                     InAppUpdate.requestInstallPermission(context)
                                                     Toast.makeText(
                                                         context,
-                                                        "Allow installing apps, then tap Update again.",
+                                                        tr("Allow installing apps, then tap Update again."),
                                                         Toast.LENGTH_LONG,
                                                     ).show()
                                                 }
@@ -2172,7 +2172,7 @@ fun SettingsScreen(vm: AppViewModel, onOpenTestCentre: () -> Unit = {}) {
                                                             updDownloadPct = null
                                                             Toast.makeText(
                                                                 context,
-                                                                "Download failed — opening the release page.",
+                                                                tr("Download failed — opening the release page."),
                                                                 Toast.LENGTH_LONG,
                                                             ).show()
                                                             InAppUpdate.openReleasePage(context, avail.url)
@@ -2203,13 +2203,13 @@ fun SettingsScreen(vm: AppViewModel, onOpenTestCentre: () -> Unit = {}) {
                     }
 
                     Text(
-                        "Checks GitHub for the latest version when you tap. Nothing else is sent.",
+                        tr("Checks GitHub for the latest version when you tap. Nothing else is sent."),
                         style = NoopType.footnote, color = Palette.textTertiary,
                     )
                 }
 
                 Text(
-                    "A standalone companion for your WHOOP. Everything stays on this phone: your history, your live stream, your numbers. Nothing is uploaded.",
+                    tr("A standalone companion for your WHOOP. Everything stays on this phone: your history, your live stream, your numbers. Nothing is uploaded."),
                     style = NoopType.subhead,
                     color = Palette.textSecondary,
                 )
@@ -2242,9 +2242,9 @@ fun SettingsScreen(vm: AppViewModel, onOpenTestCentre: () -> Unit = {}) {
                             modifier = Modifier.size(18.dp),
                         )
                         Column(modifier = Modifier.weight(1f)) {
-                            Text("What's new", style = NoopType.headline, color = Palette.textPrimary)
+                            Text(tr("What's new"), style = NoopType.headline, color = Palette.textPrimary)
                             Text(
-                                "Recent changes and what to expect",
+                                tr("Recent changes and what to expect"),
                                 style = NoopType.footnote,
                                 color = Palette.textSecondary,
                             )
@@ -2268,7 +2268,7 @@ fun SettingsScreen(vm: AppViewModel, onOpenTestCentre: () -> Unit = {}) {
                             indication = null,
                         ) { showScoringGuide = true }
                         .padding(horizontal = 14.dp, vertical = 12.dp)
-                        .semantics { contentDescription = "How your scores work" },
+                        .semantics { contentDescription = tr("How your scores work") },
                 ) {
                     Row(
                         modifier = Modifier.fillMaxWidth(),
@@ -2282,9 +2282,9 @@ fun SettingsScreen(vm: AppViewModel, onOpenTestCentre: () -> Unit = {}) {
                             modifier = Modifier.size(18.dp),
                         )
                         Column(modifier = Modifier.weight(1f)) {
-                            Text("How your scores work", style = NoopType.headline, color = Palette.textPrimary)
+                            Text(tr("How your scores work"), style = NoopType.headline, color = Palette.textPrimary)
                             Text(
-                                "Charge, Effort and Rest, and how they differ from WHOOP",
+                                tr("Charge, Effort and Rest, and how they differ from WHOOP"),
                                 style = NoopType.footnote,
                                 color = Palette.textSecondary,
                             )
@@ -2309,7 +2309,7 @@ fun SettingsScreen(vm: AppViewModel, onOpenTestCentre: () -> Unit = {}) {
                             indication = null,
                         ) { showHowNoopWorks = true }
                         .padding(horizontal = 14.dp, vertical = 12.dp)
-                        .semantics { contentDescription = "How NOOP works" },
+                        .semantics { contentDescription = tr("How NOOP works") },
                 ) {
                     Row(
                         modifier = Modifier.fillMaxWidth(),
@@ -2323,9 +2323,9 @@ fun SettingsScreen(vm: AppViewModel, onOpenTestCentre: () -> Unit = {}) {
                             modifier = Modifier.size(18.dp),
                         )
                         Column(modifier = Modifier.weight(1f)) {
-                            Text("How NOOP works", style = NoopType.headline, color = Palette.textPrimary)
+                            Text(tr("How NOOP works"), style = NoopType.headline, color = Palette.textPrimary)
                             Text(
-                                "Sleep sorting, scores, recording, and where your numbers come from.",
+                                tr("Sleep sorting, scores, recording, and where your numbers come from."),
                                 style = NoopType.footnote,
                                 color = Palette.textSecondary,
                             )
@@ -2352,7 +2352,7 @@ fun SettingsScreen(vm: AppViewModel, onOpenTestCentre: () -> Unit = {}) {
                         modifier = Modifier.size(16.dp),
                     )
                     Text(
-                        "NOOP is not a medical device. It is for informational and personal-insight purposes only and is not intended to diagnose, treat, cure or prevent any condition. Talk to a clinician for medical advice.",
+                        tr("NOOP is not a medical device. It is for informational and personal-insight purposes only and is not intended to diagnose, treat, cure or prevent any condition. Talk to a clinician for medical advice."),
                         style = NoopType.footnote,
                         color = Palette.textSecondary,
                     )
@@ -2361,12 +2361,12 @@ fun SettingsScreen(vm: AppViewModel, onOpenTestCentre: () -> Unit = {}) {
                 RowDivider()
 
                 Column(verticalArrangement = Arrangement.spacedBy(6.dp)) {
-                    Overline("Built on")
-                    AttributionRow(repo = "my-whoop", note = "WHOOP 4.0 protocol")
-                    AttributionRow(repo = "goose", note = "WHOOP 5.0 protocol")
+                    Overline(tr("Built on"))
+                    AttributionRow(repo = "my-whoop", note = tr("WHOOP 4.0 protocol"))
+                    AttributionRow(repo = "goose", note = tr("WHOOP 5.0 protocol"))
                 }
                 Text(
-                    "Open-source BLE reverse-engineering work. Thank you.",
+                    tr("Open-source BLE reverse-engineering work. Thank you."),
                     style = NoopType.footnote,
                     color = Palette.textTertiary,
                 )
@@ -2401,7 +2401,7 @@ fun SettingsScreen(vm: AppViewModel, onOpenTestCentre: () -> Unit = {}) {
                         verticalAlignment = Alignment.CenterVertically,
                     ) {
                         Column(modifier = Modifier.weight(1f)) {
-                            Text("Support & project home", style = NoopType.headline, color = Palette.textPrimary)
+                            Text(tr("Support & project home"), style = NoopType.headline, color = Palette.textPrimary)
                             Text(
                                 "Code, releases, and where to report an issue: $PROJECT_URL",
                                 style = NoopType.footnote,
@@ -2545,10 +2545,10 @@ private fun waistInchesStep(current: Double, up: Boolean): Double {
 // MARK: - Strap status helpers (mirror SettingsView's computed properties)
 
 private fun strapStatusTitle(bonded: Boolean, connected: Boolean): String = when {
-    bonded && connected -> "Bonded · streaming"
-    connected -> "Connected"
-    bonded -> "Bonded · idle"
-    else -> "Disconnected"
+    bonded && connected -> tr("Bonded · streaming")
+    connected -> tr("Connected")
+    bonded -> tr("Bonded · idle")
+    else -> tr("Disconnected")
 }
 
 private fun strapTone(bonded: Boolean, connected: Boolean): StrandTone = when {
@@ -2559,11 +2559,11 @@ private fun strapTone(bonded: Boolean, connected: Boolean): StrandTone = when {
 
 // `internal` (not private) so the unit test in the same package can assert the scanning branch.
 internal fun strapStatusDetail(bonded: Boolean, connected: Boolean, scanning: Boolean): String = when {
-    scanning -> "Searching for your WHOOP… make sure it's charged, on your wrist, and the official WHOOP app isn't connected to it."
-    bonded && connected -> "Your strap is paired and sending data. Open Live for a real-time heart rate."
-    connected -> "Connected. Finishing the secure pairing handshake…"
-    bonded -> "Previously paired but not currently connected. Re-scan to reconnect."
-    else -> "No strap connected. Put your WHOOP nearby and tap Re-scan to pair."
+    scanning -> tr("Searching for your WHOOP… make sure it's charged, on your wrist, and the official WHOOP app isn't connected to it.")
+    bonded && connected -> tr("Your strap is paired and sending data. Open Live for a real-time heart rate.")
+    connected -> tr("Connected. Finishing the secure pairing handshake…")
+    bonded -> tr("Previously paired but not currently connected. Re-scan to reconnect.")
+    else -> tr("No strap connected. Put your WHOOP nearby and tap Re-scan to pair.")
 }
 
 private fun batteryTone(pct: Double): StrandTone = when {
@@ -2633,7 +2633,7 @@ private fun SettingsDisclosure(
                 )
                 .semantics {
                     contentDescription = title
-                    stateDescription = if (expanded) "Expanded" else "Collapsed"
+                    stateDescription = if (expanded) tr("Expanded") else tr("Collapsed")
                 },
             verticalAlignment = Alignment.CenterVertically,
             horizontalArrangement = Arrangement.spacedBy(12.dp),
@@ -2671,7 +2671,7 @@ private fun SettingsSection(
     NoopCard(padding = 20.dp, tint = Palette.accent) {
         Column(verticalArrangement = Arrangement.spacedBy(16.dp)) {
             Column(verticalArrangement = Arrangement.spacedBy(2.dp)) {
-                Overline("Settings")
+                Overline(tr("Settings"))
                 Row(
                     verticalAlignment = Alignment.CenterVertically,
                     horizontalArrangement = Arrangement.spacedBy(10.dp),

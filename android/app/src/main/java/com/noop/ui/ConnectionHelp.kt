@@ -65,12 +65,12 @@ fun ConnectionHelp(viewModel: AppViewModel, modifier: Modifier = Modifier) {
     if (live.whoop5Detected) {
         NoopCard(modifier = modifier) {
             Column(verticalArrangement = Arrangement.spacedBy(8.dp)) {
-                Text("WHOOP 5 / MG (experimental)", style = NoopType.headline, color = Palette.textPrimary)
+                Text(tr("WHOOP 5 / MG (experimental)"), style = NoopType.headline, color = Palette.textPrimary)
                 Text(
-                    "Your strap is connected and we're trying an experimental handshake to bring up live " +
-                        "heart rate from the standard profile. This isn't verified on 5/MG hardware yet, so " +
-                        "HR may or may not appear, and deeper metrics (recovery, strain, sleep) aren't " +
-                        "decoded for 5/MG yet. Nothing's wrong with your strap - WHOOP 4.0 is fully supported.",
+                    tr("Your strap is connected and we're trying an experimental handshake to bring up live ") +
+                        tr("heart rate from the standard profile. This isn't verified on 5/MG hardware yet, so ") +
+                        tr("HR may or may not appear, and deeper metrics (recovery, strain, sleep) aren't ") +
+                        tr("decoded for 5/MG yet. Nothing's wrong with your strap - WHOOP 4.0 is fully supported."),
                     style = NoopType.footnote,
                     color = Palette.textSecondary,
                 )
@@ -81,22 +81,22 @@ fun ConnectionHelp(viewModel: AppViewModel, modifier: Modifier = Modifier) {
 
     NoopCard(modifier = modifier) {
         Column(verticalArrangement = Arrangement.spacedBy(14.dp)) {
-            Text("Won't connect? Run through these", style = NoopType.headline, color = Palette.textPrimary)
+            Text(tr("Won't connect? Run through these"), style = NoopType.headline, color = Palette.textPrimary)
 
             HelpStep(
                 done = !whoopInstalled,
-                title = "Close the official WHOOP app",
-                body = "Your strap only pairs with ONE app at a time. If the WHOOP app is connected, " +
-                    "NOOP can't reach the strap. Force stop it (swiping it out of recents isn't enough).",
-                actionLabel = if (whoopInstalled) "Open WHOOP app, then Force stop" else "WHOOP app isn't installed",
+                title = tr("Close the official WHOOP app"),
+                body = tr("Your strap only pairs with ONE app at a time. If the WHOOP app is connected, ") +
+                    tr("NOOP can't reach the strap. Force stop it (swiping it out of recents isn't enough)."),
+                actionLabel = if (whoopInstalled) tr("Open WHOOP app, then Force stop") else tr("WHOOP app isn't installed"),
                 enabled = whoopInstalled,
                 onAction = { openAppInfo(context, WHOOP_PACKAGE) },
             )
             HelpStep(
                 done = btOn,
-                title = "Turn Bluetooth on",
-                body = if (btOn) "Bluetooth is on." else "Bluetooth is currently off.",
-                actionLabel = if (!btOn) "Turn on Bluetooth" else null,
+                title = tr("Turn Bluetooth on"),
+                body = if (btOn) tr("Bluetooth is on.") else tr("Bluetooth is currently off."),
+                actionLabel = if (!btOn) tr("Turn on Bluetooth") else null,
                 enabled = !btOn,
                 onAction = {
                     runCatching { enableBtLauncher.launch(Intent(BluetoothAdapter.ACTION_REQUEST_ENABLE)) }
@@ -104,18 +104,18 @@ fun ConnectionHelp(viewModel: AppViewModel, modifier: Modifier = Modifier) {
             )
             HelpStep(
                 done = permGranted,
-                title = "Allow Nearby devices",
-                body = if (permGranted) "Permission granted."
-                else "On Android 12+, \"Nearby devices\" is the Bluetooth permission. NOOP needs it to find your strap.",
-                actionLabel = if (!permGranted) "Grant permission" else null,
+                title = tr("Allow Nearby devices"),
+                body = if (permGranted) tr("Permission granted.")
+                else tr("On Android 12+, \"Nearby devices\" is the Bluetooth permission. NOOP needs it to find your strap."),
+                actionLabel = if (!permGranted) tr("Grant permission") else null,
                 enabled = !permGranted,
                 onAction = { permLauncher.launch(perms) },
             )
             HelpStep(
                 done = false,
-                title = "Charge it and put it on",
-                body = "A flat or off-wrist strap won't advertise, so nothing shows up. A real phone is " +
-                    "required too: an emulator has no Bluetooth.",
+                title = tr("Charge it and put it on"),
+                body = tr("A flat or off-wrist strap won't advertise, so nothing shows up. A real phone is ") +
+                    tr("required too: an emulator has no Bluetooth."),
                 actionLabel = null,
                 enabled = false,
                 onAction = {},
@@ -124,7 +124,7 @@ fun ConnectionHelp(viewModel: AppViewModel, modifier: Modifier = Modifier) {
             OutlinedButton(
                 onClick = { if (permGranted) viewModel.connect() else permLauncher.launch(perms) },
                 modifier = Modifier.fillMaxWidth(),
-            ) { Text("Try connecting now", style = NoopType.body) }
+            ) { Text(tr("Try connecting now"), style = NoopType.body) }
         }
     }
 }

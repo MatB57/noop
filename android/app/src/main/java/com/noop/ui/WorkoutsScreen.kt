@@ -197,8 +197,8 @@ fun WorkoutsScreen(vm: AppViewModel) {
     // scaffold is untouched. The All-Sessions list still lives inside its single enclosing card (appearance
     // is byte-identical) — see the report note on why it isn't flattened to top-level items here.
     LazyScreenScaffold(
-        title = "Workouts",
-        subtitle = "Every session, threaded together.",
+        title = tr("Workouts"),
+        subtitle = tr("Every session, threaded together."),
         // LIQUID SKY BACKDROP (the pilot pattern — LiquidScreenSky.kt): the time-of-day liquid sky settles
         // into the theme canvas behind the header + top rows (bled full-width up behind the status bar via
         // the scaffold's topBackground plumbing), and the cards float OVER it on the flat surface below. The
@@ -322,7 +322,7 @@ private data class DialogTarget(val editing: WorkoutRow?)
 private fun EmptyWorkouts(loaded: Boolean, onAdd: () -> Unit) {
     Column(verticalArrangement = Arrangement.spacedBy(16.dp)) {
         DataPendingNote(
-            title = "No workouts yet",
+            title = tr("No workouts yet"),
             body = "No workouts yet. They come from your WHOOP and Apple Health history. " +
                 "Import in Data Sources to bring them in, or add one you tracked elsewhere.",
         )
@@ -373,7 +373,7 @@ private fun AddWorkoutButton(onAdd: () -> Unit) {
     ) {
         Icon(Icons.Filled.Add, contentDescription = null, tint = Palette.accent, modifier = Modifier.size(16.dp))
         Spacer(Modifier.width(6.dp))
-        Text("Add workout", style = NoopType.subhead, color = Palette.accent)
+        Text(tr("Add workout"), style = NoopType.subhead, color = Palette.accent)
     }
 }
 
@@ -454,12 +454,12 @@ private fun FilterBar(
             verticalAlignment = Alignment.CenterVertically,
         ) {
             FilterPillMenu(
-                title = filter.sport ?: "All sports",
+                title = filter.sport ?: tr("All sports"),
                 active = filter.sport != null,
-                contentDescription = "Filter by sport",
+                contentDescription = tr("Filter by sport"),
             ) { dismiss ->
                 DropdownMenuItem(
-                    text = { Text("All sports", style = NoopType.body, color = Palette.textPrimary) },
+                    text = { Text(tr("All sports"), style = NoopType.body, color = Palette.textPrimary) },
                     onClick = { onSport(null); dismiss() },
                 )
                 availableSports.forEach { s ->
@@ -470,12 +470,12 @@ private fun FilterBar(
                 }
             }
             FilterPillMenu(
-                title = filter.sourceClass?.let { sourceFilterLabel(it) } ?: "All sources",
+                title = filter.sourceClass?.let { sourceFilterLabel(it) } ?: tr("All sources"),
                 active = filter.sourceClass != null,
-                contentDescription = "Filter by source",
+                contentDescription = tr("Filter by source"),
             ) { dismiss ->
                 DropdownMenuItem(
-                    text = { Text("All sources", style = NoopType.body, color = Palette.textPrimary) },
+                    text = { Text(tr("All sources"), style = NoopType.body, color = Palette.textPrimary) },
                     onClick = { onSource(null); dismiss() },
                 )
                 SOURCE_FILTER_OPTIONS.forEach { opt ->
@@ -491,12 +491,12 @@ private fun FilterBar(
                         .clip(RoundedCornerShape(50))
                         .clickable(onClick = onClear)
                         .padding(horizontal = 8.dp, vertical = 6.dp)
-                        .semantics { contentDescription = "Clear filters" },
+                        .semantics { contentDescription = tr("Clear filters") },
                     verticalAlignment = Alignment.CenterVertically,
                 ) {
                     Icon(Icons.Filled.Close, contentDescription = null, tint = Palette.textSecondary, modifier = Modifier.size(14.dp))
                     Spacer(Modifier.width(4.dp))
-                    Text("Clear", style = NoopType.footnote, color = Palette.textSecondary)
+                    Text(tr("Clear"), style = NoopType.footnote, color = Palette.textSecondary)
                 }
             }
         }
@@ -507,11 +507,11 @@ private fun FilterBar(
             trailingIcon = {
                 if (filter.search.isNotEmpty()) {
                     IconButton(onClick = { onSearch("") }) {
-                        Icon(Icons.Filled.Close, contentDescription = "Clear search", tint = Palette.textTertiary, modifier = Modifier.size(16.dp))
+                        Icon(Icons.Filled.Close, contentDescription = tr("Clear search"), tint = Palette.textTertiary, modifier = Modifier.size(16.dp))
                     }
                 }
             },
-            placeholder = { Text("Search sport", style = NoopType.body, color = Palette.textTertiary) },
+            placeholder = { Text(tr("Search sport"), style = NoopType.body, color = Palette.textTertiary) },
             singleLine = true,
             colors = workoutFieldColors(),
             modifier = Modifier.fillMaxWidth(),
@@ -565,11 +565,11 @@ private fun MergeSportDialog(onDismiss: () -> Unit, onPick: (String) -> Unit) {
     AlertDialog(
         onDismissRequest = onDismiss,
         containerColor = Palette.surfaceOverlay,
-        title = { Text("Name the merged session", style = NoopType.title2, color = Palette.textPrimary) },
+        title = { Text(tr("Name the merged session"), style = NoopType.title2, color = Palette.textPrimary) },
         text = {
             Column(verticalArrangement = Arrangement.spacedBy(12.dp)) {
                 Text(
-                    "These sessions have no sport label yet. Pick one for the merged session.",
+                    tr("These sessions have no sport label yet. Pick one for the merged session."),
                     style = NoopType.footnote,
                     color = Palette.textSecondary,
                 )
@@ -578,11 +578,11 @@ private fun MergeSportDialog(onDismiss: () -> Unit, onPick: (String) -> Unit) {
         },
         confirmButton = {
             TextButton(onClick = { if (sport.isNotBlank()) onPick(sport.trim()) }, enabled = sport.isNotBlank()) {
-                Text("Merge", style = NoopType.body, color = if (sport.isNotBlank()) Palette.accent else Palette.textTertiary)
+                Text(tr("Merge"), style = NoopType.body, color = if (sport.isNotBlank()) Palette.accent else Palette.textTertiary)
             }
         },
         dismissButton = {
-            TextButton(onClick = onDismiss) { Text("Cancel", style = NoopType.body, color = Palette.textSecondary) }
+            TextButton(onClick = onDismiss) { Text(tr("Cancel"), style = NoopType.body, color = Palette.textSecondary) }
         },
     )
 }
@@ -642,7 +642,7 @@ private fun EffortHero(
                 horizontalAlignment = Alignment.CenterHorizontally,
                 verticalArrangement = Arrangement.spacedBy(18.dp),
             ) {
-                Overline("Typical effort", color = Palette.effortColor)
+                Overline(tr("Typical effort"), color = Palette.effortColor)
                 Box(modifier = Modifier.size(140.dp), contentAlignment = Alignment.Center) {
                     LiquidVessel(
                         value = fraction,
@@ -678,8 +678,8 @@ private fun EffortHero(
                     color = Palette.textPrimary,
                 )
                 Row(horizontalArrangement = Arrangement.spacedBy(Metrics.gap), modifier = Modifier.fillMaxWidth()) {
-                    HeroStat("Sessions", "${rows.size}", Palette.effortColor, Modifier.weight(1f))
-                    HeroStat("Active", oneDecimal(totalTimeH) + "h", Palette.textPrimary, Modifier.weight(1f))
+                    HeroStat(tr("Sessions"), "${rows.size}", Palette.effortColor, Modifier.weight(1f))
+                    HeroStat(tr("Active"), oneDecimal(totalTimeH) + "h", Palette.textPrimary, Modifier.weight(1f))
                 }
                 Text(
                     if (modal != null) "Mostly ${WorkoutEditing.displaySport(modal.sport)} (${effectiveRange.caption})."
@@ -721,7 +721,7 @@ private fun SummarySection(
         { m ->
             StatTile(
                 modifier = m,
-                label = "Total Workouts",
+                label = tr("Total Workouts"),
                 value = "$totalCount",
                 caption = effectiveRange.caption,
                 accent = Palette.effortColor,
@@ -730,7 +730,7 @@ private fun SummarySection(
         { m ->
             StatTile(
                 modifier = m,
-                label = "Total Time",
+                label = tr("Total Time"),
                 value = oneDecimal(totalTimeH) + "h",
                 caption = "active",
                 accent = Palette.textPrimary,
@@ -739,7 +739,7 @@ private fun SummarySection(
         { m ->
             StatTile(
                 modifier = m,
-                label = "Total Calories",
+                label = tr("Total Calories"),
                 value = grouped(totalKcal),
                 caption = "kcal",
                 accent = Palette.metricAmber,
@@ -748,7 +748,7 @@ private fun SummarySection(
         { m ->
             StatTile(
                 modifier = m,
-                label = "Total Distance",
+                label = tr("Total Distance"),
                 value = UnitFormatter.distanceFromKilometers(totalKm, unitSystem),
                 caption = "covered",
                 accent = Palette.metricCyan,
@@ -757,7 +757,7 @@ private fun SummarySection(
         { m ->
             StatTile(
                 modifier = m,
-                label = "Most Active",
+                label = tr("Most Active"),
                 value = modal?.sport ?: "–",
                 caption = modal?.let { "${it.count} session${if (it.count == 1) "" else "s"}" },
                 accent = Palette.textPrimary,
@@ -782,8 +782,8 @@ private fun SummarySection(
 private fun BreakdownSection(groups: List<SportGroup>, rows: List<WorkoutRow>) {
     Column(verticalArrangement = Arrangement.spacedBy(Metrics.gap)) {
         SectionHeader(
-            title = "Activity Breakdown",
-            overline = "By sport",
+            title = tr("Activity Breakdown"),
+            overline = tr("By sport"),
             trailing = "${groups.size} sport${if (groups.size == 1) "" else "s"}",
         )
         // This sport's own sessions, so each card can carry an HR-zone mini-bar.
@@ -828,10 +828,10 @@ private fun SportCard(g: SportGroup, zones: ZoneSummary?) {
             CardDivider()
             // Identical 4-up stat strip for every card.
             Row(modifier = Modifier.fillMaxWidth()) {
-                MiniStat("Sessions", "${g.count}", Modifier.weight(1f))
-                MiniStat("Time", oneDecimal(g.totalTimeH) + "h", Modifier.weight(1f))
-                MiniStat("Kcal", grouped(g.totalKcal), Modifier.weight(1f), tint = Palette.metricAmber)
-                MiniStat("Avg/sess", "${g.avgTimePerSessionMin.roundToInt()}m", Modifier.weight(1f))
+                MiniStat(tr("Sessions"), "${g.count}", Modifier.weight(1f))
+                MiniStat(tr("Time"), oneDecimal(g.totalTimeH) + "h", Modifier.weight(1f))
+                MiniStat(tr("Kcal"), grouped(g.totalKcal), Modifier.weight(1f), tint = Palette.metricAmber)
+                MiniStat(tr("Avg/sess"), "${g.avgTimePerSessionMin.roundToInt()}m", Modifier.weight(1f))
             }
         }
     }
@@ -858,8 +858,8 @@ private fun ZonesSection(rows: List<WorkoutRow>) {
     val z = remember(rows) { zoneSummary(rows) } ?: return
     Column(verticalArrangement = Arrangement.spacedBy(Metrics.gap)) {
         SectionHeader(
-            title = "HR Zones",
-            overline = "Whoop import",
+            title = tr("HR Zones"),
+            overline = tr("Whoop import"),
             trailing = "${z.sessionsWithZones} of ${rows.size} session${if (rows.size == 1) "" else "s"}",
         )
         NoopCard(tint = Palette.effortColor) {
@@ -880,7 +880,7 @@ private fun ZonesSection(rows: List<WorkoutRow>) {
                     }
                 }
                 Text(
-                    "Share of imported zone time, duration-weighted across sessions (approximate).",
+                    tr("Share of imported zone time, duration-weighted across sessions (approximate)."),
                     style = NoopType.footnote,
                     color = Palette.textTertiary,
                 )
@@ -948,7 +948,7 @@ private fun SessionsSection(
     Column(verticalArrangement = Arrangement.spacedBy(Metrics.gap)) {
         Row(verticalAlignment = Alignment.CenterVertically) {
             Box(modifier = Modifier.weight(1f)) {
-                SectionHeader(title = "All Sessions", overline = "Log", trailing = "${rows.size} total")
+                SectionHeader(title = tr("All Sessions"), overline = tr("Log"), trailing = "${rows.size} total")
             }
             if (anySelectable) SelectPill(selectionMode, onToggleSelectMode)
         }
@@ -1010,12 +1010,12 @@ private fun SelectPill(selectionMode: Boolean, onToggle: () -> Unit) {
             .clickable(onClick = onToggle)
             .padding(horizontal = 12.dp, vertical = 6.dp)
             .semantics {
-                contentDescription = if (selectionMode) "Finish selecting" else "Select sessions to merge or delete"
+                contentDescription = if (selectionMode) tr("Finish selecting") else tr("Select sessions to merge or delete")
             },
         verticalAlignment = Alignment.CenterVertically,
     ) {
         Text(
-            if (selectionMode) "Done" else "Select",
+            if (selectionMode) tr("Done") else tr("Select"),
             style = NoopType.footnote,
             color = if (selectionMode) Palette.effortColor else Palette.accent,
         )
@@ -1053,7 +1053,7 @@ private fun SelectionToolbar(
         )
         Spacer(Modifier.weight(1f))
         Text(
-            "Cancel",
+            tr("Cancel"),
             style = NoopType.subhead,
             color = Palette.textSecondary,
             modifier = Modifier.clickable(onClick = onCancel).padding(4.dp),
@@ -1093,12 +1093,12 @@ private fun SessionHeaderRow(selectionMode: Boolean = false) {
         // #64: a leading spacer over the per-row selection glyph, so the columns stay aligned in select mode.
         if (selectionMode) Spacer(Modifier.width(30.dp))
         // Weights mirror SessionRow (#157: Date widened for the time range, taken from Sport).
-        ColHeader("Date", Modifier.weight(1.7f), TextAlign.Start)
-        ColHeader("Sport", Modifier.weight(1.3f), TextAlign.Start)
-        ColHeader("Dur", Modifier.weight(1f), TextAlign.End)
-        ColHeader("HR", Modifier.weight(1.1f), TextAlign.End)
-        ColHeader("Kcal", Modifier.weight(1f), TextAlign.End)
-        ColHeader("Src", Modifier.weight(1f), TextAlign.End)
+        ColHeader(tr("Date"), Modifier.weight(1.7f), TextAlign.Start)
+        ColHeader(tr("Sport"), Modifier.weight(1.3f), TextAlign.Start)
+        ColHeader(tr("Dur"), Modifier.weight(1f), TextAlign.End)
+        ColHeader(tr("HR"), Modifier.weight(1.1f), TextAlign.End)
+        ColHeader(tr("Kcal"), Modifier.weight(1f), TextAlign.End)
+        ColHeader(tr("Src"), Modifier.weight(1f), TextAlign.End)
         // Trailing spacer column over the per-row overflow menu, so headers line up with the cells.
         Spacer(Modifier.width(32.dp))
     }
@@ -1281,16 +1281,16 @@ private fun WorkoutDetailSheet(vm: AppViewModel, row: WorkoutRow, onDismiss: () 
                 SourceBadge(srcLabel, tint = srcTint)
             }
             CardDivider()
-            DetailRow("Time", timeRangeLabel(row.startTs, row.endTs))
-            DetailRow("Duration", durationLabel(row.durationS))
-            if (row.avgHr != null) DetailRow("Avg HR", "${row.avgHr} bpm")
-            if (row.maxHr != null) DetailRow("Max HR", "${row.maxHr} bpm")
-            if (row.energyKcal != null) DetailRow("Calories", "${grouped(row.energyKcal)} kcal")
+            DetailRow(tr("Time"), timeRangeLabel(row.startTs, row.endTs))
+            DetailRow(tr("Duration"), durationLabel(row.durationS))
+            if (row.avgHr != null) DetailRow(tr("Avg HR"), "${row.avgHr} bpm")
+            if (row.maxHr != null) DetailRow(tr("Max HR"), "${row.maxHr} bpm")
+            if (row.energyKcal != null) DetailRow(tr("Calories"), "${grouped(row.energyKcal)} kcal")
             if (row.distanceM != null) {
                 val unitSystem = UnitPrefs.system(LocalContext.current)
-                DetailRow("Distance", UnitFormatter.distanceFromKilometers(row.distanceM / 1000.0, unitSystem))
+                DetailRow(tr("Distance"), UnitFormatter.distanceFromKilometers(row.distanceM / 1000.0, unitSystem))
             }
-            if (!row.notes.isNullOrBlank()) DetailRow("Notes", row.notes)
+            if (!row.notes.isNullOrBlank()) DetailRow(tr("Notes"), row.notes)
 
             // #796 - per-session Effort contribution. The session's captured strain re-homed from a plain
             // value row into a prominent Effort-amber card (the big count-up value + the "This session"
@@ -1307,7 +1307,7 @@ private fun WorkoutDetailSheet(vm: AppViewModel, row: WorkoutRow, onDismiss: () 
             // HR curve over the session window (#410). A faint baseline shows under 2 points.
             if (hrCurve.size > 1) {
                 CardDivider()
-                Overline("Heart rate")
+                Overline(tr("Heart rate"))
                 LineChart(
                     values = hrCurve,
                     modifier = Modifier.height(Metrics.compactChartHeight),
@@ -1317,9 +1317,9 @@ private fun WorkoutDetailSheet(vm: AppViewModel, row: WorkoutRow, onDismiss: () 
                 Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.spacedBy(12.dp)) {
                     val lo = hrCurve.minOrNull()?.roundToInt() ?: 0
                     val hi = hrCurve.maxOrNull()?.roundToInt() ?: 0
-                    MiniStat("Avg", row.avgHr?.let { "$it bpm" } ?: "–", Modifier.weight(1f))
-                    MiniStat("Peak", (row.maxHr ?: hi).let { "$it bpm" }, Modifier.weight(1f))
-                    MiniStat("Low", "$lo bpm", Modifier.weight(1f))
+                    MiniStat(tr("Avg"), row.avgHr?.let { "$it bpm" } ?: "–", Modifier.weight(1f))
+                    MiniStat(tr("Peak"), (row.maxHr ?: hi).let { "$it bpm" }, Modifier.weight(1f))
+                    MiniStat(tr("Low"), "$lo bpm", Modifier.weight(1f))
                 }
                 // #18: the Avg HR shown above can be EDITED on the manual sheet while the graph, zones and
                 // Effort stay from the recorded session (preservingCaptured keeps the captured strain/zones).
@@ -1330,7 +1330,7 @@ private fun WorkoutDetailSheet(vm: AppViewModel, row: WorkoutRow, onDismiss: () 
                 val captured = row.strain != null || !row.zonesJSON.isNullOrEmpty()
                 if (captured && row.avgHr != null && kotlin.math.abs(row.avgHr - traceMean) > 3.0) {
                     Text(
-                        "The average above was edited. The graph, zones and Effort stay from the recorded session.",
+                        tr("The average above was edited. The graph, zones and Effort stay from the recorded session."),
                         style = NoopType.footnote,
                         color = Palette.textTertiary,
                     )
@@ -1343,9 +1343,9 @@ private fun WorkoutDetailSheet(vm: AppViewModel, row: WorkoutRow, onDismiss: () 
                 if (total > 0.0) {
                     CardDivider()
                     Row(modifier = Modifier.fillMaxWidth(), verticalAlignment = Alignment.CenterVertically) {
-                        Overline("HR zones", modifier = Modifier.weight(1f))
+                        Overline(tr("HR zones"), modifier = Modifier.weight(1f))
                         Text(
-                            if (zonesFromImport) "Whoop import" else "From strap HR",
+                            if (zonesFromImport) tr("Whoop import") else tr("From strap HR"),
                             style = NoopType.footnote,
                             color = Palette.textTertiary,
                         )
@@ -1359,7 +1359,7 @@ private fun WorkoutDetailSheet(vm: AppViewModel, row: WorkoutRow, onDismiss: () 
                         z.forEachIndexed { i, m -> ZoneStat(i + 1, m, total, Modifier.weight(1f)) }
                     }
                     Text(
-                        if (zonesFromImport) "WHOOP's imported per-zone split for this session."
+                        if (zonesFromImport) tr("WHOOP's imported per-zone split for this session.")
                         else "Time in each %HRmax zone, derived from the strap's heart rate over this window (approximate).",
                         style = NoopType.footnote,
                         color = Palette.textTertiary,
@@ -1381,7 +1381,7 @@ private fun WorkoutDetailSheet(vm: AppViewModel, row: WorkoutRow, onDismiss: () 
 private fun SessionEffortCard(strain: Double, effortScale: EffortScale) {
     val shown = UnitFormatter.effortValue(strain, effortScale)
     Column(verticalArrangement = Arrangement.spacedBy(Metrics.space8)) {
-        SectionHeader("Effort", overline = "This session")
+        SectionHeader(tr("Effort"), overline = tr("This session"))
         NoopCard(tint = Palette.effortColor) {
             Row(
                 verticalAlignment = Alignment.CenterVertically,
@@ -1403,13 +1403,13 @@ private fun SessionEffortCard(strain: Double, effortScale: EffortScale) {
                         color = Palette.effortBright,
                     )
                     Text(
-                        if (effortScale == EffortScale.WHOOP) "strain (0-21)" else "Effort (0-100)",
+                        if (effortScale == EffortScale.WHOOP) tr("strain (0-21)") else tr("Effort (0-100)"),
                         style = NoopType.footnote,
                         color = Palette.textTertiary,
                     )
                 }
                 Text(
-                    "This session's contribution to the day's Effort, as captured during the workout.",
+                    tr("This session's contribution to the day's Effort, as captured during the workout."),
                     style = NoopType.subhead,
                     color = Palette.textSecondary,
                     modifier = Modifier.weight(1f),
@@ -1456,38 +1456,38 @@ private fun RowActionsMenu(
     var relabelOpen by remember { mutableStateOf(false) }
     Box {
         IconButton(onClick = { open = true }, modifier = Modifier.size(32.dp)) {
-            Icon(Icons.Filled.MoreVert, contentDescription = "Workout actions",
+            Icon(Icons.Filled.MoreVert, contentDescription = tr("Workout actions"),
                 tint = Palette.textTertiary, modifier = Modifier.size(18.dp))
         }
         DropdownMenu(expanded = open, onDismissRequest = { open = false }) {
             when (WorkoutEditing.classify(row.source)) {
                 WorkoutSource.DETECTED -> {
                     DropdownMenuItem(
-                        text = { Text("Re-label as…", style = NoopType.body, color = Palette.textPrimary) },
+                        text = { Text(tr("Re-label as…"), style = NoopType.body, color = Palette.textPrimary) },
                         onClick = { open = false; relabelOpen = true },
                     )
                     DropdownMenuItem(
-                        text = { Text("Edit details…", style = NoopType.body, color = Palette.textPrimary) },
+                        text = { Text(tr("Edit details…"), style = NoopType.body, color = Palette.textPrimary) },
                         onClick = { open = false; onEdit(row) },
                     )
                     DropdownMenuItem(
-                        text = { Text("Dismiss (not a workout)", style = NoopType.body, color = Palette.statusCritical) },
+                        text = { Text(tr("Dismiss (not a workout)"), style = NoopType.body, color = Palette.statusCritical) },
                         onClick = { open = false; onDismiss(row) },
                     )
                 }
                 WorkoutSource.MANUAL -> {
                     DropdownMenuItem(
-                        text = { Text("Edit…", style = NoopType.body, color = Palette.textPrimary) },
+                        text = { Text(tr("Edit…"), style = NoopType.body, color = Palette.textPrimary) },
                         onClick = { open = false; onEdit(row) },
                     )
                     DropdownMenuItem(
-                        text = { Text("Delete", style = NoopType.body, color = Palette.statusCritical) },
+                        text = { Text(tr("Delete"), style = NoopType.body, color = Palette.statusCritical) },
                         onClick = { open = false; onDelete(row) },
                     )
                 }
                 WorkoutSource.WHOOP, WorkoutSource.APPLE, WorkoutSource.LIFTING, WorkoutSource.ACTIVITY_FILE -> {
                     DropdownMenuItem(
-                        text = { Text("Duplicate as manual…", style = NoopType.body, color = Palette.textPrimary) },
+                        text = { Text(tr("Duplicate as manual…"), style = NoopType.body, color = Palette.textPrimary) },
                         onClick = { open = false; onEdit(row.copy(source = "manual", sport = WorkoutEditing.displaySport(row.sport))) },
                     )
                 }
@@ -1595,7 +1595,7 @@ private fun ManualWorkoutDialog(
                     )
                 }
                 Spacer(Modifier.width(10.dp))
-                Text(if (editing == null) "Add Workout" else "Edit Workout",
+                Text(if (editing == null) tr("Add Workout") else tr("Edit Workout"),
                     style = NoopType.title2, color = Palette.textPrimary)
             }
         },
@@ -1603,12 +1603,12 @@ private fun ManualWorkoutDialog(
             Column(verticalArrangement = Arrangement.spacedBy(12.dp)) {
                 SportPickerField(sport, onChange = { sport = it })
                 StartTimeField(startMillis, onPick = { startMillis = it })
-                DialogField("Duration (minutes)", durationMin, onChange = { durationMin = it }, numeric = true)
-                DialogField("Avg HR (bpm, optional)", avgHr, onChange = { avgHr = it }, numeric = true)
-                DialogField("Calories (kcal, optional)", kcal, onChange = { kcal = it }, numeric = true)
+                DialogField(tr("Duration (minutes)"), durationMin, onChange = { durationMin = it }, numeric = true)
+                DialogField(tr("Avg HR (bpm, optional)"), avgHr, onChange = { avgHr = it }, numeric = true)
+                DialogField(tr("Calories (kcal, optional)"), kcal, onChange = { kcal = it }, numeric = true)
                 if (built == null) {
                     Text(
-                        "Enter a sport, a positive duration (≤ 24h), and valid HR (25-250) / calories (0-20,000).",
+                        tr("Enter a sport, a positive duration (≤ 24h), and valid HR (25-250) / calories (0-20,000)."),
                         style = NoopType.footnote, color = Palette.statusWarning,
                     )
                 }
@@ -1618,7 +1618,7 @@ private fun ManualWorkoutDialog(
                 // We do NOT re-score from one number. Parity with macOS ManualWorkoutSheet.avgHrEditedNote.
                 if (built != null && WorkoutEditing.avgHrEdited(built, editing)) {
                     Text(
-                        "Avg HR is shown as typed. The HR graph, zones and Effort stay from the recorded session.",
+                        tr("Avg HR is shown as typed. The HR graph, zones and Effort stay from the recorded session."),
                         style = NoopType.footnote, color = Palette.statusWarning,
                     )
                 }
@@ -1634,13 +1634,13 @@ private fun ManualWorkoutDialog(
                 c == WorkoutSource.MANUAL || c == WorkoutSource.DETECTED
             }
             TextButton(onClick = { built?.let { onSave(it, replacing) } }, enabled = built != null) {
-                Text(if (editing == null) "Add" else "Save",
+                Text(if (editing == null) tr("Add") else tr("Save"),
                     style = NoopType.body, color = if (built != null) Palette.accent else Palette.textTertiary)
             }
         },
         dismissButton = {
             TextButton(onClick = onDismiss) {
-                Text("Cancel", style = NoopType.body, color = Palette.textSecondary)
+                Text(tr("Cancel"), style = NoopType.body, color = Palette.textSecondary)
             }
         },
     )
@@ -1664,7 +1664,7 @@ private fun StartTimeField(millis: Long, onPick: (Long) -> Unit) {
     val context = LocalContext.current
     val label = remember(millis) { SimpleDateFormat("d MMM yyyy, h:mm a", Locale.US).format(java.util.Date(millis)) }
     Column(verticalArrangement = Arrangement.spacedBy(6.dp)) {
-        Text("Started", style = NoopType.footnote, color = Palette.textSecondary)
+        Text(tr("Started"), style = NoopType.footnote, color = Palette.textSecondary)
         Row(
             modifier = Modifier
                 .fillMaxWidth()
@@ -1713,7 +1713,7 @@ private fun SportPickerField(value: String, onChange: (String) -> Unit) {
     val exact = WorkoutSport.all.any { it.name.equals(q, ignoreCase = true) }
     val showList = matches.isNotEmpty() && !exact
 
-    DialogField("Sport", value, onChange = onChange, placeholder = "e.g. Running")
+    DialogField(tr("Sport"), value, onChange = onChange, placeholder = tr("e.g. Running"))
     if (showList) {
         Column(
             modifier = Modifier

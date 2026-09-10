@@ -60,9 +60,9 @@ import kotlin.math.min
 // With no strap bonded it still works as a big glanceable visual timer (no haptics).
 
 private enum class IntervalPhase(val label: String) {
-    Work("WORK"),
-    Rest("REST"),
-    Done("DONE"),
+    Work(tr("WORK")),
+    Rest(tr("REST")),
+    Done(tr("DONE")),
 }
 
 /**
@@ -203,22 +203,22 @@ fun IntervalsScreen(vm: AppViewModel) {
     // (the heavy per-second BevelGauge hero) and off-screen cards (config) don't recompose or get
     // semantics-walked. Order/spacing unchanged (LazyColumn reproduces the eager `spacedBy(20.dp)`).
     LazyScreenScaffold(
-        title = "Interval Timer",
-        subtitle = "Silent haptic HIIT - the strap buzzes the transitions",
+        title = tr("Interval Timer"),
+        subtitle = tr("Silent haptic HIIT - the strap buzzes the transitions"),
     ) {
         // --- Status row ---
         item {
         Row(modifier = Modifier.fillMaxWidth(), verticalAlignment = Alignment.CenterVertically) {
             if (live.bonded) {
-                StatePill("Buzz cues on", tone = StrandTone.Positive)
+                StatePill(tr("Buzz cues on"), tone = StrandTone.Positive)
             } else {
-                StatePill("Connect strap for buzz cues", tone = StrandTone.Warning)
+                StatePill(tr("Connect strap for buzz cues"), tone = StrandTone.Warning)
             }
             Spacer(Modifier.weight(1f))
             when {
-                running -> StatePill("Running", tone = StrandTone.Accent, pulsing = true)
-                isFinished -> StatePill("Complete", tone = StrandTone.Positive)
-                else -> StatePill("Paused", tone = StrandTone.Neutral, showsDot = false)
+                running -> StatePill(tr("Running"), tone = StrandTone.Accent, pulsing = true)
+                isFinished -> StatePill(tr("Complete"), tone = StrandTone.Positive)
+                else -> StatePill(tr("Paused"), tone = StrandTone.Neutral, showsDot = false)
             }
         }
         }
@@ -256,7 +256,7 @@ fun IntervalsScreen(vm: AppViewModel) {
                             stops = phaseStops,
                             tipColor = phaseColor,
                             numberText = if (isFinished) "✓" else remaining.toString(),
-                            captionText = if (isFinished) "SESSION DONE" else "SECONDS",
+                            captionText = if (isFinished) tr("SESSION DONE") else tr("SECONDS"),
                             diameter = 240.dp,
                             lineWidth = 18.dp,
                         )
@@ -284,7 +284,7 @@ fun IntervalsScreen(vm: AppViewModel) {
                                 modifier = Modifier.padding(end = 6.dp),
                             )
                             Text(
-                                if (running) "Pause" else if (isFinished) "Restart" else "Start",
+                                if (running) tr("Pause") else if (isFinished) tr("Restart") else tr("Start"),
                                 style = NoopType.headline,
                             )
                         }
@@ -304,7 +304,7 @@ fun IntervalsScreen(vm: AppViewModel) {
                                 contentDescription = null,
                                 modifier = Modifier.padding(end = 6.dp),
                             )
-                            Text("Reset", style = NoopType.headline)
+                            Text(tr("Reset"), style = NoopType.headline)
                         }
                     }
 
@@ -322,7 +322,7 @@ fun IntervalsScreen(vm: AppViewModel) {
                             )
                             Spacer(Modifier.width(6.dp))
                             Text(
-                                "Bond your strap on the Live screen to feel the transitions hands-free.",
+                                tr("Bond your strap on the Live screen to feel the transitions hands-free."),
                                 style = NoopType.footnote,
                                 color = Palette.textTertiary,
                                 textAlign = TextAlign.Center,
@@ -342,7 +342,7 @@ fun IntervalsScreen(vm: AppViewModel) {
                     modifier = Modifier.fillMaxWidth(),
                     verticalAlignment = Alignment.Bottom,
                 ) {
-                    Overline("Session")
+                    Overline(tr("Session"))
                     Spacer(Modifier.weight(1f))
                     Text(
                         "${timeString(elapsed)} / ${timeString(totalPlanned)}",
@@ -378,11 +378,11 @@ fun IntervalsScreen(vm: AppViewModel) {
                 }
 
                 Row(modifier = Modifier.fillMaxWidth()) {
-                    OverviewStat(Modifier.weight(1f), "Work", "${workSeconds}s", Palette.effortColor)
-                    OverviewStat(Modifier.weight(1f), "Rest", "${restSeconds}s", Palette.restColor)
-                    OverviewStat(Modifier.weight(1f), "Rounds", rounds.toString(), Palette.textPrimary)
+                    OverviewStat(Modifier.weight(1f), tr("Work"), "${workSeconds}s", Palette.effortColor)
+                    OverviewStat(Modifier.weight(1f), tr("Rest"), "${restSeconds}s", Palette.restColor)
+                    OverviewStat(Modifier.weight(1f), tr("Rounds"), rounds.toString(), Palette.textPrimary)
                     OverviewStat(
-                        Modifier.weight(1f), "Remaining",
+                        Modifier.weight(1f), tr("Remaining"),
                         timeString(max(0, totalPlanned - elapsed)), Palette.textSecondary,
                     )
                 }
@@ -394,27 +394,27 @@ fun IntervalsScreen(vm: AppViewModel) {
         item {
         NoopCard {
             Column(verticalArrangement = Arrangement.spacedBy(14.dp)) {
-                Overline("Configure")
+                Overline(tr("Configure"))
                 ConfigStepper(
-                    title = "Work", unit = "sec", value = workSeconds,
+                    title = tr("Work"), unit = tr("sec"), value = workSeconds,
                     range = 5..600, step = 5, tint = Palette.effortColor, enabled = !running,
                     onChange = { workSeconds = it },
                 )
                 Divider()
                 ConfigStepper(
-                    title = "Rest", unit = "sec", value = restSeconds,
+                    title = tr("Rest"), unit = tr("sec"), value = restSeconds,
                     range = 5..600, step = 5, tint = Palette.restColor, enabled = !running,
                     onChange = { restSeconds = it },
                 )
                 Divider()
                 ConfigStepper(
-                    title = "Rounds", unit = null, value = rounds,
+                    title = tr("Rounds"), unit = null, value = rounds,
                     range = 1..30, step = 1, tint = Palette.textPrimary, enabled = !running,
                     onChange = { rounds = it },
                 )
                 if (running) {
                     Text(
-                        "Pause to change work, rest, or rounds.",
+                        tr("Pause to change work, rest, or rounds."),
                         style = NoopType.footnote,
                         color = Palette.textTertiary,
                     )
@@ -456,7 +456,7 @@ private fun RoundChip(currentRound: Int, rounds: Int) {
             .border(1.dp, Palette.hairline, shape)
             .padding(horizontal = 12.dp, vertical = 7.dp),
     ) {
-        Overline("Round")
+        Overline(tr("Round"))
         Spacer(Modifier.width(6.dp))
         Text(currentRound.toString(), style = NoopType.number(18f), color = Palette.textPrimary)
         Spacer(Modifier.width(2.dp))

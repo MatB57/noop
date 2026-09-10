@@ -138,16 +138,16 @@ private data class MetricSpec(
 /** The built-in DailyMetric-backed metrics, in the macOS ordering (Charge first). */
 private val builtInMetrics: List<MetricSpec> = listOf(
     MetricSpec(
-        key = "recovery", title = "Charge", unit = "%", category = "Charge",
+        key = "recovery", title = tr("Charge"), unit = "%", category = "Charge",
         accent = Palette.accent, higherIsBetter = true, decimals = 0,
         dailyPick = { it.recovery },
-        description = "How recovered you are , led by HRV versus your personal baseline.",
+        description = tr("How recovered you are , led by HRV versus your personal baseline."),
     ),
     MetricSpec(
-        key = "strain", title = "Effort", unit = "/100", category = "Effort",
+        key = "strain", title = tr("Effort"), unit = "/100", category = "Effort",
         accent = Palette.strain066, higherIsBetter = null, decimals = 1,
         dailyPick = { it.strain },
-        description = "Cardiovascular load for the day, on a 0-100 scale (was 0-21).",
+        description = tr("Cardiovascular load for the day, on a 0-100 scale (was 0-21)."),
     ),
     MetricSpec(
         key = "hrv", title = "HRV", unit = "ms", category = "Charge",
@@ -155,30 +155,30 @@ private val builtInMetrics: List<MetricSpec> = listOf(
         dailyPick = { it.avgHrv },
     ),
     MetricSpec(
-        key = "rhr", title = "Resting HR", unit = "bpm", category = "Charge",
+        key = "rhr", title = tr("Resting HR"), unit = "bpm", category = "Charge",
         accent = Palette.metricRose, higherIsBetter = false, decimals = 0,
         dailyPick = { it.restingHr?.toDouble() },
     ),
     MetricSpec(
-        key = "sleep", title = "Sleep", unit = "h", category = "Rest",
+        key = "sleep", title = tr("Sleep"), unit = "h", category = "Rest",
         // Rest-score accent rides the reset accent token (iOS metricAccent maps every Rest metric ,
         // sleep_performance / sleep_total_min , to StrandPalette.accent), not a stray metric hue.
         accent = Palette.accent, higherIsBetter = true, decimals = 1,
         dailyPick = { it.totalSleepMin?.let { m -> m / 60.0 } },
-        description = "How restorative your sleep was , duration, efficiency, deep+REM, timing.",
+        description = tr("How restorative your sleep was , duration, efficiency, deep+REM, timing."),
     ),
     MetricSpec(
-        key = "efficiency", title = "Sleep Efficiency", unit = "%", category = "Rest",
+        key = "efficiency", title = tr("Sleep Efficiency"), unit = "%", category = "Rest",
         accent = Palette.accent, higherIsBetter = true, decimals = 0,
         dailyPick = { it.efficiency },
     ),
     MetricSpec(
-        key = "spo2", title = "Blood Oxygen", unit = "%", category = "Health",
+        key = "spo2", title = tr("Blood Oxygen"), unit = "%", category = "Health",
         accent = Palette.metricCyan, higherIsBetter = true, decimals = 0,
         dailyPick = { it.spo2Pct },
     ),
     MetricSpec(
-        key = "resp", title = "Respiratory Rate", unit = "rpm", category = "Health",
+        key = "resp", title = tr("Respiratory Rate"), unit = "rpm", category = "Health",
         accent = Palette.accent, higherIsBetter = null, decimals = 1,
         dailyPick = { it.respRateBpm },
     ),
@@ -374,7 +374,7 @@ fun TrendsExploreScreen(vm: AppViewModel) {
     // are accessibility-walked on scroll. Each top-level child is one `item { }` in the same order; the
     // conditional empty-state note uses `if (cond) { item {} }` so it adds no row when hidden. No standalone
     // Spacers here , the LazyColumn's `spacedBy(20.dp)` reproduces the eager column's row spacing exactly.
-    LazyScreenScaffold(title = "Explore", subtitle = "Every signal, one tap deep.") {
+    LazyScreenScaffold(title = tr("Explore"), subtitle = tr("Every signal, one tap deep.")) {
 
         // The headline tap-through (#575): a full-day, full-resolution, zoomable timeline. Sits above the
         // per-metric catalog because it's a different kind of view , every second of one day, not one
@@ -386,9 +386,9 @@ fun TrendsExploreScreen(vm: AppViewModel) {
         if (series.isEmpty()) {
             item {
             DataPendingNote(
-                title = "Import your history first",
-                body = "Import your history first. A WHOOP export in Data Sources fills " +
-                    "every metric you can explore here in about a minute.",
+                title = tr("Import your history first"),
+                body = tr("Import your history first. A WHOOP export in Data Sources fills ") +
+                    tr("every metric you can explore here in about a minute."),
             )
             }
         }
@@ -480,9 +480,9 @@ private fun DeepTimelineEntry(onClick: () -> Unit) {
                 Text("∿", style = NoopType.title2, color = Palette.metricRose)
             }
             Column(modifier = Modifier.weight(1f)) {
-                Text("Deep Timeline", style = NoopType.headline, color = Palette.textPrimary)
+                Text(tr("Deep Timeline"), style = NoopType.headline, color = Palette.textPrimary)
                 Text(
-                    "Every second of your day, zoomable.",
+                    tr("Every second of your day, zoomable."),
                     style = NoopType.footnote,
                     color = Palette.textTertiary,
                 )
@@ -531,7 +531,7 @@ private fun MetricDropdown(
             }
             Icon(
                 if (expanded) Icons.Filled.ArrowDropUp else Icons.Filled.ArrowDropDown,
-                contentDescription = "Pick metric",
+                contentDescription = tr("Pick metric"),
                 tint = if (expanded) Palette.accent else Palette.textSecondary,
             )
         }
@@ -696,7 +696,7 @@ private fun HeroChartCard(
                         if (windowed.isEmpty()) {
                             "No ${metric.title.lowercase()} recorded yet. Sync your strap to populate this trend."
                         } else {
-                            "Only one reading in range , widen the window to see a trend."
+                            tr("Only one reading in range , widen the window to see a trend.")
                         },
                         style = NoopType.subhead,
                         color = Palette.textTertiary,
@@ -789,25 +789,25 @@ private fun StatRow(
     }
 
     Column(verticalArrangement = Arrangement.spacedBy(Metrics.gap)) {
-        SectionHeader("Summary", overline = "Over the visible window", trailing = "${s.n} pts")
+        SectionHeader(tr("Summary"), overline = tr("Over the visible window"), trailing = "${s.n} pts")
 
         Row(horizontalArrangement = Arrangement.spacedBy(Metrics.gap)) {
             StatTile(
                 modifier = Modifier.weight(1f),
-                label = "Average",
+                label = tr("Average"),
                 value = if (s.n > 0) metric.format(s.mean) else ",",
                 caption = "${s.n} days",
                 accent = metric.accent,
             )
             StatTile(
                 modifier = Modifier.weight(1f),
-                label = "Min",
+                label = tr("Min"),
                 value = if (s.n > 0) metric.format(s.min) else ",",
                 accent = Palette.textPrimary,
             )
             StatTile(
                 modifier = Modifier.weight(1f),
-                label = "Max",
+                label = tr("Max"),
                 value = if (s.n > 0) metric.format(s.max) else ",",
                 accent = Palette.textPrimary,
             )
@@ -819,14 +819,14 @@ private fun StatRow(
         Row(horizontalArrangement = Arrangement.spacedBy(Metrics.gap)) {
             StatTile(
                 modifier = Modifier.weight(1f),
-                label = "Latest",
+                label = tr("Latest"),
                 value = latest?.let { metric.format(it.value) } ?: ",",
                 caption = latest?.day,
                 accent = metric.accent,
             )
             StatTile(
                 modifier = Modifier.weight(1f),
-                label = "Δ vs prev",
+                label = tr("Δ vs prev"),
                 value = deltaText,
                 caption = deltaCaption,
                 accent = Palette.textPrimary,
@@ -867,7 +867,7 @@ private fun rangeCaption(
 ): String {
     if (series.isEmpty()) return ","
     val n = windowed.size
-    val unit = if (n == 1) "reading" else "readings"
+    val unit = if (n == 1) tr("reading") else tr("readings")
     return if (fellBack) "$n $unit · sparse , widened to ${effectiveRange.windowName}"
     else "$n $unit · ${range.windowName}"
 }

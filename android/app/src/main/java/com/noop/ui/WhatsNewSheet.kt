@@ -94,14 +94,14 @@ private fun Header(onClose: () -> Unit) {
             modifier = Modifier.weight(1f),
             verticalArrangement = Arrangement.spacedBy(4.dp),
         ) {
-            Overline("What's new", color = Palette.textTertiary)
+            Overline(tr("What's new"), color = Palette.textTertiary)
             Text("NOOP ${AppChangelog.CURRENT_VERSION}", style = NoopType.display(26f), color = Palette.textPrimary)
-            Text("Release notes", style = NoopType.caption, color = Palette.textSecondary)
+            Text(tr("Release notes"), style = NoopType.caption, color = Palette.textSecondary)
         }
         IconButton(onClick = onClose, modifier = Modifier.size(36.dp)) {
             Icon(
                 Icons.Filled.Close,
-                contentDescription = "Close",
+                contentDescription = tr("Close"),
                 tint = Palette.textTertiary,
                 modifier = Modifier.size(22.dp),
             )
@@ -115,7 +115,7 @@ private fun Header(onClose: () -> Unit) {
 private fun ExpectationsCard() {
     NoopCard(padding = 20.dp, tint = Palette.accent) {
         Column(verticalArrangement = Arrangement.spacedBy(14.dp)) {
-            Overline("What to expect")
+            Overline(tr("What to expect"))
             AppChangelog.expectations.forEach { e ->
                 Row(
                     modifier = Modifier.fillMaxWidth(),
@@ -205,7 +205,7 @@ private fun Footer(onClose: () -> Unit) {
                 contentColor = Palette.surfaceBase,
             ),
         ) {
-            Text("Got it", style = NoopType.captionNumber)
+            Text(tr("Got it"), style = NoopType.captionNumber)
         }
     }
 }

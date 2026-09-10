@@ -451,7 +451,7 @@ fun AppRoot(viewModel: AppViewModel = viewModel()) {
                         .padding(bottom = 24.dp),
                 ) {
                     Overline(
-                        "Quick actions",
+                        tr("Quick actions"),
                         modifier = Modifier.padding(start = 16.dp, top = 4.dp, bottom = 6.dp),
                         color = Palette.textTertiary,
                     )
@@ -465,7 +465,7 @@ fun AppRoot(viewModel: AppViewModel = viewModel()) {
                             showUpdatesInbox = true
                         },
                         icon = { Icon(Icons.Filled.Notifications, contentDescription = null) },
-                        label = { Text("Updates", style = NoopType.body) },
+                        label = { Text(tr("Updates"), style = NoopType.body) },
                         badge = {
                             val unread = updateStore.unreadCount
                             if (unread > 0) {
@@ -570,8 +570,8 @@ private fun MoreScreen(onNavigate: (String) -> Unit) {
         }
     }
     ScreenScaffold(
-        title = "More",
-        subtitle = "Everything else, one tap away",
+        title = tr("More"),
+        subtitle = tr("Everything else, one tap away"),
     ) {
         // Mirror the iOS More page: each group is a tappable UPPERCASE overline header (with a disclosure
         // chevron) over a single grouped white NoopCard whose rows are tight (accent icon + title +
@@ -912,9 +912,9 @@ fun ComingSoon(text: String, modifier: Modifier = Modifier) {
                 )
                 Spacer(Modifier.height(4.dp))
                 Text(text, style = NoopType.title2, color = Palette.textPrimary, textAlign = TextAlign.Center)
-                Overline("Coming soon", color = Palette.textSecondary)
+                Overline(tr("Coming soon"), color = Palette.textSecondary)
                 Text(
-                    "This section is on the way.",
+                    tr("This section is on the way."),
                     style = NoopType.footnote,
                     color = Palette.textTertiary,
                     textAlign = TextAlign.Center,

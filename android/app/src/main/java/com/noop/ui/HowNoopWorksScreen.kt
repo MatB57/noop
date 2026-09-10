@@ -64,27 +64,27 @@ private enum class PrimerSection(
     val icon: ImageVector,
 ) {
     SLEEP(
-        title = "How your sleep is sorted",
-        body = "NOOP picks your main sleep as your longest real block, and (once it has " +
-            "learned your usual hours) the one nearest your normal sleep time. Everything " +
-            "else that day is a nap. You can always edit bed and wake times.",
+        title = tr("How your sleep is sorted"),
+        body = tr("NOOP picks your main sleep as your longest real block, and (once it has ") +
+            tr("learned your usual hours) the one nearest your normal sleep time. Everything ") +
+            tr("else that day is a nap. You can always edit bed and wake times."),
         icon = Icons.Filled.Bedtime,
     ),
     SCORES(
-        title = "How your scores work",
-        body = "Charge, Effort and Rest are scored on your own device from your strap data. " +
-            "Charge needs about four nights of sleep to learn your baseline (that's \"Calibrating\", " +
-            "counted as nights of 4 on the ring), and keeps sharpening over your first couple of weeks. " +
+        title = tr("How your scores work"),
+        body = tr("Charge, Effort and Rest are scored on your own device from your strap data. ") +
+            tr("Charge needs about four nights of sleep to learn your baseline (that's \"Calibrating\", ") +
+            tr("counted as nights of 4 on the ring), and keeps sharpening over your first couple of weeks. ") +
             "On a WHOOP 5 or MG the strap banks little history, so that count can sit at 0 of 4 until you " +
             "have worn it across a few nights. That's the strap's sync limit, not a fault. " +
             "Before there's a number, NOOP shows what it can without faking one.",
         icon = Icons.Filled.Insights,
     ),
     SCORE_RECIPE(
-        title = "How your scores are computed",
-        body = "Charge weighs five signals against your own baseline: your overnight HRV matters most, " +
-            "then your resting heart rate, how well you slept, your breathing rate, and how far your skin " +
-            "temperature drifted from normal. Higher HRV and lower resting heart rate lift Charge; a big " +
+        title = tr("How your scores are computed"),
+        body = tr("Charge weighs five signals against your own baseline: your overnight HRV matters most, ") +
+            tr("then your resting heart rate, how well you slept, your breathing rate, and how far your skin ") +
+            tr("temperature drifted from normal. Higher HRV and lower resting heart rate lift Charge; a big ") +
             "skin-temperature drift in either direction lowers it. Each signal is measured as how far " +
             "tonight sits from your personal baseline, never an absolute target. If a signal is missing, " +
             "it's dropped and the rest are reweighted, so the number always reflects only what was " +
@@ -93,15 +93,15 @@ private enum class PrimerSection(
         icon = Icons.Filled.Calculate,
     ),
     RECORDING(
-        title = "What \"recording\" means",
-        body = "When your strap is connected NOOP is saving data live. \"Last synced\" tells " +
-            "you how fresh it is. If it says \"Not recording\", reconnect.",
+        title = tr("What \"recording\" means"),
+        body = tr("When your strap is connected NOOP is saving data live. \"Last synced\" tells ") +
+            tr("you how fresh it is. If it says \"Not recording\", reconnect."),
         icon = Icons.Filled.Sensors,
     ),
     PROVENANCE(
-        title = "Where your numbers come from",
-        body = "A badge shows whether a number was scored on-device by NOOP, or imported " +
-            "from Whoop or Apple Health.",
+        title = tr("Where your numbers come from"),
+        body = tr("A badge shows whether a number was scored on-device by NOOP, or imported ") +
+            tr("from Whoop or Apple Health."),
         icon = Icons.Filled.Verified,
     );
 
@@ -174,10 +174,10 @@ private fun Header(onClose: () -> Unit) {
             modifier = Modifier.weight(1f),
             verticalArrangement = Arrangement.spacedBy(4.dp),
         ) {
-            Overline("The basics", color = Palette.textTertiary)
-            Text("How NOOP works", style = NoopType.display(26f), color = Palette.textPrimary)
+            Overline(tr("The basics"), color = Palette.textTertiary)
+            Text(tr("How NOOP works"), style = NoopType.display(26f), color = Palette.textPrimary)
             Text(
-                "Sleep · scores · recording · where your numbers come from",
+                tr("Sleep · scores · recording · where your numbers come from"),
                 style = NoopType.caption,
                 color = Palette.textSecondary,
             )
@@ -185,7 +185,7 @@ private fun Header(onClose: () -> Unit) {
         IconButton(onClick = onClose, modifier = Modifier.size(36.dp)) {
             Icon(
                 Icons.Filled.Close,
-                contentDescription = "Close",
+                contentDescription = tr("Close"),
                 tint = Palette.textTertiary,
                 modifier = Modifier.size(22.dp),
             )
@@ -199,11 +199,11 @@ private fun Header(onClose: () -> Unit) {
 private fun IntroCard() {
     NoopCard(padding = 20.dp) {
         Column(verticalArrangement = Arrangement.spacedBy(14.dp)) {
-            Overline("The one rule")
+            Overline(tr("The one rule"))
             Text(
-                "NOOP never shows you a number it had to make up. If a score isn't ready, " +
-                    "it tells you why and what to do next. Everything here runs on your " +
-                    "device, from your strap.",
+                tr("NOOP never shows you a number it had to make up. If a score isn't ready, ") +
+                    tr("it tells you why and what to do next. Everything here runs on your ") +
+                    tr("device, from your strap."),
                 style = NoopType.subhead,
                 color = Palette.textSecondary,
             )
@@ -257,8 +257,8 @@ private fun PrimerCard(section: PrimerSection) {
 @Composable
 private fun FooterNote() {
     Text(
-        "NOOP never makes up a number. When it can't compute one honestly it tells you " +
-            "what's missing and what to do, rather than showing a fake value.",
+        tr("NOOP never makes up a number. When it can't compute one honestly it tells you ") +
+            tr("what's missing and what to do, rather than showing a fake value."),
         style = NoopType.footnote,
         color = Palette.textTertiary,
         modifier = Modifier
@@ -282,7 +282,7 @@ private fun Footer(onClose: () -> Unit) {
                 contentColor = Palette.surfaceBase,
             ),
         ) {
-            Text("Got it", style = NoopType.captionNumber)
+            Text(tr("Got it"), style = NoopType.captionNumber)
         }
     }
 }

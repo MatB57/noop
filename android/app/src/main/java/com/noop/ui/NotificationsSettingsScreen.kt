@@ -260,18 +260,18 @@ fun NotificationsSettingsScreen(vm: AppViewModel) {
     val enabledCount = enabledState.values.count { it }
 
     ScreenScaffold(
-        title = "Notifications",
-        subtitle = "Buzz your strap when these apps notify you. Everything runs on this device.",
+        title = tr("Notifications"),
+        subtitle = tr("Buzz your strap when these apps notify you. Everything runs on this device."),
     ) {
         // MARK: Master card
         AlertSection(
             icon = Icons.Filled.NotificationsActive,
-            title = "Wrist alerts",
-            blurb = "When on, NOOP taps your wrist for the apps you pick below, so you can leave " +
-                "your phone and still feel what matters.",
+            title = tr("Wrist alerts"),
+            blurb = tr("When on, NOOP taps your wrist for the apps you pick below, so you can leave ") +
+                tr("your phone and still feel what matters."),
         ) {
             Row(modifier = Modifier.fillMaxWidth(), verticalAlignment = Alignment.CenterVertically) {
-                Text("Enable wrist alerts", style = NoopType.body, color = Palette.textPrimary)
+                Text(tr("Enable wrist alerts"), style = NoopType.body, color = Palette.textPrimary)
                 Spacer(Modifier.weight(1f))
                 NoopSwitch(
                     checked = masterEnabled,
@@ -279,7 +279,7 @@ fun NotificationsSettingsScreen(vm: AppViewModel) {
                         masterEnabled = it
                         NotifPrefs.setBool(context, NotifPrefs.MASTER, it)
                     },
-                    label = "Enable wrist alerts",
+                    label = tr("Enable wrist alerts"),
                 )
             }
 
@@ -296,7 +296,7 @@ fun NotificationsSettingsScreen(vm: AppViewModel) {
                 )
                 Spacer(Modifier.weight(1f))
                 PillButton(
-                    label = "Test buzz",
+                    label = tr("Test buzz"),
                     icon = Icons.Filled.GraphicEq,
                     enabled = live.bonded,
                     onClick = { vm.buzz(loops = 2) },
@@ -375,12 +375,12 @@ fun NotificationsSettingsScreen(vm: AppViewModel) {
         // MARK: Behaviour card
         AlertSection(
             icon = Icons.Filled.Tune,
-            title = "Behaviour",
-            blurb = "Fine-tune when alerts reach your wrist.",
+            title = tr("Behaviour"),
+            blurb = tr("Fine-tune when alerts reach your wrist."),
         ) {
             FormToggleRow(
-                label = "Only buzz when worn",
-                help = "Skip alerts when the strap is off your wrist.",
+                label = tr("Only buzz when worn"),
+                help = tr("Skip alerts when the strap is off your wrist."),
                 checked = onlyWhenWorn,
                 onChange = {
                     onlyWhenWorn = it
@@ -389,10 +389,10 @@ fun NotificationsSettingsScreen(vm: AppViewModel) {
             )
             RowDivider()
             FormToggleRow(
-                label = "All other apps",
-                help = "Also buzz for apps that aren't in the lists above (e.g. BeReal). Android " +
-                    "doesn't let NOOP see every installed app, so this is how you cover the rest. " +
-                    "Can be chatty; quiet hours and \"only when worn\" still apply.",
+                label = tr("All other apps"),
+                help = tr("Also buzz for apps that aren't in the lists above (e.g. BeReal). Android ") +
+                    tr("doesn't let NOOP see every installed app, so this is how you cover the rest. ") +
+                    tr("Can be chatty; quiet hours and \"only when worn\" still apply."),
                 checked = allOtherApps,
                 onChange = {
                     allOtherApps = it
@@ -401,8 +401,8 @@ fun NotificationsSettingsScreen(vm: AppViewModel) {
             )
             RowDivider()
             FormToggleRow(
-                label = "Quiet hours",
-                help = "Mute wrist alerts overnight.",
+                label = tr("Quiet hours"),
+                help = tr("Mute wrist alerts overnight."),
                 checked = quietHoursEnabled,
                 onChange = {
                     quietHoursEnabled = it
@@ -416,19 +416,19 @@ fun NotificationsSettingsScreen(vm: AppViewModel) {
                     verticalAlignment = Alignment.CenterVertically,
                     horizontalArrangement = Arrangement.spacedBy(12.dp),
                 ) {
-                    Text("From", style = NoopType.body, color = Palette.textPrimary)
+                    Text(tr("From"), style = NoopType.body, color = Palette.textPrimary)
                     TimeChip(
                         minutes = quietStartMinutes,
-                        accessibilityLabel = "Quiet hours start",
+                        accessibilityLabel = tr("Quiet hours start"),
                         onPicked = {
                             quietStartMinutes = it
                             NotifPrefs.setInt(context, NotifPrefs.QUIET_START, it)
                         },
                     )
-                    Text("to", style = NoopType.body, color = Palette.textSecondary)
+                    Text(tr("to"), style = NoopType.body, color = Palette.textSecondary)
                     TimeChip(
                         minutes = quietEndMinutes,
-                        accessibilityLabel = "Quiet hours end",
+                        accessibilityLabel = tr("Quiet hours end"),
                         onPicked = {
                             quietEndMinutes = it
                             NotifPrefs.setInt(context, NotifPrefs.QUIET_END, it)
@@ -442,15 +442,15 @@ fun NotificationsSettingsScreen(vm: AppViewModel) {
         // MARK: Daily reports (#517) — phone notifications, not wrist buzzes. Opt-in, default OFF, no AI.
         AlertSection(
             icon = Icons.Filled.NotificationsActive,
-            title = "Daily reports",
-            blurb = "Optional phone notifications, off by default. These arrive after your strap syncs " +
-                "and NOOP scores the data, so they land soon after, not the exact second you wake or " +
-                "finish a workout. Everything is worked out on this phone.",
+            title = tr("Daily reports"),
+            blurb = tr("Optional phone notifications, off by default. These arrive after your strap syncs ") +
+                tr("and NOOP scores the data, so they land soon after, not the exact second you wake or ") +
+                tr("finish a workout. Everything is worked out on this phone."),
         ) {
             FormToggleRow(
-                label = "Morning recap",
-                help = "After last night is processed, a notification with your Charge and Rest. Posts " +
-                    "once a day, after your strap has synced the night.",
+                label = tr("Morning recap"),
+                help = tr("After last night is processed, a notification with your Charge and Rest. Posts ") +
+                    tr("once a day, after your strap has synced the night."),
                 checked = morningReport,
                 onChange = {
                     morningReport = it
@@ -459,9 +459,9 @@ fun NotificationsSettingsScreen(vm: AppViewModel) {
             )
             RowDivider()
             FormToggleRow(
-                label = "Post-workout summary",
-                help = "When a new workout syncs in, a notification with its Effort, duration and average " +
-                    "heart rate. Shows up after the session reaches NOOP on the next sync.",
+                label = tr("Post-workout summary"),
+                help = tr("When a new workout syncs in, a notification with its Effort, duration and average ") +
+                    tr("heart rate. Shows up after the session reaches NOOP on the next sync."),
                 checked = postWorkoutReport,
                 onChange = {
                     postWorkoutReport = it
@@ -478,9 +478,9 @@ fun NotificationsSettingsScreen(vm: AppViewModel) {
 // MARK: - Strap status (mirrors the three-state mapping from the Mac screen)
 
 private fun strapPillTitle(live: com.noop.ble.LiveState): String = when {
-    live.connected -> "Strap connected"
-    live.bonded -> "Strap idle"
-    else -> "Strap not connected"
+    live.connected -> tr("Strap connected")
+    live.bonded -> tr("Strap idle")
+    else -> tr("Strap not connected")
 }
 
 private fun strapPillTone(live: com.noop.ble.LiveState): StrandTone = when {
@@ -507,8 +507,8 @@ private fun CallsCard(
     val contentAlpha = if (masterEnabled) 1f else Palette.disabledOpacity
     AlertSection(
         icon = Icons.Filled.Call,
-        title = "Calls",
-        blurb = "Tap your wrist for incoming phone calls and strict best-effort VoIP calls.",
+        title = tr("Calls"),
+        blurb = tr("Tap your wrist for incoming phone calls and strict best-effort VoIP calls."),
     ) {
         Column(modifier = Modifier.alphaIf(contentAlpha)) {
             Row(
@@ -519,36 +519,36 @@ private fun CallsCard(
                 horizontalArrangement = Arrangement.spacedBy(12.dp),
             ) {
                 Column(modifier = Modifier.weight(1f), verticalArrangement = Arrangement.spacedBy(2.dp)) {
-                    Text("Buzz on incoming calls", style = NoopType.body, color = Palette.textPrimary)
+                    Text(tr("Buzz on incoming calls"), style = NoopType.body, color = Palette.textPrimary)
                     Text(
-                        "Uses the same quiet-hours and worn-only rules.",
+                        tr("Uses the same quiet-hours and worn-only rules."),
                         style = NoopType.footnote,
                         color = Palette.textTertiary,
                     )
                 }
                 if (callsEnabled) {
-                    PatternMenu(pattern = pattern, enabled = masterEnabled, appName = "calls", onSelect = onPattern)
-                    TestIconButton(enabled = masterEnabled && bonded, appName = "calls", onClick = onTest)
+                    PatternMenu(pattern = pattern, enabled = masterEnabled, appName = tr("calls"), onSelect = onPattern)
+                    TestIconButton(enabled = masterEnabled && bonded, appName = tr("calls"), onClick = onTest)
                 }
                 NoopSwitch(
                     checked = callsEnabled,
                     onChange = onCallsEnabled,
                     enabled = masterEnabled,
-                    label = "Buzz on incoming calls",
+                    label = tr("Buzz on incoming calls"),
                 )
             }
             if (callsEnabled) {
                 RowDivider()
                 FormToggleRow(
-                    label = "Phone calls",
-                    help = "Needs Phone permission; NOOP never reads numbers or call logs.",
+                    label = tr("Phone calls"),
+                    help = tr("Needs Phone permission; NOOP never reads numbers or call logs."),
                     checked = phoneCallsEnabled,
                     enabled = masterEnabled,
                     onChange = onPhoneCallsEnabled,
                 )
                 if (permissionDenied) {
                     Text(
-                        "Phone permission was denied, so phone-call buzzing is off.",
+                        tr("Phone permission was denied, so phone-call buzzing is off."),
                         style = NoopType.footnote,
                         color = Palette.statusCritical,
                         modifier = Modifier.padding(top = 2.dp, bottom = 8.dp),
@@ -556,8 +556,8 @@ private fun CallsCard(
                 }
                 RowDivider()
                 FormToggleRow(
-                    label = "VoIP calls",
-                    help = "Detects call-style notifications from known calling apps.",
+                    label = tr("VoIP calls"),
+                    help = tr("Detects call-style notifications from known calling apps."),
                     checked = voipCallsEnabled,
                     enabled = masterEnabled,
                     onChange = onVoipCallsEnabled,
@@ -590,9 +590,9 @@ private fun DeliveryNote() {
                 modifier = Modifier.size(16.dp),
             )
             Text(
-                "Wrist delivery needs Notification Access so NOOP can read which apps notify " +
-                    "you. Nothing leaves this device. Your choices are saved now and apply " +
-                    "automatically once access is granted.",
+                tr("Wrist delivery needs Notification Access so NOOP can read which apps notify ") +
+                    tr("you. Nothing leaves this device. Your choices are saved now and apply ") +
+                    tr("automatically once access is granted."),
                 style = NoopType.footnote,
                 color = Palette.textSecondary,
             )
@@ -609,7 +609,7 @@ private fun DeliveryNote() {
                     }
                 }
                 .padding(horizontal = 2.dp, vertical = 2.dp)
-                .semantics { contentDescription = "Open Notification Access settings" },
+                .semantics { contentDescription = tr("Open Notification Access settings") },
             verticalAlignment = Alignment.CenterVertically,
             horizontalArrangement = Arrangement.spacedBy(6.dp),
         ) {
@@ -619,7 +619,7 @@ private fun DeliveryNote() {
                 tint = Palette.accent,
                 modifier = Modifier.size(14.dp),
             )
-            Text("Open Notification Access", style = NoopType.caption, color = Palette.accent)
+            Text(tr("Open Notification Access"), style = NoopType.caption, color = Palette.accent)
         }
     }
 }
@@ -694,7 +694,7 @@ private fun AppRow(
         Column(modifier = Modifier.weight(1f), verticalArrangement = Arrangement.spacedBy(2.dp)) {
             Text(app.name, style = NoopType.body, color = Palette.textPrimary)
             Text(
-                if (enabled) "Buzzes your wrist" else "Off",
+                if (enabled) tr("Buzzes your wrist") else tr("Off"),
                 style = NoopType.footnote,
                 color = if (enabled) Palette.accent else Palette.textTertiary,
             )
@@ -877,7 +877,7 @@ internal fun TimeChip(
                     horizontalArrangement = Arrangement.spacedBy(8.dp, Alignment.End),
                 ) {
                     Text(
-                        "Cancel",
+                        tr("Cancel"),
                         style = NoopType.body,
                         color = Palette.textSecondary,
                         modifier = Modifier
@@ -886,7 +886,7 @@ internal fun TimeChip(
                             .padding(horizontal = 16.dp, vertical = 8.dp),
                     )
                     Text(
-                        "Set",
+                        tr("Set"),
                         style = NoopType.body,
                         color = Palette.accent,
                         modifier = Modifier
@@ -910,7 +910,7 @@ private fun AlertSection(
     icon: ImageVector,
     title: String,
     blurb: String? = null,
-    overline: String = "Alerts",
+    overline: String = tr("Alerts"),
     content: @Composable () -> Unit,
 ) {
     NoopCard(padding = 20.dp, tint = Palette.accent) {

@@ -89,8 +89,8 @@ fun UpdatesInboxScreen(
     ) {
         // Header — "INBOX" overline + "Updates" title + a live subtitle.
         Column(verticalArrangement = Arrangement.spacedBy(4.dp)) {
-            Overline("Inbox", color = Palette.textTertiary)
-            Text("Updates", style = NoopType.title1, color = Palette.textPrimary)
+            Overline(tr("Inbox"), color = Palette.textTertiary)
+            Text(tr("Updates"), style = NoopType.title1, color = Palette.textPrimary)
             Text(subtitle(store), style = NoopType.caption, color = Palette.textSecondary)
         }
 
@@ -99,7 +99,7 @@ fun UpdatesInboxScreen(
         } else {
             if (unread.isNotEmpty()) {
                 InboxSection(
-                    label = "New",
+                    label = tr("New"),
                     items = unread,
                     onTap = { handleTap(it, store, onDeepLink, onClose) },
                     onRestore = { handleRestore(it, store, onRestore, onClose) },
@@ -109,7 +109,7 @@ fun UpdatesInboxScreen(
             }
             if (read.isNotEmpty()) {
                 InboxSection(
-                    label = "Earlier",
+                    label = tr("Earlier"),
                     items = read,
                     onTap = { handleTap(it, store, onDeepLink, onClose) },
                     onRestore = { handleRestore(it, store, onRestore, onClose) },
@@ -134,7 +134,7 @@ fun UpdatesInboxScreen(
                         modifier = Modifier.size(Metrics.iconSmall),
                     )
                     Spacer(Modifier.width(6.dp))
-                    Text("Clear all", style = NoopType.subhead, color = Palette.textSecondary)
+                    Text(tr("Clear all"), style = NoopType.subhead, color = Palette.textSecondary)
                 }
                 Spacer(Modifier.weight(1f))
                 Button(
@@ -157,7 +157,7 @@ fun UpdatesInboxScreen(
                         modifier = Modifier.size(Metrics.iconSmall),
                     )
                     Spacer(Modifier.width(6.dp))
-                    Text("Mark all read", style = NoopType.subhead)
+                    Text(tr("Mark all read"), style = NoopType.subhead)
                 }
             }
         }
@@ -165,9 +165,9 @@ fun UpdatesInboxScreen(
 }
 
 private fun subtitle(store: UpdateStore): String {
-    if (store.items.isEmpty()) return "What's new in the app and your data"
+    if (store.items.isEmpty()) return tr("What's new in the app and your data")
     val n = store.unreadCount
-    return if (n == 0) "All caught up" else "$n unread"
+    return if (n == 0) tr("All caught up") else "$n unread"
 }
 
 @Composable
@@ -270,7 +270,7 @@ private fun SwipeBackground(direction: SwipeToDismissBoxValue) {
                     tint = contentColor,
                     modifier = Modifier.size(Metrics.iconSmall),
                 )
-                Text("Mark read", style = NoopType.subhead, color = contentColor)
+                Text(tr("Mark read"), style = NoopType.subhead, color = contentColor)
             }
         }
     }
@@ -354,7 +354,7 @@ private fun UpdateRow(
                             modifier = Modifier.size(Metrics.iconSmall),
                         )
                         Spacer(Modifier.width(6.dp))
-                        Text("Restore to Today", style = NoopType.subhead, color = Palette.accent)
+                        Text(tr("Restore to Today"), style = NoopType.subhead, color = Palette.accent)
                     }
                 }
             }
@@ -377,9 +377,9 @@ private fun EmptyInboxState() {
             tint = Palette.textTertiary,
             modifier = Modifier.size(34.dp),
         )
-        Text("You're all caught up.", style = NoopType.headline, color = Palette.textPrimary)
+        Text(tr("You're all caught up."), style = NoopType.headline, color = Palette.textPrimary)
         Text(
-            "New release notes and fresh data will land here.",
+            tr("New release notes and fresh data will land here."),
             style = NoopType.subhead,
             color = Palette.textSecondary,
         )

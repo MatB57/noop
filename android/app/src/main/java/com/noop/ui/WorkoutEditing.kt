@@ -366,8 +366,8 @@ object WorkoutEditing {
 
     /** Common sports offered when re-labelling a detected bout (the user can fine-tune via Edit). */
     val relabelSports: List<String> = listOf(
-        "Running", "Walking", "Cycling", "Strength Training", "Swimming", "Rowing", "Yoga", "HIIT",
-        "CrossFit", "Hiking", "Tennis",
+        tr("Running"), tr("Walking"), tr("Cycling"), tr("Strength Training"), tr("Swimming"), tr("Rowing"), tr("Yoga"), tr("HIIT"),
+        tr("CrossFit"), tr("Hiking"), tr("Tennis"),
     )
 }
 

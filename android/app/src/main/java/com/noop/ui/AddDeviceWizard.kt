@@ -103,14 +103,14 @@ private enum class DeviceType {
 
     val title: String
         get() = when (this) {
-            Whoop5MG -> "WHOOP 5.0 / MG"
-            Whoop4 -> "WHOOP 4.0"
-            HrStrap -> "Heart-rate strap"
-            GymEquipment -> "Gym equipment"
-            Amazfit -> "Amazfit / Zepp"
-            MiBand -> "Xiaomi Mi Band"
-            Garmin -> "Garmin watch"
-            Oura -> "Oura ring"
+            Whoop5MG -> tr("WHOOP 5.0 / MG")
+            Whoop4 -> tr("WHOOP 4.0")
+            HrStrap -> tr("Heart-rate strap")
+            GymEquipment -> tr("Gym equipment")
+            Amazfit -> tr("Amazfit / Zepp")
+            MiBand -> tr("Xiaomi Mi Band")
+            Garmin -> tr("Garmin watch")
+            Oura -> tr("Oura ring")
         }
 }
 
@@ -235,21 +235,21 @@ fun AddDeviceWizard(
     }
 
     val confirmAdvertisedName = run {
-        pickedWhoop?.let { return@run it.name?.takeIf { n -> n.isNotBlank() } ?: (type?.title ?: "Device") }
+        pickedWhoop?.let { return@run it.name?.takeIf { n -> n.isNotBlank() } ?: (type?.title ?: tr("Device")) }
         pickedStrap?.let { return@run it.name }
         pickedMachine?.let { return@run it.name }
         pickedHuami?.let { return@run it.name }
-        type?.title ?: "Device"
+        type?.title ?: tr("Device")
     }
     val confirmName = nameDraft.trim().ifEmpty { confirmAdvertisedName }
     val confirmBrand = when {
-        type?.isWhoop == true -> "WHOOP"
-        type == DeviceType.GymEquipment -> "Gym equipment"
-        type == DeviceType.Amazfit -> "Amazfit"
-        type == DeviceType.MiBand -> "Mi Band"
-        type == DeviceType.Garmin -> "Garmin"
+        type?.isWhoop == true -> tr("WHOOP")
+        type == DeviceType.GymEquipment -> tr("Gym equipment")
+        type == DeviceType.Amazfit -> tr("Amazfit")
+        type == DeviceType.MiBand -> tr("Mi Band")
+        type == DeviceType.Garmin -> tr("Garmin")
         pickedStrap != null -> brandGuess(pickedStrap!!.name)
-        else -> "Heart-rate strap"
+        else -> tr("Heart-rate strap")
     }
     val confirmRssi = pickedWhoop?.rssi ?: pickedStrap?.rssi ?: pickedMachine?.rssi ?: pickedHuami?.rssi ?: -70
 
@@ -413,7 +413,7 @@ fun AddDeviceWizard(
                     IconButton(onClick = { goBack() }, modifier = Modifier.size(28.dp)) {
                         Icon(
                             Icons.AutoMirrored.Filled.KeyboardArrowLeft,
-                            contentDescription = "Back",
+                            contentDescription = tr("Back"),
                             tint = Palette.textSecondary,
                             modifier = Modifier.size(22.dp),
                         )
@@ -427,7 +427,7 @@ fun AddDeviceWizard(
                     }
                 }
                 IconButton(onClick = { stopAllScans(); onClose() }, modifier = Modifier.size(28.dp)) {
-                    Icon(Icons.Filled.Close, contentDescription = "Close", tint = Palette.textTertiary, modifier = Modifier.size(20.dp))
+                    Icon(Icons.Filled.Close, contentDescription = tr("Close"), tint = Palette.textTertiary, modifier = Modifier.size(20.dp))
                 }
             }
         },
@@ -564,23 +564,23 @@ fun AddDeviceWizard(
         AlertDialog(
             onDismissRequest = { askMakeActive = false; finishAdd(makeActive = false) },
             containerColor = Palette.surfaceOverlay,
-            title = { Text("Make this your active device?", style = NoopType.title2, color = Palette.textPrimary) },
+            title = { Text(tr("Make this your active device?"), style = NoopType.title2, color = Palette.textPrimary) },
             text = {
                 Text(
                     "Make $confirmName your active device now? It will provide your live data. You can change " +
-                        "this any time.",
+                        tr("this any time."),
                     style = NoopType.subhead,
                     color = Palette.textSecondary,
                 )
             },
             confirmButton = {
                 TextButton(onClick = { askMakeActive = false; finishAdd(makeActive = true) }) {
-                    Text("Make active", style = NoopType.body, color = Palette.accent)
+                    Text(tr("Make active"), style = NoopType.body, color = Palette.accent)
                 }
             },
             dismissButton = {
                 TextButton(onClick = { askMakeActive = false; finishAdd(makeActive = false) }) {
-                    Text("Not now", style = NoopType.body, color = Palette.textSecondary)
+                    Text(tr("Not now"), style = NoopType.body, color = Palette.textSecondary)
                 }
             },
         )
@@ -592,11 +592,11 @@ fun AddDeviceWizard(
         AlertDialog(
             onDismissRequest = { ouraConfirmAdopt = false },
             containerColor = Palette.surfaceOverlay,
-            title = { Text("Take over this ring?", style = NoopType.title2, color = Palette.textPrimary) },
+            title = { Text(tr("Take over this ring?"), style = NoopType.title2, color = Palette.textPrimary) },
             text = {
                 Text(
-                    "NOOP will install its own key on the ring and become its owner. The Oura app will no " +
-                        "longer control this ring. This is intended and it cannot be undone from NOOP.",
+                    tr("NOOP will install its own key on the ring and become its owner. The Oura app will no ") +
+                        tr("longer control this ring. This is intended and it cannot be undone from NOOP."),
                     style = NoopType.subhead,
                     color = Palette.textSecondary,
                 )
@@ -610,12 +610,12 @@ fun AddDeviceWizard(
                     // adoptPhase / needs-pairing drives it to success (close) or a REACHABLE honest Failed.
                     finishAddOura(closeAfter = false)
                 }) {
-                    Text("Take over", style = NoopType.body, color = Palette.statusCritical)
+                    Text(tr("Take over"), style = NoopType.body, color = Palette.statusCritical)
                 }
             },
             dismissButton = {
                 TextButton(onClick = { ouraConfirmAdopt = false }) {
-                    Text("Cancel", style = NoopType.body, color = Palette.textSecondary)
+                    Text(tr("Cancel"), style = NoopType.body, color = Palette.textSecondary)
                 }
             },
         )
@@ -640,34 +640,34 @@ fun AddDeviceWizard(
 }
 
 private fun headerTitle(step: WizardStep, type: DeviceType?): String = when (step) {
-    WizardStep.Type -> "Add a device"
-    WizardStep.Prep -> type?.title ?: "Add a device"
-    WizardStep.Pick -> "Pick your device"
-    WizardStep.Confirm -> "Name & confirm"
+    WizardStep.Type -> tr("Add a device")
+    WizardStep.Prep -> type?.title ?: tr("Add a device")
+    WizardStep.Pick -> tr("Pick your device")
+    WizardStep.Confirm -> tr("Name & confirm")
 }
 
 private fun headerSubtitle(step: WizardStep): String? = when (step) {
-    WizardStep.Type -> "What are you adding?"
-    WizardStep.Prep -> "Get it ready, then scan."
-    WizardStep.Pick -> "Tap the one that's yours."
+    WizardStep.Type -> tr("What are you adding?")
+    WizardStep.Prep -> tr("Get it ready, then scan.")
+    WizardStep.Pick -> tr("Tap the one that's yours.")
     WizardStep.Confirm -> null
 }
 
 // MARK: - Oura header titles (the adopt sub-flow's own steps)
 
 private fun ouraHeaderTitle(step: OuraStep, advanced: Boolean): String = when (step) {
-    OuraStep.Gate -> if (advanced) "Advanced: use your own key" else "Oura ring"
-    OuraStep.Prep -> "Get your ring ready"
-    OuraStep.Pick -> "Pick the ring"
-    OuraStep.Confirm -> "Your ring"
-    OuraStep.Adopting -> "Taking over your ring"
-    OuraStep.Failed -> "Could not take over"
+    OuraStep.Gate -> if (advanced) tr("Advanced: use your own key") else tr("Oura ring")
+    OuraStep.Prep -> tr("Get your ring ready")
+    OuraStep.Pick -> tr("Pick the ring")
+    OuraStep.Confirm -> tr("Your ring")
+    OuraStep.Adopting -> tr("Taking over your ring")
+    OuraStep.Failed -> tr("Could not take over")
 }
 
 private fun ouraHeaderSubtitle(step: OuraStep, advanced: Boolean): String? = when (step) {
-    OuraStep.Gate -> if (advanced) "Power users only." else "Take it over locally. Beta."
-    OuraStep.Prep -> "Reset it in the Oura app first."
-    OuraStep.Pick -> "Tap the one that's yours."
+    OuraStep.Gate -> if (advanced) tr("Power users only.") else tr("Take it over locally. Beta.")
+    OuraStep.Prep -> tr("Reset it in the Oura app first.")
+    OuraStep.Pick -> tr("Tap the one that's yours.")
     OuraStep.Confirm -> null
     OuraStep.Adopting -> null
     OuraStep.Failed -> null
@@ -678,33 +678,33 @@ private fun ouraHeaderSubtitle(step: OuraStep, advanced: Boolean): String? = whe
 @Composable
 private fun TypeStep(onPick: (DeviceType) -> Unit) {
     Column(verticalArrangement = Arrangement.spacedBy(10.dp)) {
-        TypeRow(Icons.Filled.Watch, DeviceType.Whoop5MG.title, "Newer WHOOP band. Experimental in NOOP") {
+        TypeRow(Icons.Filled.Watch, DeviceType.Whoop5MG.title, tr("Newer WHOOP band. Experimental in NOOP")) {
             onPick(DeviceType.Whoop5MG)
         }
-        TypeRow(Icons.Filled.Watch, DeviceType.Whoop4.title, "NOOP's primary, fully-supported band") {
+        TypeRow(Icons.Filled.Watch, DeviceType.Whoop4.title, tr("NOOP's primary, fully-supported band")) {
             onPick(DeviceType.Whoop4)
         }
-        TypeRow(Icons.Filled.FavoriteBorder, DeviceType.HrStrap.title, "Polar, Wahoo, Coospo, Garmin HRM, Amazfit Helio broadcast") {
+        TypeRow(Icons.Filled.FavoriteBorder, DeviceType.HrStrap.title, tr("Polar, Wahoo, Coospo, Garmin HRM, Amazfit Helio broadcast")) {
             onPick(DeviceType.HrStrap)
         }
-        TypeRow(Icons.AutoMirrored.Filled.DirectionsRun, DeviceType.GymEquipment.title, "Treadmill, indoor bike, rower or cross-trainer (Bluetooth FTMS)") {
+        TypeRow(Icons.AutoMirrored.Filled.DirectionsRun, DeviceType.GymEquipment.title, tr("Treadmill, indoor bike, rower or cross-trainer (Bluetooth FTMS)")) {
             onPick(DeviceType.GymEquipment)
         }
 
         // EXPERIMENTAL tier - clearly labelled, opt-in, best-effort. Each is honest about what it can
         // actually read; none fabricates data.
-        Overline("Experimental", modifier = Modifier.padding(top = 8.dp))
+        Overline(tr("Experimental"), modifier = Modifier.padding(top = 8.dp))
         ExperimentalTierNote()
-        TypeRow(Icons.Filled.Circle, DeviceType.Oura.title, "Take over your ring locally. Beta. This replaces the Oura app.") {
+        TypeRow(Icons.Filled.Circle, DeviceType.Oura.title, tr("Take over your ring locally. Beta. This replaces the Oura app.")) {
             onPick(DeviceType.Oura)
         }
-        TypeRow(Icons.Filled.GraphicEq, DeviceType.Amazfit.title, "Incl. Helio. Live heart rate where the band exposes it. Help us test.") {
+        TypeRow(Icons.Filled.GraphicEq, DeviceType.Amazfit.title, tr("Incl. Helio. Live heart rate where the band exposes it. Help us test.")) {
             onPick(DeviceType.Amazfit)
         }
-        TypeRow(Icons.Filled.GraphicEq, DeviceType.MiBand.title, "Live heart rate on bands that don't need pairing. Help us test.") {
+        TypeRow(Icons.Filled.GraphicEq, DeviceType.MiBand.title, tr("Live heart rate on bands that don't need pairing. Help us test.")) {
             onPick(DeviceType.MiBand)
         }
-        TypeRow(Icons.Filled.Watch, DeviceType.Garmin.title, "Uses the watch's Broadcast Heart Rate. We'll show you how.") {
+        TypeRow(Icons.Filled.Watch, DeviceType.Garmin.title, tr("Uses the watch's Broadcast Heart Rate. We'll show you how.")) {
             onPick(DeviceType.Garmin)
         }
 
@@ -727,8 +727,8 @@ private fun ExperimentalTierNote() {
     ) {
         Icon(Icons.Filled.Science, contentDescription = null, tint = Palette.statusWarning, modifier = Modifier.size(18.dp))
         Text(
-            "Experimental, best-effort support. We're still testing these, so they might not connect on " +
-                "every device. They never make up data, and they'll tell you honestly when live isn't possible.",
+            tr("Experimental, best-effort support. We're still testing these, so they might not connect on ") +
+                tr("every device. They never make up data, and they'll tell you honestly when live isn't possible."),
             style = NoopType.footnote,
             color = Palette.statusWarning,
         )
@@ -771,8 +771,8 @@ private fun WhoopFirstNote() {
     ) {
         Icon(Icons.Filled.FavoriteBorder, contentDescription = null, tint = Palette.textTertiary, modifier = Modifier.size(16.dp))
         Text(
-            "WHOOP is NOOP's primary, fully-supported band. Other heart-rate straps stream live heart rate " +
-                "and HRV, but not WHOOP's deeper sleep and recovery data.",
+            tr("WHOOP is NOOP's primary, fully-supported band. Other heart-rate straps stream live heart rate ") +
+                tr("and HRV, but not WHOOP's deeper sleep and recovery data."),
             style = NoopType.footnote,
             color = Palette.textTertiary,
         )
@@ -804,14 +804,14 @@ private fun OnePhoneWarningCard() {
         )
         Column(verticalArrangement = Arrangement.spacedBy(4.dp)) {
             Text(
-                "One phone at a time",
+                tr("One phone at a time"),
                 style = NoopType.headline,
                 color = Palette.statusWarning,
             )
             Text(
-                "A WHOOP strap bonds to a single device. While it's connected to NOOP it won't stream " +
-                    "to the official WHOOP app, and the other way round. It's reversible: pair it in the " +
-                    "other app whenever you want it back.",
+                tr("A WHOOP strap bonds to a single device. While it's connected to NOOP it won't stream ") +
+                    tr("to the official WHOOP app, and the other way round. It's reversible: pair it in the ") +
+                    tr("other app whenever you want it back."),
                 style = NoopType.footnote,
                 color = Palette.statusWarning,
             )
@@ -852,7 +852,7 @@ private fun PrepStep(type: DeviceType, onScan: () -> Unit) {
             ) {
                 Icon(Icons.Filled.Science, contentDescription = null, tint = Palette.statusWarning, modifier = Modifier.size(18.dp))
                 Text(
-                    "WHOOP 5.0 / MG support is newer and still experimental in NOOP.",
+                    tr("WHOOP 5.0 / MG support is newer and still experimental in NOOP."),
                     style = NoopType.footnote,
                     color = Palette.statusWarning,
                 )
@@ -892,7 +892,7 @@ private fun PrepStep(type: DeviceType, onScan: () -> Unit) {
                 .background(Palette.accent)
                 .semantics { contentDescription = "Scan for ${type.title}" },
         ) {
-            Text("Scan", style = NoopType.headline, color = Palette.goldDeepText)
+            Text(tr("Scan"), style = NoopType.headline, color = Palette.goldDeepText)
         }
     }
 }
@@ -900,34 +900,34 @@ private fun PrepStep(type: DeviceType, onScan: () -> Unit) {
 /** Type-specific "get it ready" guidance - the point of the branching wizard. US English copy. */
 private fun prepInstructions(type: DeviceType): List<String> = when (type) {
     DeviceType.Whoop4 -> listOf(
-        "Put your WHOOP 4.0 on your wrist and make sure it's awake.",
-        "Make sure it's NOT connected to the official WHOOP app right now.",
-        "NOOP will look for it nearby.",
+        tr("Put your WHOOP 4.0 on your wrist and make sure it's awake."),
+        tr("Make sure it's NOT connected to the official WHOOP app right now."),
+        tr("NOOP will look for it nearby."),
     )
     DeviceType.Whoop5MG -> listOf(
-        "WHOOP 5.0 / MG bonds to one device at a time, so unpair it from the official WHOOP app first.",
-        "Put the band into pairing mode, on your wrist and awake.",
-        "NOOP will look for it nearby.",
+        tr("WHOOP 5.0 / MG bonds to one device at a time, so unpair it from the official WHOOP app first."),
+        tr("Put the band into pairing mode, on your wrist and awake."),
+        tr("NOOP will look for it nearby."),
     )
     DeviceType.HrStrap -> listOf(
-        "Wake your strap. Put it on, or dampen the contacts.",
-        "Make sure it isn't connected to another app (a bike computer, the brand's own app…).",
-        "NOOP will look for it nearby.",
+        tr("Wake your strap. Put it on, or dampen the contacts."),
+        tr("Make sure it isn't connected to another app (a bike computer, the brand's own app…)."),
+        tr("NOOP will look for it nearby."),
     )
     DeviceType.GymEquipment -> listOf(
-        "Wake the machine. Start pedalling, walking or rowing so it powers on its Bluetooth.",
-        "Make sure it isn't already connected to another app (Zwift, the gym's app, a bike computer…).",
-        "NOOP looks for machines that broadcast the standard Bluetooth Fitness Machine service.",
+        tr("Wake the machine. Start pedalling, walking or rowing so it powers on its Bluetooth."),
+        tr("Make sure it isn't already connected to another app (Zwift, the gym's app, a bike computer…)."),
+        tr("NOOP looks for machines that broadcast the standard Bluetooth Fitness Machine service."),
     )
     DeviceType.Amazfit -> listOf(
-        "Wake your Amazfit / Zepp band and make sure it isn't connected to the Zepp app right now.",
-        "NOOP reads live heart rate when the band exposes it. Some bands need a pairing we can't do yet. If so, we'll say so honestly.",
-        "Experimental: this is best-effort. If live doesn't work, you can export from Zepp and import the file.",
+        tr("Wake your Amazfit / Zepp band and make sure it isn't connected to the Zepp app right now."),
+        tr("NOOP reads live heart rate when the band exposes it. Some bands need a pairing we can't do yet. If so, we'll say so honestly."),
+        tr("Experimental: this is best-effort. If live doesn't work, you can export from Zepp and import the file."),
     )
     DeviceType.MiBand -> listOf(
-        "Wake your Mi Band and make sure it isn't connected to the Mi Fitness / Zepp Life app right now.",
-        "NOOP reads live heart rate on bands that don't require pairing. Newer bands need an auth handshake we can't do yet.",
-        "Experimental: if your band needs pairing, we'll tell you honestly rather than show a fake reading.",
+        tr("Wake your Mi Band and make sure it isn't connected to the Mi Fitness / Zepp Life app right now."),
+        tr("NOOP reads live heart rate on bands that don't require pairing. Newer bands need an auth handshake we can't do yet."),
+        tr("Experimental: if your band needs pairing, we'll tell you honestly rather than show a fake reading."),
     )
     DeviceType.Garmin -> com.noop.ble.GarminBroadcast.broadcastHint
     // Oura runs the factory-reset-and-adopt prep inside OuraFlow (ouraPrepInstructions), so this generic
@@ -938,11 +938,11 @@ private fun prepInstructions(type: DeviceType): List<String> = when (type) {
 /** The factory-reset prep checklist for the Oura adopt flow (Step B of the onboarding UX spec). No
  *  em-dashes; matches the iOS copy. */
 private val ouraPrepInstructions: List<String> = listOf(
-    "Open the official Oura app and remove this ring (Oura calls it \"factory reset\" or \"unpair and " +
-        "reset\"). This wipes the ring's owner so NOOP can take it over.",
-    "Keep the ring on the charger or on your finger so it stays awake.",
-    "Make sure the Oura app is fully closed. A ring answers one owner at a time.",
-    "When the ring is reset and waking, tap Scan below.",
+    tr("Open the official Oura app and remove this ring (Oura calls it \"factory reset\" or \"unpair and ") +
+        tr("reset\"). This wipes the ring's owner so NOOP can take it over."),
+    tr("Keep the ring on the charger or on your finger so it stays awake."),
+    tr("Make sure the Oura app is fully closed. A ring answers one owner at a time."),
+    tr("When the ring is reset and waking, tap Scan below."),
 )
 
 // MARK: - Step 3 - pick from the live scan
@@ -957,8 +957,8 @@ private fun WhoopPickStep(
     PickList(searching = true, isEmpty = found.isEmpty(), onRescan = onRescan) {
         found.sortedByDescending { it.rssi }.forEach { strap ->
             DiscoveredRow(
-                name = strap.name?.takeIf { it.isNotBlank() } ?: "WHOOP",
-                subtitle = "WHOOP",
+                name = strap.name?.takeIf { it.isNotBlank() } ?: tr("WHOOP"),
+                subtitle = tr("WHOOP"),
                 rssi = strap.rssi,
                 onTap = { onSelect(strap) },
             )
@@ -998,7 +998,7 @@ private fun FtmsPickStep(
         discovered.sortedByDescending { it.rssi }.forEach { machine ->
             DiscoveredRow(
                 name = machine.name,
-                subtitle = "Gym equipment",
+                subtitle = tr("Gym equipment"),
                 rssi = machine.rssi,
                 onTap = { onSelect(machine) },
             )
@@ -1018,7 +1018,7 @@ private fun HuamiPickStep(
         discovered.sortedByDescending { it.rssi }.forEach { dev ->
             DiscoveredRow(
                 name = dev.name,
-                subtitle = "Experimental",
+                subtitle = tr("Experimental"),
                 rssi = dev.rssi,
                 onTap = { onSelect(dev) },
             )
@@ -1080,10 +1080,10 @@ private fun OuraGateStep(
     Column(verticalArrangement = Arrangement.spacedBy(16.dp)) {
         // Beta banner (amber heads-up pattern).
         OuraAmberPanel(
-            "Beta. Read this first.",
-            "Local Oura support is new and we cannot test every ring here. It may not connect on your " +
-                "ring, and it can change between updates. NOOP never makes up a number. If something does " +
-                "not work, it will tell you plainly.",
+            tr("Beta. Read this first."),
+            tr("Local Oura support is new and we cannot test every ring here. It may not connect on your ") +
+                tr("ring, and it can change between updates. NOOP never makes up a number. If something does ") +
+                tr("not work, it will tell you plainly."),
         )
 
         // What you get / what you lose, two stacked sections on a frosted card.
@@ -1095,25 +1095,25 @@ private fun OuraGateStep(
                 .padding(16.dp),
             verticalArrangement = Arrangement.spacedBy(14.dp),
         ) {
-            Overline("What you get")
+            Overline(tr("What you get"))
             OuraBulletList(
                 listOf(
-                    "Your ring talks to NOOP only, fully offline, no Oura account.",
-                    "Live heart rate, and HRV when the ring can measure it.",
-                    "Overnight sleep staging, resting heart rate, skin-temperature trend, motion and " +
-                        "battery, read straight off the ring.",
-                    "NOOP's own Charge, Effort and Rest, computed on your device from published methods.",
+                    tr("Your ring talks to NOOP only, fully offline, no Oura account."),
+                    tr("Live heart rate, and HRV when the ring can measure it."),
+                    tr("Overnight sleep staging, resting heart rate, skin-temperature trend, motion and ") +
+                        tr("battery, read straight off the ring."),
+                    tr("NOOP's own Charge, Effort and Rest, computed on your device from published methods."),
                 ),
             )
-            Overline("What you lose")
+            Overline(tr("What you lose"))
             OuraBulletList(
                 listOf(
-                    "The Oura app and your Oura account stop working with this ring. This is the point. " +
-                        "You are replacing Oura.",
-                    "Oura's own Readiness and Sleep scores. NOOP does not copy them. It computes its own.",
-                    "Anything that needs Oura's cloud (web dashboard, Oura's coaching, shared circles).",
-                    "Likely your Oura warranty and support, because the ring is no longer paired to Oura. " +
-                        "Treat this as permanent.",
+                    tr("The Oura app and your Oura account stop working with this ring. This is the point. ") +
+                        tr("You are replacing Oura."),
+                    tr("Oura's own Readiness and Sleep scores. NOOP does not copy them. It computes its own."),
+                    tr("Anything that needs Oura's cloud (web dashboard, Oura's coaching, shared circles)."),
+                    tr("Likely your Oura warranty and support, because the ring is no longer paired to Oura. ") +
+                        tr("Treat this as permanent."),
                 ),
             )
         }
@@ -1127,7 +1127,7 @@ private fun OuraGateStep(
                 .clickable { onConsent(!consent) }
                 .semantics {
                     contentDescription =
-                        "I understand this disconnects the ring from Oura and that NOOP cannot undo it for me."
+                        tr("I understand this disconnects the ring from Oura and that NOOP cannot undo it for me.")
                 }
                 .padding(12.dp),
             horizontalArrangement = Arrangement.spacedBy(10.dp),
@@ -1140,8 +1140,8 @@ private fun OuraGateStep(
                 modifier = Modifier.size(20.dp),
             )
             Text(
-                "I understand this disconnects the ring from Oura and that NOOP cannot undo it for me. To " +
-                    "go back to Oura I would factory-reset the ring again and set it up in the Oura app.",
+                tr("I understand this disconnects the ring from Oura and that NOOP cannot undo it for me. To ") +
+                    tr("go back to Oura I would factory-reset the ring again and set it up in the Oura app."),
                 style = NoopType.footnote,
                 color = Palette.statusCritical,
             )
@@ -1155,21 +1155,21 @@ private fun OuraGateStep(
                 .fillMaxWidth()
                 .clip(RoundedCornerShape(12.dp))
                 .background(if (consent) Palette.accent else Palette.surfaceInset)
-                .semantics { contentDescription = "Continue" },
+                .semantics { contentDescription = tr("Continue") },
         ) {
             Text(
-                "Continue",
+                tr("Continue"),
                 style = NoopType.headline,
                 color = if (consent) Palette.goldDeepText else Palette.textTertiary,
             )
         }
         // Secondary: keep the Oura app (non-destructive file import) - always one tap away.
         TextButton(onClick = onUseFileImport, modifier = Modifier.fillMaxWidth()) {
-            Text("Keep the Oura app instead (import a file)", style = NoopType.subhead, color = Palette.accent)
+            Text(tr("Keep the Oura app instead (import a file)"), style = NoopType.subhead, color = Palette.accent)
         }
         // Tertiary: Advanced power-user key path.
         TextButton(onClick = onAdvanced, modifier = Modifier.fillMaxWidth()) {
-            Text("Advanced: I already have my ring's key", style = NoopType.footnote, color = Palette.accent)
+            Text(tr("Advanced: I already have my ring's key"), style = NoopType.footnote, color = Palette.accent)
         }
     }
 }
@@ -1186,13 +1186,13 @@ private fun OuraAdvancedKeyStep(
     val showError = keyDraft.isNotBlank() && parsed == null
     Column(verticalArrangement = Arrangement.spacedBy(16.dp)) {
         OuraAmberPanel(
-            "For power users.",
-            "If you extracted your ring's 16-byte key from a previous Oura setup, NOOP can talk to the " +
-                "ring with that key WITHOUT resetting it, so the Oura app keeps working too. NOOP does not " +
-                "extract keys for you and cannot help you find one. If you do not know what this means, go " +
-                "back and use the standard setup or file import.",
+            tr("For power users."),
+            tr("If you extracted your ring's 16-byte key from a previous Oura setup, NOOP can talk to the ") +
+                tr("ring with that key WITHOUT resetting it, so the Oura app keeps working too. NOOP does not ") +
+                tr("extract keys for you and cannot help you find one. If you do not know what this means, go ") +
+                tr("back and use the standard setup or file import."),
         )
-        Overline("Ring key (32 hex characters)")
+        Overline(tr("Ring key (32 hex characters)"))
         OutlinedTextField(
             value = keyDraft,
             onValueChange = { onKeyDraft(it) },
@@ -1204,13 +1204,13 @@ private fun OuraAdvancedKeyStep(
             colors = wizardFieldColors(),
             modifier = Modifier
                 .fillMaxWidth()
-                .semantics { contentDescription = "Ring key, 32 hex characters" },
+                .semantics { contentDescription = tr("Ring key, 32 hex characters") },
         )
         if (showError) {
-            Text("That is not a 32-character hex key.", style = NoopType.footnote, color = Palette.statusCritical)
+            Text(tr("That is not a 32-character hex key."), style = NoopType.footnote, color = Palette.statusCritical)
         }
         Text(
-            "NOOP stores this key only on this device, in the same place it stores your paired bands.",
+            tr("NOOP stores this key only on this device, in the same place it stores your paired bands."),
             style = NoopType.footnote,
             color = Palette.textTertiary,
         )
@@ -1221,10 +1221,10 @@ private fun OuraAdvancedKeyStep(
                 .fillMaxWidth()
                 .clip(RoundedCornerShape(12.dp))
                 .background(if (parsed != null) Palette.accent else Palette.surfaceInset)
-                .semantics { contentDescription = "Scan for your ring" },
+                .semantics { contentDescription = tr("Scan for your ring") },
         ) {
             Text(
-                "Scan for your ring",
+                tr("Scan for your ring"),
                 style = NoopType.headline,
                 color = if (parsed != null) Palette.goldDeepText else Palette.textTertiary,
             )
@@ -1256,9 +1256,9 @@ private fun OuraPrepStep(advanced: Boolean, onScan: () -> Unit) {
         // does not reset the ring, so it skips the "force-quit Oura" framing).
         if (!advanced) {
             OuraAmberPanel(
-                "A ring talks to one owner at a time.",
-                "If the Oura app is still running it will hold the ring and adoption will fail. Force-quit " +
-                    "Oura, then scan.",
+                tr("A ring talks to one owner at a time."),
+                tr("If the Oura app is still running it will hold the ring and adoption will fail. Force-quit ") +
+                    tr("Oura, then scan."),
             )
         }
         TextButton(
@@ -1267,9 +1267,9 @@ private fun OuraPrepStep(advanced: Boolean, onScan: () -> Unit) {
                 .fillMaxWidth()
                 .clip(RoundedCornerShape(12.dp))
                 .background(Palette.accent)
-                .semantics { contentDescription = "Scan for your ring" },
+                .semantics { contentDescription = tr("Scan for your ring") },
         ) {
-            Text("Scan for your ring", style = NoopType.headline, color = Palette.goldDeepText)
+            Text(tr("Scan for your ring"), style = NoopType.headline, color = Palette.goldDeepText)
         }
     }
 }
@@ -1287,13 +1287,13 @@ private fun OuraPickStep(
     Column(verticalArrangement = Arrangement.spacedBy(Metrics.gap)) {
         Row(verticalAlignment = Alignment.CenterVertically) {
             StatePill(
-                if (scanning) "Searching…" else "Idle",
+                if (scanning) tr("Searching…") else tr("Idle"),
                 tone = if (scanning) StrandTone.Accent else StrandTone.Neutral,
                 pulsing = scanning,
             )
             Spacer(Modifier.weight(1f))
             TextButton(onClick = onRescan) {
-                Text("Rescan", style = NoopType.subhead, color = Palette.accent)
+                Text(tr("Rescan"), style = NoopType.subhead, color = Palette.accent)
             }
         }
         if (discovered.isEmpty()) {
@@ -1306,10 +1306,10 @@ private fun OuraPickStep(
                 verticalArrangement = Arrangement.spacedBy(10.dp),
             ) {
                 CircularProgressIndicator(color = Palette.accent, modifier = Modifier.size(22.dp))
-                Text("Searching…", style = NoopType.body, color = Palette.textPrimary)
+                Text(tr("Searching…"), style = NoopType.body, color = Palette.textPrimary)
                 Text(
-                    "Not showing up? Make sure you reset the ring in the Oura app and force-quit it, then " +
-                        "tap Rescan. A ring still owned by Oura will not list here.",
+                    tr("Not showing up? Make sure you reset the ring in the Oura app and force-quit it, then ") +
+                        tr("tap Rescan. A ring still owned by Oura will not list here."),
                     style = NoopType.subhead,
                     color = Palette.textSecondary,
                 )
@@ -1320,7 +1320,7 @@ private fun OuraPickStep(
                     DiscoveredRow(
                         name = ring.name,
                         // Subtitle = the detected generation (best-effort); "Oura ring" when undetected.
-                        subtitle = ring.detectedGen?.displayName ?: "Oura ring",
+                        subtitle = ring.detectedGen?.displayName ?: tr("Oura ring"),
                         rssi = ring.rssi,
                         onTap = { onPick(ring) },
                     )
@@ -1353,7 +1353,7 @@ private fun OuraConfirmStep(
             Row(verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.spacedBy(10.dp)) {
                 Icon(Icons.Filled.Circle, contentDescription = null, tint = Palette.accent, modifier = Modifier.size(24.dp))
                 Text(gen.displayName, style = NoopType.headline, color = Palette.textPrimary, modifier = Modifier.weight(1f))
-                StatePill("Beta", tone = StrandTone.Warning, showsDot = false)
+                StatePill(tr("Beta"), tone = StrandTone.Warning, showsDot = false)
             }
             // Per-gen capability checklist: tick for supported, dash for not-available, * for an estimate.
             ouraCapabilityRows(gen).forEach { (mark, label) ->
@@ -1363,22 +1363,22 @@ private fun OuraConfirmStep(
                 }
             }
             Text(
-                "Beta. * is an on-device estimate. Skin temp is a trend versus your own baseline, steps " +
-                    "are a raw motion count, and HRV needs you to be still. No Oura Readiness or SpO2 " +
-                    "percentage comes off the ring (import an Oura file for those).",
+                tr("Beta. * is an on-device estimate. Skin temp is a trend versus your own baseline, steps ") +
+                    tr("are a raw motion count, and HRV needs you to be still. No Oura Readiness or SpO2 ") +
+                    tr("percentage comes off the ring (import an Oura file for those)."),
                 style = NoopType.footnote,
                 color = Palette.textTertiary,
             )
         }
 
-        Overline("Name")
+        Overline(tr("Name"))
         OutlinedTextField(
             value = name,
             onValueChange = onName,
             singleLine = true,
-            placeholder = { Text("Oura ring", style = NoopType.body, color = Palette.textTertiary) },
+            placeholder = { Text(tr("Oura ring"), style = NoopType.body, color = Palette.textTertiary) },
             colors = wizardFieldColors(),
-            modifier = Modifier.fillMaxWidth().semantics { contentDescription = "Device name" },
+            modifier = Modifier.fillMaxWidth().semantics { contentDescription = tr("Device name") },
         )
 
         // The adopt action. The destructive (key-install) path is red; the Advanced key path is not
@@ -1390,13 +1390,13 @@ private fun OuraConfirmStep(
                     .fillMaxWidth()
                     .clip(RoundedCornerShape(12.dp))
                     .background(Palette.accent)
-                    .semantics { contentDescription = "Connect to this ring" },
+                    .semantics { contentDescription = tr("Connect to this ring") },
             ) {
-                Text("Connect to this ring", style = NoopType.headline, color = Palette.goldDeepText)
+                Text(tr("Connect to this ring"), style = NoopType.headline, color = Palette.goldDeepText)
             }
             Text(
-                "Both NOOP and the Oura app can use a ring you own by key, but only one can hold the " +
-                    "Bluetooth link at a time.",
+                tr("Both NOOP and the Oura app can use a ring you own by key, but only one can hold the ") +
+                    tr("Bluetooth link at a time."),
                 style = NoopType.footnote,
                 color = Palette.textTertiary,
             )
@@ -1407,9 +1407,9 @@ private fun OuraConfirmStep(
                     .fillMaxWidth()
                     .clip(RoundedCornerShape(12.dp))
                     .background(Palette.statusCritical.copy(alpha = 0.16f))
-                    .semantics { contentDescription = "Take over this ring" },
+                    .semantics { contentDescription = tr("Take over this ring") },
             ) {
-                Text("Take over this ring", style = NoopType.headline, color = Palette.statusCritical)
+                Text(tr("Take over this ring"), style = NoopType.headline, color = Palette.statusCritical)
             }
         }
     }
@@ -1429,11 +1429,11 @@ private fun OuraAdoptingStep() {
     ) {
         Row(verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.spacedBy(12.dp)) {
             CircularProgressIndicator(color = Palette.accent, modifier = Modifier.size(22.dp))
-            Text("Taking over your ring", style = NoopType.headline, color = Palette.textPrimary)
+            Text(tr("Taking over your ring"), style = NoopType.headline, color = Palette.textPrimary)
         }
         Text(
-            "Installing NOOP's key and confirming the ring answers only to NOOP. Keep the ring close and " +
-                "do not open the Oura app.",
+            tr("Installing NOOP's key and confirming the ring answers only to NOOP. Keep the ring close and ") +
+                tr("do not open the Oura app."),
             style = NoopType.subhead,
             color = Palette.textSecondary,
         )
@@ -1452,20 +1452,20 @@ private fun OuraFailedStep(reason: String?, onTryAgain: () -> Unit, onUseFileImp
             .padding(16.dp),
         verticalArrangement = Arrangement.spacedBy(12.dp),
     ) {
-        Text("We could not take over this ring.", style = NoopType.headline, color = Palette.textPrimary)
+        Text(tr("We could not take over this ring."), style = NoopType.headline, color = Palette.textPrimary)
         // Surface the live adopt-failure reason when the source reported one; otherwise the static help.
         // Mirrors the Swift wizard's `model.ouraNeedsPairing ?? <static fallback>`.
         Text(
-            reason ?: "The most common cause is the ring was not fully reset in the Oura app, or the Oura " +
-                "app is still running. Reset the ring again, force-quit Oura, then try once more. If it keeps " +
-                "failing, your ring may be a generation NOOP cannot adopt yet. You can still use file import.",
+            reason ?: tr("The most common cause is the ring was not fully reset in the Oura app, or the Oura ") +
+                tr("app is still running. Reset the ring again, force-quit Oura, then try once more. If it keeps ") +
+                tr("failing, your ring may be a generation NOOP cannot adopt yet. You can still use file import."),
             style = NoopType.subhead,
             color = Palette.textSecondary,
         )
         // Honest recovery reassurance (Swift parity): a failed adopt never bricks the ring.
         Text(
-            "The ring is not bricked. To go back to where you started, factory-reset it again and set it " +
-                "up in the Oura app.",
+            tr("The ring is not bricked. To go back to where you started, factory-reset it again and set it ") +
+                tr("up in the Oura app."),
             style = NoopType.subhead,
             color = Palette.textSecondary,
         )
@@ -1477,7 +1477,7 @@ private fun OuraFailedStep(reason: String?, onTryAgain: () -> Unit, onUseFileImp
                     .clip(RoundedCornerShape(12.dp))
                     .background(Palette.accent),
             ) {
-                Text("Try again", style = NoopType.headline, color = Palette.goldDeepText)
+                Text(tr("Try again"), style = NoopType.headline, color = Palette.goldDeepText)
             }
             TextButton(
                 onClick = onUseFileImport,
@@ -1486,7 +1486,7 @@ private fun OuraFailedStep(reason: String?, onTryAgain: () -> Unit, onUseFileImp
                     .clip(RoundedCornerShape(12.dp))
                     .background(Palette.surfaceInset),
             ) {
-                Text("Use file import", style = NoopType.headline, color = Palette.accent)
+                Text(tr("Use file import"), style = NoopType.headline, color = Palette.accent)
             }
         }
     }
@@ -1538,15 +1538,15 @@ private fun ouraCapabilityRows(gen: OuraRingGen): List<Pair<String, String>> {
     val live = if (gen == OuraRingGen.GEN5) "*" else "✓"   // newer rings: live HR is best-effort
     val firm = if (gen == OuraRingGen.GEN5) "*" else "✓"   // resting HR / sleep / battery
     return listOf(
-        live to "Live heart rate",
-        "*" to "HRV (rMSSD)",
-        firm to "Resting heart rate",
-        firm to "Sleep staging",
-        "*" to "Skin-temperature trend",
-        "*" to "Steps / motion",
-        firm to "Battery",
+        live to tr("Live heart rate"),
+        "*" to tr("HRV (rMSSD)"),
+        firm to tr("Resting heart rate"),
+        firm to tr("Sleep staging"),
+        "*" to tr("Skin-temperature trend"),
+        "*" to tr("Steps / motion"),
+        firm to tr("Battery"),
         "-" to "Blood oxygen (SpO2 %)",
-        "-" to "Oura Readiness / Sleep score",
+        "-" to tr("Oura Readiness / Sleep score"),
     )
 }
 
@@ -1575,13 +1575,13 @@ private fun PickList(
     Column(verticalArrangement = Arrangement.spacedBy(Metrics.gap)) {
         Row(verticalAlignment = Alignment.CenterVertically) {
             StatePill(
-                if (searching) "Searching…" else "Idle",
+                if (searching) tr("Searching…") else tr("Idle"),
                 tone = if (searching) StrandTone.Accent else StrandTone.Neutral,
                 pulsing = searching,
             )
             Spacer(Modifier.weight(1f))
             TextButton(onClick = onRescan) {
-                Text("Rescan", style = NoopType.subhead, color = Palette.accent)
+                Text(tr("Rescan"), style = NoopType.subhead, color = Palette.accent)
             }
         }
         if (isEmpty) {
@@ -1594,9 +1594,9 @@ private fun PickList(
                 verticalArrangement = Arrangement.spacedBy(10.dp),
             ) {
                 CircularProgressIndicator(color = Palette.accent, modifier = Modifier.size(22.dp))
-                Text("Searching…", style = NoopType.body, color = Palette.textPrimary)
+                Text(tr("Searching…"), style = NoopType.body, color = Palette.textPrimary)
                 Text(
-                    "Make sure it's awake and not connected elsewhere.",
+                    tr("Make sure it's awake and not connected elsewhere."),
                     style = NoopType.subhead,
                     color = Palette.textSecondary,
                 )
@@ -1662,16 +1662,16 @@ private fun ConfirmStep(
             }
         }
 
-        Overline("Name")
+        Overline(tr("Name"))
         OutlinedTextField(
             value = name,
             onValueChange = onName,
             singleLine = true,
-            placeholder = { Text("Device name", style = NoopType.body, color = Palette.textTertiary) },
+            placeholder = { Text(tr("Device name"), style = NoopType.body, color = Palette.textTertiary) },
             colors = wizardFieldColors(),
             modifier = Modifier
                 .fillMaxWidth()
-                .semantics { contentDescription = "Device name" },
+                .semantics { contentDescription = tr("Device name") },
         )
 
         TextButton(
@@ -1683,7 +1683,7 @@ private fun ConfirmStep(
                 .background(if (name.trim().isNotEmpty()) Palette.accent else Palette.surfaceInset),
         ) {
             Text(
-                "Add",
+                tr("Add"),
                 style = NoopType.headline,
                 color = if (name.trim().isNotEmpty()) Palette.goldDeepText else Palette.textTertiary,
             )

@@ -105,16 +105,16 @@ object RhythmConsent {
     /** The points the user must read before turning the feature on (spec §9). No condition
      *  name, no diagnosis, no "consider a clinician" verdict. Kept identical to macOS. */
     val points: List<Pair<String, String>> = listOf(
-        "Experimental, and not a medical device" to
-            "This is an experimental wellness visualization of your beat-to-beat timing. It is NOT an ECG, and it cannot diagnose, detect, or rule out any heart condition.",
-        "It is a picture, not a verdict" to
-            "It shows the shape of your heartbeat timing and a plain-language description of how steady it looked. It does not tell you whether anything is right or wrong.",
-        "Variation is normal and often benign" to
-            "Beat-to-beat timing varies for many ordinary reasons: breathing, movement, an imperfect optical reading, or the occasional extra or skipped beat that most healthy people have.",
-        "It is not a substitute for a professional" to
-            "If you feel unwell or are worried about your heart, contact a qualified professional; in an emergency, your local emergency service. Do not rely on NOOP.",
-        "Everything stays on your device" to
-            "All of this is computed on your own device from data you already have. No heartbeat data leaves it.",
+        tr("Experimental, and not a medical device") to
+            tr("This is an experimental wellness visualization of your beat-to-beat timing. It is NOT an ECG, and it cannot diagnose, detect, or rule out any heart condition."),
+        tr("It is a picture, not a verdict") to
+            tr("It shows the shape of your heartbeat timing and a plain-language description of how steady it looked. It does not tell you whether anything is right or wrong."),
+        tr("Variation is normal and often benign") to
+            tr("Beat-to-beat timing varies for many ordinary reasons: breathing, movement, an imperfect optical reading, or the occasional extra or skipped beat that most healthy people have."),
+        tr("It is not a substitute for a professional") to
+            tr("If you feel unwell or are worried about your heart, contact a qualified professional; in an emergency, your local emergency service. Do not rely on NOOP."),
+        tr("Everything stays on your device") to
+            tr("All of this is computed on your own device from data you already have. No heartbeat data leaves it."),
     )
 }
 
@@ -135,10 +135,10 @@ fun RhythmConsentGate(
     Surface(modifier = Modifier.fillMaxSize(), color = Palette.surfaceBase) {
         Column(modifier = Modifier.fillMaxSize().padding(horizontal = 24.dp)) {
             Spacer(Modifier.height(40.dp))
-            Text("Before you turn on Rhythm", style = NoopType.title1, color = Palette.textPrimary)
+            Text(tr("Before you turn on Rhythm"), style = NoopType.title1, color = Palette.textPrimary)
             Spacer(Modifier.height(4.dp))
             Text(
-                "An experimental picture of your beat-to-beat timing. Please read these first.",
+                tr("An experimental picture of your beat-to-beat timing. Please read these first."),
                 style = NoopType.subhead, color = Palette.textSecondary,
             )
             Spacer(Modifier.height(20.dp))
@@ -154,7 +154,7 @@ fun RhythmConsentGate(
                     }
                 }
                 Text(
-                    "This is a wellness visualization, not a screening test. It does not tell you to see a clinician and it names no condition. This is not legal or medical advice.",
+                    tr("This is a wellness visualization, not a screening test. It does not tell you to see a clinician and it names no condition. This is not legal or medical advice."),
                     style = NoopType.footnote, color = Palette.textTertiary,
                 )
             }
@@ -168,7 +168,7 @@ fun RhythmConsentGate(
                 )
                 Spacer(Modifier.width(8.dp))
                 Text(
-                    "I understand this is an experimental wellness feature, not a medical device or a diagnosis.",
+                    tr("I understand this is an experimental wellness feature, not a medical device or a diagnosis."),
                     style = NoopType.footnote, color = Palette.textPrimary,
                     modifier = Modifier.padding(top = 14.dp),
                 )
@@ -183,11 +183,11 @@ fun RhythmConsentGate(
                     contentColor = Palette.goldDeepText,
                 ),
             ) {
-                Text("Turn on Rhythm", style = NoopType.body)
+                Text(tr("Turn on Rhythm"), style = NoopType.body)
             }
             if (onCancel != null) {
                 TextButton(onClick = onCancel, modifier = Modifier.fillMaxWidth()) {
-                    Text("Not now", style = NoopType.body, color = Palette.gold)
+                    Text(tr("Not now"), style = NoopType.body, color = Palette.gold)
                 }
             }
             Spacer(Modifier.height(24.dp))
@@ -246,25 +246,25 @@ private fun RhythmVisualization(
     // only on-screen cards compose + are accessibility-walked, with the LazyColumn's `spacedBy(20.dp)`
     // reproducing the eager column's inter-card spacing exactly. The Poincaré PlotCard is the heavy one.
     LazyScreenScaffold(
-        title = "Rhythm",
-        subtitle = "An experimental picture of your beat-to-beat timing",
+        title = tr("Rhythm"),
+        subtitle = tr("An experimental picture of your beat-to-beat timing"),
         trailing = if (onClose != null) {
             {
                 IconButton(onClick = onClose) {
-                    Icon(Icons.Filled.Close, contentDescription = "Close Rhythm", tint = Palette.textTertiary)
+                    Icon(Icons.Filled.Close, contentDescription = tr("Close Rhythm"), tint = Palette.textTertiary)
                 }
             }
         } else {
             null
         },
     ) {
-        item { SourceBadge("Experimental", tint = Palette.restColor) }
+        item { SourceBadge(tr("Experimental"), tint = Palette.restColor) }
 
         if (allPoints.isEmpty()) {
             item {
             DataPendingNote(
-                title = "No clear reading yet",
-                body = "Rhythm only looks during quiet, still, resting windows, so it needs a calm night's worth of steady beats. Once there's a clean window, the scatter and its description show here.",
+                title = tr("No clear reading yet"),
+                body = tr("Rhythm only looks during quiet, still, resting windows, so it needs a calm night's worth of steady beats. Once there's a clean window, the scatter and its description show here."),
             )
             }
         } else {
@@ -289,7 +289,7 @@ private fun SummaryCard(
     NoopCard(padding = 18.dp, tint = Palette.restColor) {
         Column(verticalArrangement = Arrangement.spacedBy(10.dp)) {
             Row(verticalAlignment = Alignment.CenterVertically) {
-                Overline("Last night", modifier = Modifier.weight(1f))
+                Overline(tr("Last night"), modifier = Modifier.weight(1f))
                 ConfidencePill(headline = headline, readable = night?.readableWindows)
             }
             Text(headlineLabel(label), style = NoopType.title2, color = Palette.textPrimary)
@@ -306,14 +306,14 @@ private fun SummaryCard(
 private fun ConfidencePill(headline: RhythmScreener.WindowResult?, readable: Int?) {
     when (headline?.confidence ?: RhythmConfidence.CALIBRATING) {
         RhythmConfidence.SOLID ->
-            StatePill("Solid", tone = StrandTone.Accent)
+            StatePill(tr("Solid"), tone = StrandTone.Accent)
         RhythmConfidence.BUILDING ->
             StatePill(
-                if ((readable ?: 0) <= 1) "Building · 1 window" else "Building",
+                if ((readable ?: 0) <= 1) tr("Building · 1 window") else tr("Building"),
                 tone = StrandTone.Warning,
             )
         RhythmConfidence.CALIBRATING ->
-            StatePill("Calibrating", tone = StrandTone.Neutral)
+            StatePill(tr("Calibrating"), tone = StrandTone.Neutral)
     }
 }
 
@@ -323,7 +323,7 @@ private fun ConfidencePill(headline: RhythmScreener.WindowResult?, readable: Int
 private fun PlotCard(points: List<RhythmScreener.PoincarePoint>) {
     NoopCard(padding = 18.dp, tint = Palette.restColor) {
         Column(verticalArrangement = Arrangement.spacedBy(12.dp)) {
-            Overline("Beat-to-beat scatter")
+            Overline(tr("Beat-to-beat scatter"))
             Box(
                 modifier = Modifier
                     .fillMaxWidth()
@@ -341,7 +341,7 @@ private fun PlotCard(points: List<RhythmScreener.PoincarePoint>) {
                 )
             }
             Text(
-                "Each dot pairs one heartbeat interval with the next. A tight line along the diagonal means a steady beat; a rounder, more spread-out cloud means the timing varied more.",
+                tr("Each dot pairs one heartbeat interval with the next. A tight line along the diagonal means a steady beat; a rounder, more spread-out cloud means the timing varied more."),
                 style = NoopType.footnote, color = Palette.textTertiary,
             )
         }
@@ -408,40 +408,40 @@ private fun PoincarePlot(
 @Composable
 private fun StatsCard(headline: RhythmScreener.WindowResult?) {
     Column(verticalArrangement = Arrangement.spacedBy(Metrics.gap)) {
-        SectionHeader(title = "The numbers", overline = "Descriptive stats")
+        SectionHeader(title = tr("The numbers"), overline = tr("Descriptive stats"))
         Row(horizontalArrangement = Arrangement.spacedBy(Metrics.gap)) {
             StatTile(
-                label = "Short axis", value = fmt(headline?.sd1, "%.0f"),
-                caption = "SD1 · ms", accent = Palette.restBright,
+                label = tr("Short axis"), value = fmt(headline?.sd1, "%.0f"),
+                caption = tr("SD1 · ms"), accent = Palette.restBright,
                 modifier = Modifier.weight(1f),
             )
             StatTile(
-                label = "Long axis", value = fmt(headline?.sd2, "%.0f"),
-                caption = "SD2 · ms", accent = Palette.restColor,
+                label = tr("Long axis"), value = fmt(headline?.sd2, "%.0f"),
+                caption = tr("SD2 · ms"), accent = Palette.restColor,
                 modifier = Modifier.weight(1f),
             )
         }
         Row(horizontalArrangement = Arrangement.spacedBy(Metrics.gap)) {
             StatTile(
-                label = "Cloud shape", value = fmt(headline?.sd1sd2, "%.2f"),
-                caption = "SD1:SD2 ratio", accent = Palette.metricCyan,
+                label = tr("Cloud shape"), value = fmt(headline?.sd1sd2, "%.2f"),
+                caption = tr("SD1:SD2 ratio"), accent = Palette.metricCyan,
                 modifier = Modifier.weight(1f),
             )
             StatTile(
-                label = "Beat-to-beat", value = percent(headline?.normRmssd),
-                caption = "variation index", accent = Palette.metricPurple,
+                label = tr("Beat-to-beat"), value = percent(headline?.normRmssd),
+                caption = tr("variation index"), accent = Palette.metricPurple,
                 modifier = Modifier.weight(1f),
             )
         }
         Row(horizontalArrangement = Arrangement.spacedBy(Metrics.gap)) {
             StatTile(
-                label = "Extra / skipped", value = percent(headline?.ectopicFraction),
-                caption = "of beats", accent = Palette.restColor,
+                label = tr("Extra / skipped"), value = percent(headline?.ectopicFraction),
+                caption = tr("of beats"), accent = Palette.restColor,
                 modifier = Modifier.weight(1f),
             )
             StatTile(
-                label = "Beats read", value = headline?.nBeats?.toString() ?: "—",
-                caption = "clean intervals", accent = Palette.textSecondary,
+                label = tr("Beats read"), value = headline?.nBeats?.toString() ?: "—",
+                caption = tr("clean intervals"), accent = Palette.textSecondary,
                 modifier = Modifier.weight(1f),
             )
         }
@@ -454,9 +454,9 @@ private fun StatsCard(headline: RhythmScreener.WindowResult?) {
 private fun MethodologyCard() {
     NoopCard {
         Column(verticalArrangement = Arrangement.spacedBy(8.dp)) {
-            Overline("How this is measured")
+            Overline(tr("How this is measured"))
             Text(
-                "During quiet, still, resting windows, NOOP looks at the timing between your heartbeats (R-R intervals) and draws their Poincaré scatter. From the cloud it computes its short and long axes (SD1, SD2) and a few plain regularity numbers. Movement and noisy windows are skipped, not shown. These are transparent, published descriptive statistics: a picture of your timing, never a clinical measurement.",
+                tr("During quiet, still, resting windows, NOOP looks at the timing between your heartbeats (R-R intervals) and draws their Poincaré scatter. From the cloud it computes its short and long axes (SD1, SD2) and a few plain regularity numbers. Movement and noisy windows are skipped, not shown. These are transparent, published descriptive statistics: a picture of your timing, never a clinical measurement."),
                 style = NoopType.footnote, color = Palette.textTertiary,
             )
         }
@@ -481,7 +481,7 @@ private fun RhythmDisclaimerNote() {
                 modifier = Modifier.size(18.dp),
             )
             Text(
-                "Experimental wellness visualization: not a diagnosis, not an ECG, and not a medical device. It cannot detect any heart condition. Beat-to-beat variation has many ordinary, benign causes. If you feel unwell or are worried, contact a qualified professional; in an emergency, your local emergency service. Everything is computed on your device.",
+                tr("Experimental wellness visualization: not a diagnosis, not an ECG, and not a medical device. It cannot detect any heart condition. Beat-to-beat variation has many ordinary, benign causes. If you feel unwell or are worried, contact a qualified professional; in an emergency, your local emergency service. Everything is computed on your device."),
                 style = NoopType.footnote, color = Palette.textTertiary,
             )
         }
@@ -491,21 +491,21 @@ private fun RhythmDisclaimerNote() {
 // ── Copy mapping (neutral, non-clinical — NO verdict, NO condition name) ──────────────────
 
 private fun headlineLabel(label: RhythmRegularity): String = when (label) {
-    RhythmRegularity.STEADY -> "Your rhythm looked steady"
-    RhythmRegularity.OCCASIONAL_ECTOPY -> "Some occasional extra or skipped beats"
-    RhythmRegularity.VARIED -> "Your rhythm varied more than usual"
-    RhythmRegularity.UNREADABLE -> "Couldn't read clearly"
+    RhythmRegularity.STEADY -> tr("Your rhythm looked steady")
+    RhythmRegularity.OCCASIONAL_ECTOPY -> tr("Some occasional extra or skipped beats")
+    RhythmRegularity.VARIED -> tr("Your rhythm varied more than usual")
+    RhythmRegularity.UNREADABLE -> tr("Couldn't read clearly")
 }
 
 private fun headlineDetail(label: RhythmRegularity): String = when (label) {
     RhythmRegularity.STEADY ->
-        "Across the quiet windows we could read, your beat-to-beat timing held a tight, even shape."
+        tr("Across the quiet windows we could read, your beat-to-beat timing held a tight, even shape.")
     RhythmRegularity.OCCASIONAL_ECTOPY ->
-        "Mostly steady, with a few isolated extra or skipped beats. Very common and usually nothing."
+        tr("Mostly steady, with a few isolated extra or skipped beats. Very common and usually nothing.")
     RhythmRegularity.VARIED ->
-        "The scatter looked rounder and more spread out than a tight, steady beat. This has many ordinary causes and is not a diagnosis."
+        tr("The scatter looked rounder and more spread out than a tight, steady beat. This has many ordinary causes and is not a diagnosis.")
     RhythmRegularity.UNREADABLE ->
-        "There wasn't a calm, still window clean enough to describe. Try again after a settled night."
+        tr("There wasn't a calm, still window clean enough to describe. Try again after a settled night.")
 }
 
 // ── Formatting ────────────────────────────────────────────────────────────────────────────

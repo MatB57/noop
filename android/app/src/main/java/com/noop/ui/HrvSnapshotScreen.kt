@@ -160,28 +160,28 @@ fun HrvSnapshotScreen(
     // items. Conditional sections use `if (cond) { item {} }` so a hidden result/hint adds no row. Order +
     // spacing identical (LazyColumn reproduces the eager `spacedBy(20.dp)`).
     LazyScreenScaffold(
-        title = "HRV Reading",
-        subtitle = "A still, seated snapshot of your heart-rate variability",
+        title = tr("HRV Reading"),
+        subtitle = tr("A still, seated snapshot of your heart-rate variability"),
     ) {
         // Status row.
         item {
         Row(modifier = Modifier.fillMaxWidth(), verticalAlignment = Alignment.CenterVertically) {
             when (phase) {
-                HrvPhase.Idle -> StatePill("Ready", tone = StrandTone.Neutral)
-                HrvPhase.Capturing -> StatePill("Capturing", tone = StrandTone.Accent, pulsing = true)
-                HrvPhase.Done -> StatePill("Reading complete", tone = StrandTone.Positive)
+                HrvPhase.Idle -> StatePill(tr("Ready"), tone = StrandTone.Neutral)
+                HrvPhase.Capturing -> StatePill(tr("Capturing"), tone = StrandTone.Accent, pulsing = true)
+                HrvPhase.Done -> StatePill(tr("Reading complete"), tone = StrandTone.Positive)
             }
             Spacer(Modifier.width(8.dp))
             if (bonded) {
-                StatePill("Strap live", tone = StrandTone.Positive)
+                StatePill(tr("Strap live"), tone = StrandTone.Positive)
             } else {
-                StatePill("Not connected", tone = StrandTone.Warning)
+                StatePill(tr("Not connected"), tone = StrandTone.Warning)
             }
             Spacer(Modifier.weight(1f))
             IconButton(onClick = onClose) {
                 Icon(
                     Icons.Filled.Close,
-                    contentDescription = "Close HRV reading",
+                    contentDescription = tr("Close HRV reading"),
                     tint = Palette.textTertiary,
                 )
             }
@@ -210,7 +210,7 @@ fun HrvSnapshotScreen(
                     CaptureDial(
                         fraction = captureFraction(phase, secondsRemaining),
                         value = dialValue(phase, runningRmssd, result),
-                        unit = if (phase == HrvPhase.Idle) "RMSSD" else "MS RMSSD",
+                        unit = if (phase == HrvPhase.Idle) tr("RMSSD") else tr("MS RMSSD"),
                         sub = if (phase == HrvPhase.Capturing) {
                             "${secondsRemaining}s left · ${captureBuffer.value.size} beats"
                         } else null,
@@ -285,7 +285,7 @@ fun HrvSnapshotScreen(
                     colors = ButtonDefaults.outlinedButtonColors(contentColor = Palette.accent),
                 ) {
                     Icon(Icons.Filled.Download, contentDescription = null, modifier = Modifier.padding(end = 6.dp))
-                    Text(if (saved) "Saved" else "Save", style = NoopType.body)
+                    Text(if (saved) tr("Saved") else tr("Save"), style = NoopType.body)
                 }
             }
         }
@@ -303,11 +303,11 @@ fun HrvSnapshotScreen(
         item {
         NoopCard(tint = Palette.restColor) {
             Column(verticalArrangement = Arrangement.spacedBy(8.dp)) {
-                Overline("How this is measured")
+                Overline(tr("How this is measured"))
                 Text(
-                    "A 60-second snapshot of your beat-to-beat (R-R) intervals from the strap, cleaned " +
-                        "(range and ectopic-beat filtering) before computing RMSSD the same way your " +
-                        "overnight HRV is computed.",
+                    tr("A 60-second snapshot of your beat-to-beat (R-R) intervals from the strap, cleaned ") +
+                        tr("(range and ectopic-beat filtering) before computing RMSSD the same way your ") +
+                        tr("overnight HRV is computed."),
                     style = NoopType.footnote, color = Palette.textTertiary,
                 )
                 Text(
@@ -396,7 +396,7 @@ private fun CaptureDial(fraction: Float, value: String, unit: String, sub: Strin
 private fun ResultCard(result: HrvAnalyzer.HrvResult) {
     NoopCard(padding = 18.dp, tint = Palette.restColor) {
         Column(verticalArrangement = Arrangement.spacedBy(14.dp)) {
-            Overline("Your reading")
+            Overline(tr("Your reading"))
 
             if (result.rmssd == null) {
                 Row(
@@ -414,30 +414,30 @@ private fun ResultCard(result: HrvAnalyzer.HrvResult) {
                 Row(horizontalArrangement = Arrangement.spacedBy(Metrics.gap)) {
                     StatTile(
                         modifier = Modifier.weight(1f),
-                        label = "RMSSD",
+                        label = tr("RMSSD"),
                         value = formatHrv(result.rmssd, "%.0f"),
                         caption = "ms",
                         accent = Palette.metricPurple,
                     )
                     StatTile(
                         modifier = Modifier.weight(1f),
-                        label = "SDNN",
+                        label = tr("SDNN"),
                         value = formatHrv(result.sdnn, "%.0f"),
                         caption = "ms",
                         accent = Palette.restBright,
                     )
                     StatTile(
                         modifier = Modifier.weight(1f),
-                        label = "Mean HR",
+                        label = tr("Mean HR"),
                         value = formatHrv(meanHr(result.meanNN), "%.0f"),
                         caption = "bpm",
                         accent = Palette.metricRose,
                     )
                     StatTile(
                         modifier = Modifier.weight(1f),
-                        label = "Beats",
+                        label = tr("Beats"),
                         value = "${result.nClean}",
-                        caption = "used",
+                        caption = tr("used"),
                         accent = Palette.metricCyan,
                     )
                 }
@@ -461,8 +461,8 @@ private fun NotBondedHint() {
     ) {
         Icon(Icons.Filled.MonitorHeart, contentDescription = null, tint = Palette.statusWarning)
         Text(
-            "An HRV reading needs the live R-R stream. Open the Live screen and connect your strap, " +
-                "then come back.",
+            tr("An HRV reading needs the live R-R stream. Open the Live screen and connect your strap, ") +
+                tr("then come back."),
             style = NoopType.footnote, color = Palette.textSecondary,
         )
     }
@@ -496,23 +496,23 @@ private fun dialValue(phase: HrvPhase, runningRmssd: Double?, result: HrvAnalyze
     }
 
 private fun primaryLabel(phase: HrvPhase): String = when (phase) {
-    HrvPhase.Idle -> "Take an HRV reading"
-    HrvPhase.Capturing -> "Cancel"
-    HrvPhase.Done -> "Take another reading"
+    HrvPhase.Idle -> tr("Take an HRV reading")
+    HrvPhase.Capturing -> tr("Cancel")
+    HrvPhase.Done -> tr("Take another reading")
 }
 
 private fun instruction(phase: HrvPhase, bonded: Boolean, result: HrvAnalyzer.HrvResult?): String =
     when (phase) {
         HrvPhase.Idle -> if (bonded) {
-            "Sit still and breathe normally. Tap below to take a 60-second reading."
+            tr("Sit still and breathe normally. Tap below to take a 60-second reading.")
         } else {
-            "Connect your strap on the Live screen to take a reading."
+            tr("Connect your strap on the Live screen to take a reading.")
         }
-        HrvPhase.Capturing -> "Sit still, breathe normally. Keep your wrist relaxed and steady."
+        HrvPhase.Capturing -> tr("Sit still, breathe normally. Keep your wrist relaxed and steady.")
         HrvPhase.Done -> if (result != null && result.rmssd == null) {
-            "Not enough clean beats - sit still and try again."
+            tr("Not enough clean beats - sit still and try again.")
         } else {
-            "Done. Save this reading to keep it in your trends."
+            tr("Done. Save this reading to keep it in your trends.")
         }
     }
 

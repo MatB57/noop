@@ -176,8 +176,8 @@ fun HydrationScreen(viewModel: AppViewModel) {
     // pattern — LiquidScreenSky.kt), replacing the classic flat canvas. Gated on the day-cycle pref, so an
     // opted-out user still gets the plain surface. Mirrors the liquid Today scaffold.
     LazyScreenScaffold(
-        title = "Hydration",
-        subtitle = "Your fluid intake today, on this phone only.",
+        title = tr("Hydration"),
+        subtitle = tr("Your fluid intake today, on this phone only."),
         topBackground = if (showDayCycleBackground) { { LiquidScreenSky() } } else null,
     ) {
         // HERO — the day's intake as a LiquidVessel (water in a vessel: the literal fit), with the litre
@@ -263,19 +263,19 @@ fun HydrationScreen(viewModel: AppViewModel) {
         item {
             Row(horizontalArrangement = Arrangement.spacedBy(10.dp), modifier = Modifier.fillMaxWidth()) {
                 LiquidLogTile(
-                    label = "Sip",
+                    label = tr("Sip"),
                     icon = Icons.Filled.WaterDrop,
                     accent = accent,
                     modifier = Modifier.weight(1f),
                 ) { log(HydrationGoal.SIP_ML) }
                 LiquidLogTile(
-                    label = "Cup",
+                    label = tr("Cup"),
                     icon = Icons.Filled.LocalDrink,
                     accent = accent,
                     modifier = Modifier.weight(1f),
                 ) { log(HydrationGoal.CUP_ML) }
                 LiquidLogTile(
-                    label = "Bottle",
+                    label = tr("Bottle"),
                     icon = Icons.Filled.LocalDrink,
                     accent = accent,
                     modifier = Modifier.weight(1f),
@@ -287,7 +287,7 @@ fun HydrationScreen(viewModel: AppViewModel) {
         // NoopButton — it carries its own press feedback and this is a secondary affordance, not a quick-log.)
         item {
             NoopButton(
-                text = "Custom amount",
+                text = tr("Custom amount"),
                 leadingIcon = Icons.Filled.Add,
                 kind = NoopButtonKind.Secondary,
                 modifier = Modifier.fillMaxWidth(),
@@ -306,7 +306,7 @@ fun HydrationScreen(viewModel: AppViewModel) {
         item {
             NoopCard(padding = 18.dp) {
                 Column(verticalArrangement = Arrangement.spacedBy(12.dp)) {
-                    Overline("Last 7 days")
+                    Overline(tr("Last 7 days"))
                     HydrationHistoryBars(history = history, goalMl = goalMl, accent = accent)
                 }
             }
@@ -317,10 +317,10 @@ fun HydrationScreen(viewModel: AppViewModel) {
         item {
             NoopCard(padding = 18.dp) {
                 Column(verticalArrangement = Arrangement.spacedBy(8.dp)) {
-                    Overline("Today")
+                    Overline(tr("Today"))
                     if (totalMl <= 0.0) {
                         Text(
-                            "No drinks logged yet. Tap Sip, Cup or Bottle to start.",
+                            tr("No drinks logged yet. Tap Sip, Cup or Bottle to start."),
                             style = NoopType.subhead,
                             color = Palette.textSecondary,
                         )
@@ -337,7 +337,7 @@ fun HydrationScreen(viewModel: AppViewModel) {
                             )
                             Spacer(Modifier.width(10.dp))
                             Text(
-                                "Logged today",
+                                tr("Logged today"),
                                 style = NoopType.subhead,
                                 color = Palette.textPrimary,
                                 modifier = Modifier.weight(1f),
@@ -362,7 +362,7 @@ fun HydrationScreen(viewModel: AppViewModel) {
                                 ) { remove(last) }
                             }
                             NoopButton(
-                                text = "Clear today",
+                                text = tr("Clear today"),
                                 leadingIcon = Icons.Filled.Delete,
                                 kind = NoopButtonKind.Secondary,
                                 modifier = Modifier.weight(1f),
@@ -375,7 +375,7 @@ fun HydrationScreen(viewModel: AppViewModel) {
 
         item {
             Text(
-                "A simple goal that adjusts to your effort. General wellness guidance, not medical advice.",
+                tr("A simple goal that adjusts to your effort. General wellness guidance, not medical advice."),
                 style = NoopType.footnote,
                 color = Palette.textTertiary,
                 textAlign = TextAlign.Start,
@@ -444,7 +444,7 @@ private fun HydrationHistoryBars(
     accent: Color,
 ) {
     if (history.isEmpty()) {
-        Text("No history yet.", style = NoopType.footnote, color = Palette.textTertiary)
+        Text(tr("No history yet."), style = NoopType.footnote, color = Palette.textTertiary)
         return
     }
     val goal = goalMl.coerceAtLeast(1).toDouble()
@@ -536,7 +536,7 @@ private fun CustomAmountDialog(
                     modifier = Modifier.size(20.dp),
                 )
                 Spacer(Modifier.width(10.dp))
-                Text("Custom amount", style = NoopType.title2, color = Palette.textPrimary)
+                Text(tr("Custom amount"), style = NoopType.title2, color = Palette.textPrimary)
             }
         },
         text = {
@@ -544,7 +544,7 @@ private fun CustomAmountDialog(
                 OutlinedTextField(
                     value = text,
                     onValueChange = { new -> text = new.filter { it.isDigit() }.take(5) },
-                    label = { Text("Millilitres (ml)", style = NoopType.footnote) },
+                    label = { Text(tr("Millilitres (ml)"), style = NoopType.footnote) },
                     singleLine = true,
                     keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
                     colors = OutlinedTextFieldDefaults.colors(
@@ -569,12 +569,12 @@ private fun CustomAmountDialog(
         },
         confirmButton = {
             TextButton(onClick = { parsed?.let(onConfirm) }, enabled = parsed != null) {
-                Text("Log", color = if (parsed != null) accent else Palette.textTertiary)
+                Text(tr("Log"), color = if (parsed != null) accent else Palette.textTertiary)
             }
         },
         dismissButton = {
             TextButton(onClick = onDismiss) {
-                Text("Cancel", color = Palette.textSecondary)
+                Text(tr("Cancel"), color = Palette.textSecondary)
             }
         },
     )

@@ -616,7 +616,7 @@ fun TodayScreen(
         store.post(
             UpdateItem(
                 kind = UpdateKind.READING,
-                title = "New data added",
+                title = tr("New data added"),
                 message = "$added new $daysWord of history is ready in Trends.",
                 deepLink = "trends",
             ),
@@ -1085,11 +1085,11 @@ fun TodayScreen(
             if (selectedDayOffset != 0 || !scoresBuildingDismissed) {
                 Box(modifier = Modifier.fillMaxWidth()) {
                     DataPendingNote(
-                        title = "Live now. Your scores are building.",
-                        body = "Your live heart rate is working from the strap, and recovery, strain " +
-                            "and sleep build from it over your next few nights of wear, sharpening as it " +
-                            "learns your baseline. Want your full history instantly? Import your WHOOP " +
-                            "export in Data Sources and it backfills in about a minute.",
+                        title = tr("Live now. Your scores are building."),
+                        body = tr("Your live heart rate is working from the strap, and recovery, strain ") +
+                            tr("and sleep build from it over your next few nights of wear, sharpening as it ") +
+                            tr("learns your baseline. Want your full history instantly? Import your WHOOP ") +
+                            tr("export in Data Sources and it backfills in about a minute."),
                     )
                     // The × is only meaningful for today's card (a past day's note isn't dismissed).
                     if (selectedDayOffset == 0 && updateStore != null) {
@@ -1282,7 +1282,7 @@ fun TodayScreen(
                     modifier = Modifier.size(Metrics.iconSmall),
                 )
                 Text(
-                    "No cardio load yet. Effort builds once your heart rate climbs into your effort " +
+                    tr("No cardio load yet. Effort builds once your heart rate climbs into your effort ") +
                         "zone (around 50% of your heart-rate reserve). A calm day honestly reads near zero.",
                     style = NoopType.footnote,
                     color = Palette.textTertiary,
@@ -1318,7 +1318,7 @@ fun TodayScreen(
         item {
         Row(verticalAlignment = Alignment.CenterVertically) {
             Box(modifier = Modifier.weight(1f)) {
-                SectionHeader("Key Metrics", overline = dayLabel, trailing = "14-day trend")
+                SectionHeader(tr("Key Metrics"), overline = dayLabel, trailing = tr("14-day trend"))
             }
             TextButton(
                 onClick = { showMetricsEditor = true },
@@ -1326,11 +1326,11 @@ fun TodayScreen(
             ) {
                 Icon(
                     Icons.Filled.Tune,
-                    contentDescription = "Edit Key Metrics",
+                    contentDescription = tr("Edit Key Metrics"),
                     modifier = Modifier.size(Metrics.iconSmall),
                 )
                 Spacer(Modifier.width(4.dp))
-                Text("Edit", style = NoopType.footnote)
+                Text(tr("Edit"), style = NoopType.footnote)
             }
         }
         }
@@ -1538,7 +1538,7 @@ private fun WorkoutInProgressCard(
                 )
                 Spacer(Modifier.width(Metrics.space8))
                 Text(
-                    "WORKOUT IN PROGRESS",
+                    tr("WORKOUT IN PROGRESS"),
                     style = NoopType.overline,
                     color = Palette.metricRose,
                 )
@@ -1564,7 +1564,7 @@ private fun WorkoutInProgressCard(
                         containerColor = Palette.accent, contentColor = Palette.surfaceBase,
                     ),
                 ) {
-                    Text("Return to workout", style = NoopType.captionNumber)
+                    Text(tr("Return to workout"), style = NoopType.captionNumber)
                     Spacer(Modifier.width(Metrics.space6))
                     Icon(
                         Icons.AutoMirrored.Filled.KeyboardArrowRight,
@@ -1666,7 +1666,7 @@ private fun TodayCardDismissButton(onClick: () -> Unit, modifier: Modifier = Mod
         onClick = onClick,
         modifier = modifier
             .size(Metrics.iconButton)
-            .semantics { contentDescription = "Dismiss to Updates" },
+            .semantics { contentDescription = tr("Dismiss to Updates") },
     ) {
         Icon(
             Icons.Filled.Close,
@@ -1694,7 +1694,7 @@ private fun QuickActionDisc(onClick: () -> Unit) {
                 indication = null,
                 onClick = onClick,
             )
-            .semantics { contentDescription = "Quick actions" },
+            .semantics { contentDescription = tr("Quick actions") },
         contentAlignment = Alignment.Center,
     ) {
         Icon(
@@ -1751,13 +1751,13 @@ private fun ScoringGuideIntroCard(onOpen: () -> Unit, onDismiss: () -> Unit) {
                     modifier = Modifier.size(18.dp),
                 )
                 Spacer(Modifier.width(8.dp))
-                Text("New here?", style = NoopType.headline, color = Palette.textPrimary)
+                Text(tr("New here?"), style = NoopType.headline, color = Palette.textPrimary)
                 Spacer(Modifier.weight(1f))
                 IconButton(
                     onClick = onDismiss,
                     modifier = Modifier
                         .size(Metrics.iconButton)
-                        .semantics { contentDescription = "Dismiss" },
+                        .semantics { contentDescription = tr("Dismiss") },
                 ) {
                     Icon(
                         Icons.Filled.Close,
@@ -1768,13 +1768,13 @@ private fun ScoringGuideIntroCard(onOpen: () -> Unit, onDismiss: () -> Unit) {
                 }
             }
             Text(
-                "See how Charge, Effort and Rest are calculated, and how they differ from WHOOP.",
+                tr("See how Charge, Effort and Rest are calculated, and how they differ from WHOOP."),
                 style = NoopType.subhead,
                 color = Palette.textSecondary,
             )
             Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.End) {
                 TextButton(onClick = onOpen) {
-                    Text("See how it works", style = NoopType.captionNumber, color = Palette.accent)
+                    Text(tr("See how it works"), style = NoopType.captionNumber, color = Palette.accent)
                 }
             }
         }
@@ -1948,7 +1948,7 @@ private fun LiquidTodayHeader(
                         indication = null,
                         onClick = onOpenSettings,
                     )
-                    .semantics { contentDescription = "Profile and settings" },
+                    .semantics { contentDescription = tr("Profile and settings") },
                 contentAlignment = Alignment.Center,
             ) {
                 ProfileAvatar(size = 34.dp)
@@ -1979,7 +1979,7 @@ private fun HeaderHeartButton(onSupport: () -> Unit) {
             )
             .semantics {
                 contentDescription =
-                    "Support NOOP: help and contact."
+                    tr("Support NOOP: help and contact.")
             },
         contentAlignment = Alignment.Center,
     ) {
@@ -2145,7 +2145,7 @@ private fun SupportRow(onSupport: () -> Unit) {
                 indication = null,
                 onClick = onSupport,
             )
-            .semantics { contentDescription = "Support NOOP: help and contact" },
+            .semantics { contentDescription = tr("Support NOOP: help and contact") },
     ) {
         Row(
             verticalAlignment = Alignment.CenterVertically,
@@ -2161,9 +2161,9 @@ private fun SupportRow(onSupport: () -> Unit) {
                 modifier = Modifier.weight(1f),
                 verticalArrangement = Arrangement.spacedBy(Metrics.space4),
             ) {
-                Text("Support NOOP", style = NoopType.headline, color = Palette.textPrimary)
+                Text(tr("Support NOOP"), style = NoopType.headline, color = Palette.textPrimary)
                 Text(
-                    "Help, contact, and attribution.",
+                    tr("Help, contact, and attribution."),
                     style = NoopType.subhead,
                     color = Palette.textSecondary,
                 )
@@ -2626,7 +2626,7 @@ private fun SynthesisHeroCard(
             ) {
                 Row(verticalAlignment = Alignment.CenterVertically) {
                     Column(modifier = Modifier.weight(1f), verticalArrangement = Arrangement.spacedBy(2.dp)) {
-                        Text("SYNTHESIS", style = NoopType.overline, color = Palette.textTertiary)
+                        Text(tr("SYNTHESIS"), style = NoopType.overline, color = Palette.textTertiary)
                         Text(
                             status,
                             style = NoopType.headline,
@@ -2680,7 +2680,7 @@ private fun RingEmptyOverlay(
 ) {
     if (calibratingNights != null) {
         Column(horizontalAlignment = Alignment.CenterHorizontally) {
-            Text("Calibrating", style = NoopType.headline, color = Palette.textTertiary, maxLines = 1)
+            Text(tr("Calibrating"), style = NoopType.headline, color = Palette.textTertiary, maxLines = 1)
             Text(
                 "$calibratingNights of ${Baselines.minNightsSeed}",
                 style = NoopType.footnote,
@@ -2704,9 +2704,9 @@ private fun RingNoData() {
 @Composable
 private fun RingNeedsTrackedNight() {
     Column(horizontalAlignment = Alignment.CenterHorizontally) {
-        Text("Calibrating", style = NoopType.headline, color = Palette.textTertiary, maxLines = 1)
+        Text(tr("Calibrating"), style = NoopType.headline, color = Palette.textTertiary, maxLines = 1)
         Text(
-            "needs a tracked night",
+            tr("needs a tracked night"),
             style = NoopType.footnote,
             color = Palette.textSecondary,
             maxLines = 1,
@@ -2746,7 +2746,7 @@ private fun HeroMetricRows(day: DailyMetric?, carriedDay: DailyMetric? = null, v
             verticalArrangement = Arrangement.spacedBy(Metrics.space12),
         ) {
             Row(verticalAlignment = Alignment.CenterVertically) {
-                Overline("Recovery vitals", modifier = Modifier.weight(1f))
+                Overline(tr("Recovery vitals"), modifier = Modifier.weight(1f))
                 // iOS `lastNightLine` — today's own "Last night · <date>" unless the shown vitals are a carry.
                 Text(
                     if (carriedFromVitals) carriedCaption(vitalsDay!!.day) else heroVitalsLastNightLine(),
@@ -2755,19 +2755,19 @@ private fun HeroMetricRows(day: DailyMetric?, carriedDay: DailyMetric? = null, v
                 )
             }
             HeroVitalRow(
-                label = "Heart-rate variability",
+                label = tr("Heart-rate variability"),
                 value = hrv?.let { "${it.roundToInt()} ms" } ?: NO_DATA,
                 tint = Palette.metricCyan,
                 fraction = hrv?.let { (it / 120.0).coerceIn(0.0, 1.0) },
             )
             HeroVitalRow(
-                label = "Resting heart rate",
+                label = tr("Resting heart rate"),
                 value = rhr?.let { "$it bpm" } ?: NO_DATA,
                 tint = Palette.metricRose,
                 fraction = rhr?.let { (it / 100.0).coerceIn(0.0, 1.0) },
             )
             HeroVitalRow(
-                label = "Breaths per minute",
+                label = tr("Breaths per minute"),
                 value = resp?.let { String.format(Locale.US, "%.1f rpm", it) } ?: NO_DATA,
                 tint = Palette.accent,
                 fraction = resp?.let { (it / 24.0).coerceIn(0.0, 1.0) },
@@ -2842,11 +2842,11 @@ private fun YourCardsSection(
         Column(verticalArrangement = Arrangement.spacedBy(Metrics.gap)) {
             // Header: "YOUR CARDS" overline + a right-aligned blue CUSTOMISE action (the WHOOP ✎ affordance).
             Row(verticalAlignment = Alignment.CenterVertically) {
-                Overline("Your cards", modifier = Modifier.weight(1f))
+                Overline(tr("Your cards"), modifier = Modifier.weight(1f))
                 TextButton(
                     onClick = onCustomise,
                     colors = ButtonDefaults.textButtonColors(contentColor = Palette.accent),
-                    modifier = Modifier.semantics { contentDescription = "Customise your cards" },
+                    modifier = Modifier.semantics { contentDescription = tr("Customise your cards") },
                 ) {
                     Icon(
                         Icons.Filled.Tune,
@@ -2855,7 +2855,7 @@ private fun YourCardsSection(
                     )
                     Spacer(Modifier.width(4.dp))
                     Text(
-                        "CUSTOMISE",
+                        tr("CUSTOMISE"),
                         style = NoopType.overline.copy(letterSpacing = 0.4.sp),
                         color = Palette.accent,
                     )
@@ -3251,10 +3251,10 @@ private fun DashboardCardsEditorDialog(
                 verticalArrangement = Arrangement.spacedBy(16.dp),
             ) {
                 Column(verticalArrangement = Arrangement.spacedBy(2.dp)) {
-                    Text("My Dashboard", style = NoopType.title2, color = Palette.textPrimary)
+                    Text(tr("My Dashboard"), style = NoopType.title2, color = Palette.textPrimary)
                     Text(
-                        "Choose which cards show on Today and reorder them with the arrows. " +
-                            "Cards with no value yet show a dash.",
+                        tr("Choose which cards show on Today and reorder them with the arrows. ") +
+                            tr("Cards with no value yet show a dash."),
                         style = NoopType.subhead,
                         color = Palette.textSecondary,
                     )
@@ -3331,7 +3331,7 @@ private fun DashboardCardsEditorDialog(
                                 .forEach { items.add(EditableDashboardCard(it, false)) }
                         },
                         colors = ButtonDefaults.textButtonColors(contentColor = Palette.textSecondary),
-                    ) { Text("Reset", style = NoopType.body) }
+                    ) { Text(tr("Reset"), style = NoopType.body) }
                     Spacer(Modifier.weight(1f))
                     Button(
                         onClick = { onSave(items.filter { it.enabled }.map { it.card }) },
@@ -3341,7 +3341,7 @@ private fun DashboardCardsEditorDialog(
                             containerColor = Palette.accent,
                             contentColor = Palette.surfaceBase,
                         ),
-                    ) { Text("Done", style = NoopType.captionNumber) }
+                    ) { Text(tr("Done"), style = NoopType.captionNumber) }
                 }
             }
         }
@@ -3378,13 +3378,13 @@ internal fun ChargeBreakdownSheet(
                 verticalAlignment = Alignment.CenterVertically,
             ) {
                 Text(
-                    "What shaped your Charge",
+                    tr("What shaped your Charge"),
                     style = NoopType.headline,
                     color = Palette.textPrimary,
                     modifier = Modifier.weight(1f),
                 )
                 IconButton(onClick = onClose) {
-                    Icon(Icons.Filled.Close, contentDescription = "Close", tint = Palette.textSecondary)
+                    Icon(Icons.Filled.Close, contentDescription = tr("Close"), tint = Palette.textSecondary)
                 }
             }
             Column(
@@ -3417,7 +3417,7 @@ internal fun ChargeBreakdownSheet(
                         .background(Palette.surfaceInset)
                         .padding(14.dp)
                         .semantics {
-                            contentDescription = "How Charge is calculated. The method behind the score."
+                            contentDescription = tr("How Charge is calculated. The method behind the score.")
                         },
                     verticalAlignment = Alignment.CenterVertically,
                     horizontalArrangement = Arrangement.spacedBy(10.dp),
@@ -3433,12 +3433,12 @@ internal fun ChargeBreakdownSheet(
                         verticalArrangement = Arrangement.spacedBy(1.dp),
                     ) {
                         Text(
-                            "How Charge is calculated",
+                            tr("How Charge is calculated"),
                             style = NoopType.subhead,
                             color = Palette.textPrimary,
                         )
                         Text(
-                            "The method behind the score, not today's values.",
+                            tr("The method behind the score, not today's values."),
                             style = NoopType.caption,
                             color = Palette.textTertiary,
                         )
@@ -3484,7 +3484,7 @@ private fun RecoveryDriversSection(
         // Header row: section title + the SURFACED confidence pill (dot + tier tag) on the right.
         Row(verticalAlignment = Alignment.Top) {
             Box(modifier = Modifier.weight(1f)) {
-                SectionHeader("What shaped it", overline = overline, trailing = "vs your baseline")
+                SectionHeader(tr("What shaped it"), overline = overline, trailing = tr("vs your baseline"))
             }
             ChargeConfidencePill(tier)
         }
@@ -3492,8 +3492,8 @@ private fun RecoveryDriversSection(
             Column(verticalArrangement = Arrangement.spacedBy(Metrics.space16)) {
                 drivers.forEach { DriverRow(it) }
                 Text(
-                    "Each line is how many points that signal moved Charge versus sitting at your " +
-                        "on-device baseline. Approximate, not medical advice.",
+                    tr("Each line is how many points that signal moved Charge versus sitting at your ") +
+                        tr("on-device baseline. Approximate, not medical advice."),
                     style = NoopType.footnote,
                     color = Palette.textTertiary,
                 )
@@ -3587,12 +3587,12 @@ private fun RecoveryContributorsSection(day: DailyMetric?, carriedDay: DailyMetr
     if (hrv == null && rhr == null && sleepMin == null && resp == null) return
 
     val overline = carriedDay?.let { "Recovery · ${carriedCaption(it.day)}" } ?: "Recovery"
-    SectionHeader("Contributors", overline = overline, trailing = "What drove Charge")
+    SectionHeader(tr("Contributors"), overline = overline, trailing = tr("What drove Charge"))
     NoopCard {
         Column(verticalArrangement = Arrangement.spacedBy(Metrics.space16)) {
             // HRV, higher is better; map a typical 20–120 ms span. Teal (its biometric hue; iOS metricCyan).
             ContributorBar(
-                label = "HRV",
+                label = tr("HRV"),
                 readout = hrv?.let { "${it.roundToInt()} ms" } ?: NO_DATA,
                 fraction = hrv?.let { ((it - 20.0) / 100.0) },
                 color = Palette.metricCyan,
@@ -3600,28 +3600,28 @@ private fun RecoveryContributorsSection(day: DailyMetric?, carriedDay: DailyMetr
             // Resting HR, lower is better, so invert a typical 40–80 bpm span. Charge/recovery world (iOS
             // chargeColor, the recovery contributor reads on the WHOOP-green Charge world, not gold).
             ContributorBar(
-                label = "Resting HR",
+                label = tr("Resting HR"),
                 readout = rhr?.let { "${it.roundToInt()} bpm" } ?: NO_DATA,
                 fraction = rhr?.let { 1.0 - ((it - 40.0) / 40.0) },
                 color = Palette.chargeColor,
             )
             // Sleep, hours in bed against an 8h target. Blue (sleep world).
             ContributorBar(
-                label = "Sleep",
+                label = tr("Sleep"),
                 readout = sleepMin?.let { sleepValue(cd) } ?: NO_DATA,
                 fraction = sleepMin?.let { (it / 60.0) / 8.0 },
                 color = Palette.sleepLight,
             )
             // Respiratory, stability around a typical 12–20 rpm span. Deep blue (sleep world).
             ContributorBar(
-                label = "Respiratory",
+                label = tr("Respiratory"),
                 readout = resp?.let { String.format(Locale.US, "%.1f rpm", it) } ?: NO_DATA,
                 fraction = resp?.let { 1.0 - ((it - 12.0) / 8.0) },
                 color = Palette.sleepDeep,
             )
             Text(
-                "Baselines learned on-device over 14 days. Bars are an approximate read of each " +
-                    "signal against a typical adult range, not medical advice.",
+                tr("Baselines learned on-device over 14 days. Bars are an approximate read of each ") +
+                    tr("signal against a typical adult range, not medical advice."),
                 style = NoopType.footnote,
                 color = Palette.textTertiary,
             )
@@ -4174,7 +4174,7 @@ private fun MetricGrid(
         KeyMetric.CHARGE to run {
             val v = d?.recovery ?: lastScoredCharge?.value
             KeyTileData(
-                label = "Recovery",
+                label = tr("Recovery"),
                 value = d?.recovery?.let { "${it.roundToInt()}" }
                     ?: recoveryCalibration?.let { "$it/${Baselines.minNightsSeed}" }
                     ?: lastScoredCharge?.let { "${it.value.roundToInt()}" } ?: NO_DATA,
@@ -4184,14 +4184,14 @@ private fun MetricGrid(
             )
         },
         KeyMetric.EFFORT to KeyTileData(
-            label = "Strain",
+            label = tr("Strain"),
             value = d?.strain?.let { UnitFormatter.effortDisplay(it, effortScale) } ?: NO_DATA,
             unit = if (d?.strain != null) "%" else "",
             tint = d?.strain?.let { Palette.effortTint(it / StrainScorer.maxStrain) } ?: Palette.effortColor,
             frac = d?.strain?.let { (it / 100.0).coerceIn(0.0, 1.0) },
         ),
         KeyMetric.REST to KeyTileData(
-            label = "Rest",
+            label = tr("Rest"),
             value = restScore?.let { "${it.roundToInt()}" } ?: NO_DATA,
             unit = if (restScore != null) "%" else "",
             tint = restScore?.let { Palette.recoveryColor(it) } ?: Palette.restColor,
@@ -4200,7 +4200,7 @@ private fun MetricGrid(
         KeyMetric.HRV to run {
             val v = d?.avgHrv ?: carriedDay?.avgHrv
             KeyTileData(
-                label = "HRV",
+                label = tr("HRV"),
                 value = v?.let { "${it.roundToInt()}" } ?: NO_DATA,
                 unit = if (v != null) "ms" else "",
                 tint = Palette.metricCyan,
@@ -4210,7 +4210,7 @@ private fun MetricGrid(
         KeyMetric.RESTING_HR to run {
             val v = d?.restingHr ?: carriedDay?.restingHr
             KeyTileData(
-                label = "Rest HR",
+                label = tr("Rest HR"),
                 value = v?.toString() ?: NO_DATA,
                 unit = if (v != null) "bpm" else "",
                 tint = Palette.metricRose,
@@ -4220,7 +4220,7 @@ private fun MetricGrid(
         KeyMetric.BLOOD_OXYGEN to run {
             val v = d?.spo2Pct ?: carriedDay?.spo2Pct
             KeyTileData(
-                label = "Blood Oxygen",
+                label = tr("Blood Oxygen"),
                 value = v?.let { String.format(Locale.US, "%.0f", it) } ?: NO_DATA,
                 unit = if (v != null) "%" else "",
                 tint = Palette.metricCyan,
@@ -4230,7 +4230,7 @@ private fun MetricGrid(
         KeyMetric.RESPIRATORY to run {
             val v = d?.respRateBpm ?: carriedDay?.respRateBpm
             KeyTileData(
-                label = "Respiratory",
+                label = tr("Respiratory"),
                 value = v?.let { String.format(Locale.US, "%.1f", it) } ?: NO_DATA,
                 unit = if (v != null) "rpm" else "",
                 tint = Palette.accent,
@@ -4242,7 +4242,7 @@ private fun MetricGrid(
             val realSteps = d?.steps ?: importedStepsForDay
             val steps = realSteps ?: estimatedStepsForDay
             KeyTileData(
-                label = "Steps",
+                label = tr("Steps"),
                 value = steps?.let { intString(it.toDouble()) } ?: NO_DATA,
                 unit = "",
                 tint = Palette.metricCyan,
@@ -4252,7 +4252,7 @@ private fun MetricGrid(
         KeyMetric.WEIGHT to run {
             val weight = weightTile(latestWeightKg, profileWeightKg, unitSystem)
             KeyTileData(
-                label = "Weight",
+                label = tr("Weight"),
                 value = weight.value,
                 unit = "",
                 tint = Palette.accent,
@@ -4260,7 +4260,7 @@ private fun MetricGrid(
             )
         },
         KeyMetric.CALORIES to KeyTileData(
-            label = "Calories",
+            label = tr("Calories"),
             value = d?.activeKcalEst?.let { intString(it) } ?: NO_DATA,
             unit = if (d?.activeKcalEst != null) "kcal" else "",
             tint = Palette.metricAmber,
@@ -4294,7 +4294,7 @@ private fun MetricGrid(
                 colors = ButtonDefaults.textButtonColors(contentColor = Palette.accent),
             ) {
                 Text(
-                    if (metricsExpanded) "Show fewer" else "Show all metrics ($hidden)",
+                    if (metricsExpanded) tr("Show fewer") else "Show all metrics ($hidden)",
                     style = NoopType.subhead,
                 )
                 Spacer(Modifier.width(4.dp))
@@ -4518,21 +4518,21 @@ private fun HeartRateTrendCard(
     // too-narrow rolling window (say 1h with no recent offload) is never a dead end — the user widens it
     // or steps back to Today, and the message says which window came up empty.
     if (winBuckets.size < 2) {
-        SectionHeader("Heart Rate", overline = selectedLabel)
+        SectionHeader(tr("Heart Rate"), overline = selectedLabel)
         NoopCard {
             Column(verticalArrangement = Arrangement.spacedBy(10.dp)) {
-                Overline("Beats per minute")
+                Overline(tr("Beats per minute"))
                 if (selectedDay == today) {
                     HrWindowPills(hrWindow) { hrWindowOrdinal = it.ordinal }
                 }
                 Text(
                     when {
                         selectedDay != today ->
-                            "No heart rate for this day. Step back to a day the strap was worn."
+                            tr("No heart rate for this day. Step back to a day the strap was worn.")
                         hrWindow != HrWindow.TODAY && buckets.size >= 2 ->
                             "No heart rate in the last ${hrWindow.label}. Try a wider window or Today."
                         else ->
-                            "Calibrating , no heart rate banked yet today. Your curve fills in as the strap offloads."
+                            tr("Calibrating , no heart rate banked yet today. Your curve fills in as the strap offloads.")
                     },
                     style = NoopType.footnote,
                     color = Palette.textTertiary,
@@ -4569,13 +4569,13 @@ private fun HeartRateTrendCard(
     val visAvg = visBpm.average().roundToInt()
     val visMin = visBpm.min().roundToInt()
 
-    SectionHeader("Heart Rate", overline = selectedLabel)
+    SectionHeader(tr("Heart Rate"), overline = selectedLabel)
     NoopCard {
         Column(verticalArrangement = Arrangement.spacedBy(12.dp)) {
             // Header, mirrors the macOS ChartCard (title + subtitle, trailing read-out).
             Row(verticalAlignment = Alignment.Top) {
                 Column(modifier = Modifier.weight(1f)) {
-                    Overline("Beats per minute")
+                    Overline(tr("Beats per minute"))
                     // #985: the buckets stay the same 5-minute means whatever the window (view-only
                     // narrowing, no re-read), so the resolution half of the label never changes — only
                     // the span half tells the truth about what's on screen.
@@ -4687,14 +4687,14 @@ private fun HeartRateTrendCard(
                 verticalAlignment = Alignment.CenterVertically,
             ) {
                 Text(
-                    if (hrZoom == null) "Pinch to zoom · drag to pan" else "Zoomed in · drag to pan",
+                    if (hrZoom == null) tr("Pinch to zoom · drag to pan") else tr("Zoomed in · drag to pan"),
                     style = NoopType.footnote,
                     color = Palette.textTertiary,
                     modifier = Modifier.weight(1f),
                 )
                 if (hrZoom != null) {
                     Text(
-                        "Reset",
+                        tr("Reset"),
                         style = NoopType.footnote,
                         color = Palette.accent,
                         modifier = Modifier
@@ -5133,7 +5133,7 @@ data class TodayFooterState(
 private fun TodayWorkoutsSection(workouts: List<WorkoutRow>) {
     if (workouts.isEmpty()) return
 
-    SectionHeader("Last Workouts", overline = "Activity", trailing = "14 days")
+    SectionHeader(tr("Last Workouts"), overline = tr("Activity"), trailing = tr("14 days"))
     Column(verticalArrangement = Arrangement.spacedBy(Metrics.gap)) {
         workouts.take(4).chunked(2).forEach { rowWorkouts ->
             Row(horizontalArrangement = Arrangement.spacedBy(Metrics.gap)) {
@@ -5167,7 +5167,7 @@ private fun TodaySourcesSection(
     expanded: Boolean = true,
     onToggle: () -> Unit = {},
 ) {
-    SectionHeader("Data Sources", overline = "Provenance")
+    SectionHeader(tr("Data Sources"), overline = tr("Provenance"))
     val whoopPresent = (footer.whoopDays ?: 0) > 0 || strapBatteryPct != null
     val applePresent = (footer.appleDays ?: 0) > 0 || (footer.appleWorkouts ?: 0) > 0
     val hcPresent = (footer.hcDays ?: 0) > 0 || (footer.hcWorkouts ?: 0) > 0
@@ -5215,7 +5215,7 @@ private fun TodaySourcesSection(
                     .clickable(onClickLabel = "Hide data source detail", onClick = onToggle),
                 verticalAlignment = Alignment.CenterVertically,
             ) {
-                Text("Synced from", style = NoopType.overline, color = Palette.textTertiary, modifier = Modifier.weight(1f))
+                Text(tr("Synced from"), style = NoopType.overline, color = Palette.textTertiary, modifier = Modifier.weight(1f))
                 Icon(
                     Icons.Filled.KeyboardArrowUp,
                     contentDescription = null,
@@ -5291,7 +5291,7 @@ private fun SourceRow(
         }
         Spacer(Modifier.weight(1f))
         Text(
-            text = if (present) detail else "Not connected",
+            text = if (present) detail else tr("Not connected"),
             style = NoopType.captionNumber,
             color = if (present) Palette.textSecondary else Palette.textTertiary,
             maxLines = 1,
@@ -5323,7 +5323,7 @@ private fun ReadinessSection(days: List<DailyMetric>, carriedDay: DailyMetric? =
     if (readiness.level == ReadinessEngine.Level.INSUFFICIENT) return
 
     val overline = carriedDay?.let { carriedCaption(it.day) } ?: "Should you push today?"
-    SectionHeader("Readiness", overline = overline)
+    SectionHeader(tr("Readiness"), overline = overline)
     NoopCard {
         Column(verticalArrangement = Arrangement.spacedBy(12.dp)) {
             // Headline row: level dot + headline, then the ACWR load read-out.
@@ -5886,9 +5886,9 @@ private fun KeyMetricsEditorDialog(
                 verticalArrangement = Arrangement.spacedBy(16.dp),
             ) {
                 Column(verticalArrangement = Arrangement.spacedBy(2.dp)) {
-                    Text("Edit Key Metrics", style = NoopType.title2, color = Palette.textPrimary)
+                    Text(tr("Edit Key Metrics"), style = NoopType.title2, color = Palette.textPrimary)
                     Text(
-                        "Choose which tiles show on your Control Center and reorder them with the arrows.",
+                        tr("Choose which tiles show on your Control Center and reorder them with the arrows."),
                         style = NoopType.subhead,
                         color = Palette.textSecondary,
                     )
@@ -5962,7 +5962,7 @@ private fun KeyMetricsEditorDialog(
                             KeyMetric.defaultOrder.forEach { items.add(EditableMetric(it, true)) }
                         },
                         colors = ButtonDefaults.textButtonColors(contentColor = Palette.textSecondary),
-                    ) { Text("Reset", style = NoopType.body) }
+                    ) { Text(tr("Reset"), style = NoopType.body) }
                     Spacer(Modifier.weight(1f))
                     Button(
                         onClick = { onSave(items.filter { it.enabled }.map { it.metric }) },
@@ -5972,7 +5972,7 @@ private fun KeyMetricsEditorDialog(
                             containerColor = Palette.accent,
                             contentColor = Palette.surfaceBase,
                         ),
-                    ) { Text("Done", style = NoopType.captionNumber) }
+                    ) { Text(tr("Done"), style = NoopType.captionNumber) }
                 }
             }
         }

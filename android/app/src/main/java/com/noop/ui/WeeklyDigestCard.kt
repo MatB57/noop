@@ -124,13 +124,13 @@ fun WeeklyDigestCard(vm: AppViewModel, modifier: Modifier = Modifier) {
 fun WeeklyDigestScreen(vm: AppViewModel) {
     val days by vm.recentDays.collectAsStateWithLifecycle()
     val factor = effortDisplayFactor(UnitPrefs.effortScale(LocalContext.current))
-    ScreenScaffold(title = "Week in review", subtitle = "Your Monday-to-Sunday, read in one glance.") {
+    ScreenScaffold(title = tr("Week in review"), subtitle = tr("Your Monday-to-Sunday, read in one glance.")) {
         val digest = buildWeeklyDigest(days, effortDisplayFactor = factor)
         if (digest.isEmpty) {
             DataPendingNote(
-                title = "No readings this week yet",
-                body = "Wear your strap or import your WHOOP export in Data Sources. Once this week has a " +
-                    "day or two of data, your week-in-review appears here.",
+                title = tr("No readings this week yet"),
+                body = tr("Wear your strap or import your WHOOP export in Data Sources. Once this week has a ") +
+                    tr("day or two of data, your week-in-review appears here."),
             )
         } else {
             NoopCard { WeeklyDigestContent(digest = digest, compact = false) }
@@ -165,7 +165,7 @@ fun WeeklyDigestContent(digest: WeeklyDigest, compact: Boolean = false) {
             verticalAlignment = Alignment.Top,
         ) {
             Column(modifier = Modifier.weight(1f), verticalArrangement = Arrangement.spacedBy(2.dp)) {
-                Overline("Week in review")
+                Overline(tr("Week in review"))
                 Text(weekRangeLabel(digest), style = NoopType.title2, color = Palette.textPrimary)
             }
             Text(
@@ -206,7 +206,7 @@ fun WeeklyDigestContent(digest: WeeklyDigest, compact: Boolean = false) {
                 }
                 Text(digest.balance.sentence, style = NoopType.footnote, color = Palette.textTertiary)
                 Text(
-                    "Informational only, not medical advice.",
+                    tr("Informational only, not medical advice."),
                     style = NoopType.footnote,
                     color = Palette.textTertiary,
                 )

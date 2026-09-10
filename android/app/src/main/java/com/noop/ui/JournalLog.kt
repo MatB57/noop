@@ -188,9 +188,9 @@ fun JournalLogCard(
         // Header: title/overline on the left, the Tomorrow/Today/Yesterday toggle (or Edit/Done) on the right.
         Row(modifier = Modifier.fillMaxWidth(), verticalAlignment = Alignment.CenterVertically) {
             Column(modifier = Modifier.weight(1f)) {
-                Overline("Log")
+                Overline(tr("Log"))
                 Text(
-                    "Journal",
+                    tr("Journal"),
                     style = NoopType.title2,
                     color = Palette.textPrimary,
                     maxLines = 1,
@@ -398,15 +398,15 @@ private fun JournalItemEditControls(
                 modifier = Modifier.clickable { menuOpen = true }.padding(horizontal = 8.dp))
             androidx.compose.material3.DropdownMenu(expanded = menuOpen, onDismissRequest = { menuOpen = false }) {
                 androidx.compose.material3.DropdownMenuItem(
-                    text = { Text("Rename…") },
+                    text = { Text(tr("Rename…")) },
                     onClick = { menuOpen = false; onStartRename() },
                 )
                 androidx.compose.material3.DropdownMenuItem(
-                    text = { Text("Group…") },
+                    text = { Text(tr("Group…")) },
                     onClick = { menuOpen = false; groupMenuOpen = true },
                 )
                 androidx.compose.material3.DropdownMenuItem(
-                    text = { Text(if (item.kind.isNumeric) "Change to Yes/No" else "Change to Number") },
+                    text = { Text(if (item.kind.isNumeric) tr("Change to Yes/No") else tr("Change to Number")) },
                     onClick = {
                         menuOpen = false
                         onSetKind(if (item.kind.isNumeric) JournalKind.Bool else JournalKind.Numeric(null))
@@ -436,25 +436,25 @@ private fun JournalRenameDialog(
     var draft by remember { mutableStateOf(item.displayName ?: item.canonical) }
     androidx.compose.material3.AlertDialog(
         onDismissRequest = onDismiss,
-        title = { Text("Rename item") },
+        title = { Text(tr("Rename item")) },
         text = {
             Column(verticalArrangement = Arrangement.spacedBy(8.dp)) {
                 OutlinedTextField(
                     value = draft,
                     onValueChange = { draft = it },
-                    placeholder = { Text("Display name") },
+                    placeholder = { Text(tr("Display name")) },
                     singleLine = true,
                     colors = journalFieldColors(),
                 )
                 Text(
-                    "History stays under the original question so WHOOP imports still line up.",
+                    tr("History stays under the original question so WHOOP imports still line up."),
                     style = NoopType.footnote,
                     color = Palette.textTertiary,
                 )
             }
         },
-        confirmButton = { Text("Save", color = Palette.accent, modifier = Modifier.clickable { onSave(draft) }.padding(8.dp)) },
-        dismissButton = { Text("Cancel", color = Palette.textSecondary, modifier = Modifier.clickable { onDismiss() }.padding(8.dp)) },
+        confirmButton = { Text(tr("Save"), color = Palette.accent, modifier = Modifier.clickable { onSave(draft) }.padding(8.dp)) },
+        dismissButton = { Text(tr("Cancel"), color = Palette.textSecondary, modifier = Modifier.clickable { onDismiss() }.padding(8.dp)) },
     )
 }
 
@@ -470,7 +470,7 @@ private fun JournalAddRow(onAddCustom: (String, JournalKind, JournalGroup) -> Un
             OutlinedTextField(
                 value = draft,
                 onValueChange = { draft = it },
-                placeholder = { Text("Add a custom item…", style = NoopType.body, color = Palette.textTertiary) },
+                placeholder = { Text(tr("Add a custom item…"), style = NoopType.body, color = Palette.textTertiary) },
                 singleLine = true,
                 textStyle = NoopType.body,
                 colors = journalFieldColors(),
@@ -478,7 +478,7 @@ private fun JournalAddRow(onAddCustom: (String, JournalKind, JournalGroup) -> Un
                 modifier = Modifier.weight(1f),
             )
             Spacer(Modifier.width(8.dp))
-            JournalChip(if (numeric) "Number" else "Yes/No", selected = numeric) { numeric = !numeric }
+            JournalChip(if (numeric) tr("Number") else "Yes/No", selected = numeric) { numeric = !numeric }
             Spacer(Modifier.width(8.dp))
             JournalChip("Add", selected = draft.isNotBlank()) {
                 val t = draft.trim()
@@ -538,7 +538,7 @@ private fun JournalChip(label: String, selected: Boolean, onClick: () -> Unit) {
 private fun JournalRemoveButton(isCustom: Boolean, onClick: () -> Unit) {
     val shape = RoundedCornerShape(50)
     Text(
-        if (isCustom) "Delete" else "Hide",
+        if (isCustom) tr("Delete") else tr("Hide"),
         style = NoopType.caption,
         color = Palette.statusCritical,
         modifier = Modifier

@@ -97,20 +97,20 @@ fun MindSection(vm: AppViewModel) {
     }
 
     Column(verticalArrangement = Arrangement.spacedBy(Metrics.gap)) {
-        SectionHeader("Mind", overline = "Mood check-in")
+        SectionHeader(tr("Mind"), overline = tr("Mood check-in"))
 
         NoopCard {
             Column(verticalArrangement = Arrangement.spacedBy(Metrics.gap)) {
                 if (!loaded) {
                     Text(
-                        "Reading your check-ins…",
+                        tr("Reading your check-ins…"),
                         style = NoopType.subhead,
                         color = Palette.textTertiary,
                     )
                 } else if (todayMood == null || editing) {
                     // --- Open check-in: the 5-face scale -----------------------
                     Text(
-                        "How are you feeling today?",
+                        tr("How are you feeling today?"),
                         style = NoopType.headline,
                         color = Palette.textPrimary,
                     )
@@ -134,7 +134,7 @@ fun MindSection(vm: AppViewModel) {
                         }
                     }
                     Text(
-                        "One check-in per day; picking another face overwrites today's.",
+                        tr("One check-in per day; picking another face overwrites today's."),
                         style = NoopType.footnote,
                         color = Palette.textTertiary,
                     )
@@ -149,7 +149,7 @@ fun MindSection(vm: AppViewModel) {
                         Spacer(Modifier.width(10.dp))
                         Column(modifier = Modifier.weight(1f)) {
                             Text(face.word, style = NoopType.headline, color = Palette.textPrimary)
-                            Text("Logged today", style = NoopType.caption, color = Palette.textTertiary)
+                            Text(tr("Logged today"), style = NoopType.caption, color = Palette.textTertiary)
                         }
                         MoodChip("Edit") { editing = true }
                     }
@@ -168,8 +168,8 @@ fun MindSection(vm: AppViewModel) {
                         )
                     } else if (lines.isEmpty()) {
                         Text(
-                            "Not enough overlapping history to correlate mood with your " +
-                                "body metrics yet.",
+                            tr("Not enough overlapping history to correlate mood with your ") +
+                                tr("body metrics yet."),
                             style = NoopType.footnote,
                             color = Palette.textTertiary,
                         )
