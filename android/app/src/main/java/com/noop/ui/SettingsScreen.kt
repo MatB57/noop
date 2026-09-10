@@ -43,6 +43,7 @@ import androidx.compose.material.icons.filled.Download
 import androidx.compose.material.icons.filled.Edit
 import androidx.compose.material.icons.filled.Favorite
 import androidx.compose.material.icons.filled.Info
+import androidx.compose.material.icons.filled.Warning
 import androidx.compose.material.icons.filled.IosShare
 import androidx.compose.material.icons.filled.KeyboardArrowDown
 import androidx.compose.material.icons.filled.MenuBook
@@ -60,6 +61,7 @@ import androidx.compose.material.icons.outlined.Person
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.CircularProgressIndicator
+import androidx.compose.material3.LinearProgressIndicator
 import androidx.compose.material3.Icon
 import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.OutlinedTextField
@@ -93,11 +95,13 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.noop.BuildConfig
 import com.noop.analytics.Baselines
 import com.noop.analytics.Zones
+import com.noop.ble.BatteryOptimization
 import com.noop.ble.PuffinExperiment
 import com.noop.ble.WhoopModel
 import com.noop.data.DataBackup
 import com.noop.ingest.RawSensorExport
 import com.noop.ingest.WhoopCsvExporter
+import com.noop.update.InAppUpdate
 import com.noop.update.UpdateCheck
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -1096,6 +1100,51 @@ fun SettingsScreen(vm: AppViewModel, onOpenTestCentre: () -> Unit = {}) {
                     )
                 }
 
+                // Doze / battery-optimisation exemption. Without it Android freezes the foreground
+                // service overnight — the strap link drops, no overnight R-R/HRV is banked, and Charge
+                // can sit on "calibrating" forever. Only shown while background connection is on and the
+                // exemption isn't already granted. No iOS/macOS counterpart.
+                if (backgroundConnection && !BatteryOptimization.isExempt(context)) {
+                    Row(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .clip(RoundedCornerShape(12.dp))
+                            .background(Palette.statusWarning.copy(alpha = 0.12f))
+                            .padding(14.dp),
+                        verticalAlignment = Alignment.CenterVertically,
+                        horizontalArrangement = Arrangement.spacedBy(12.dp),
+                    ) {
+                        Icon(
+                            Icons.Filled.Warning,
+                            contentDescription = null,
+                            tint = Palette.statusWarning,
+                            modifier = Modifier.size(22.dp),
+                        )
+                        Column(modifier = Modifier.weight(1f)) {
+                            Text(
+                                "Allow background running",
+                                style = NoopType.subhead,
+                                color = Palette.textPrimary,
+                            )
+                            Text(
+                                "Android is limiting NOOP in the background, which stops overnight syncing — your scores can stay stuck on “calibrating”. Tap Allow so it can keep the strap connected.",
+                                style = NoopType.footnote,
+                                color = Palette.textTertiary,
+                            )
+                        }
+                        NoopButton(
+                            text = "Allow",
+                            kind = NoopButtonKind.Primary,
+                            onClick = {
+                                runCatching { context.startActivity(BatteryOptimization.requestIntent(context)) }
+                                    .onFailure {
+                                        runCatching { context.startActivity(BatteryOptimization.settingsIntent()) }
+                                    }
+                            },
+                        )
+                    }
+                }
+
                 // Continuous HRV capture: keep the dense beat-to-beat (R-R) stream armed even with no Live
                 // screen open, so the strap banks far more data overnight for better HRV/recovery/sleep.
                 // Honest battery framing — continuous HR streaming uses more battery. Needs background
@@ -2020,6 +2069,9 @@ fun SettingsScreen(vm: AppViewModel, onOpenTestCentre: () -> Unit = {}) {
                 // is sent. Android already holds INTERNET (for the opt-in Coach), so this adds nothing.
                 var updChecking by remember { mutableStateOf(false) }
                 var updResult by remember { mutableStateOf<UpdateCheck.Result?>(null) }
+                // Non-null while an in-app APK download is running (0..1), so the card shows progress
+                // instead of the Update button.
+                var updDownloadPct by remember { mutableStateOf<Float?>(null) }
                 Column(verticalArrangement = Arrangement.spacedBy(8.dp)) {
                     Row(
                         verticalAlignment = Alignment.CenterVertically,
@@ -2082,13 +2134,60 @@ fun SettingsScreen(vm: AppViewModel, onOpenTestCentre: () -> Unit = {}) {
                                     style = NoopType.subhead, color = Palette.textPrimary,
                                     modifier = Modifier.weight(1f),
                                 )
-                                NoopButton(
-                                    text = "Download",
-                                    leadingIcon = Icons.Filled.Download,
-                                    kind = NoopButtonKind.Primary,
-                                    onClick = {
-                                        context.startActivity(Intent(Intent.ACTION_VIEW, Uri.parse(avail.url)))
-                                    },
+                                val pct = updDownloadPct
+                                if (pct != null) {
+                                    Text(
+                                        "Downloading… ${(pct * 100).toInt()}%",
+                                        style = NoopType.footnote, color = Palette.textSecondary,
+                                    )
+                                } else {
+                                    NoopButton(
+                                        text = "Update",
+                                        leadingIcon = Icons.Filled.Download,
+                                        kind = NoopButtonKind.Primary,
+                                        onClick = {
+                                            val apk = avail.apkUrl
+                                            when {
+                                                apk == null ->
+                                                    InAppUpdate.openReleasePage(context, avail.url)
+                                                !InAppUpdate.canInstall(context) -> {
+                                                    InAppUpdate.requestInstallPermission(context)
+                                                    Toast.makeText(
+                                                        context,
+                                                        "Allow installing apps, then tap Update again.",
+                                                        Toast.LENGTH_LONG,
+                                                    ).show()
+                                                }
+                                                else -> {
+                                                    updDownloadPct = 0f
+                                                    scope.launch {
+                                                        runCatching {
+                                                            InAppUpdate.download(context, avail.version, apk) {
+                                                                updDownloadPct = it
+                                                            }
+                                                        }.onSuccess { file ->
+                                                            updDownloadPct = null
+                                                            InAppUpdate.install(context, file)
+                                                        }.onFailure {
+                                                            updDownloadPct = null
+                                                            Toast.makeText(
+                                                                context,
+                                                                "Download failed — opening the release page.",
+                                                                Toast.LENGTH_LONG,
+                                                            ).show()
+                                                            InAppUpdate.openReleasePage(context, avail.url)
+                                                        }
+                                                    }
+                                                }
+                                            }
+                                        },
+                                    )
+                                }
+                            }
+                            updDownloadPct?.let { p ->
+                                LinearProgressIndicator(
+                                    progress = p,
+                                    modifier = Modifier.fillMaxWidth(),
                                 )
                             }
                             if (avail.notes.isNotEmpty()) {
