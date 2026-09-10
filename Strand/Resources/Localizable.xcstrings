@@ -125795,6 +125795,567 @@
           }
         }
       }
+    },
+    "A classic one-glance read of NOOP's own scores. Same data, different lens.": {
+      "extractionState": "manual",
+      "localizations": {
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Une lecture claire, en un coup d'œil, des scores de NOOP. Mêmes données, autre angle."
+          }
+        }
+      }
+    },
+    "Armed on the strap itself with the experimental 5/MG command. A strap-driven wake is still unconfirmed on 5/MG on our side (confirmed only on WHOOP 4.0), so keep a backup alarm for anything you truly can't miss.": {
+      "extractionState": "manual",
+      "localizations": {
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Armée sur le bracelet via la commande expérimentale 5/MG. Un réveil piloté par le bracelet n'est pas encore confirmé sur 5/MG de notre côté (confirmé seulement sur WHOOP 4.0) — garde une alarme de secours pour ce que tu ne peux pas manquer."
+          }
+        }
+      }
+    },
+    "Armed on the strap itself, so it can buzz at your wake time even if your phone is asleep or NOOP is closed. Sends the exact alarm command the official app sends, confirmed buzzing on a real WHOOP 4.0 (community wire capture + on-device test, #535). Keep a backup alarm for anything you truly can't miss.": {
+      "extractionState": "manual",
+      "localizations": {
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Armée sur le bracelet, donc elle peut vibrer à l'heure de réveil même si le téléphone dort ou que NOOP est fermé. Envoie exactement la commande d'alarme de l'appli officielle, vibration confirmée sur une vraie WHOOP 4.0 (capture communautaire + test sur appareil, #535). Garde une alarme de secours pour ce que tu ne peux pas manquer."
+          }
+        }
+      }
+    },
+    "Arms the strap to buzz at your wake time, even if NOOP is closed. Sends the exact alarm command the official app sends, confirmed buzzing on a real WHOOP 4.0 (community wire capture + on-device test, #535). Keep a backup alarm for anything you truly can't miss.": {
+      "extractionState": "manual",
+      "localizations": {
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Arme le bracelet pour vibrer à l'heure de réveil, même si NOOP est fermé. Envoie exactement la commande d'alarme de l'appli officielle, vibration confirmée sur une vraie WHOOP 4.0 (capture communautaire + test sur appareil, #535). Garde une alarme de secours pour ce que tu ne peux pas manquer."
+          }
+        }
+      }
+    },
+    "BEATS PER MINUTE": {
+      "extractionState": "manual",
+      "localizations": {
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "BATTEMENTS PAR MINUTE"
+          }
+        }
+      }
+    },
+    "Band": {
+      "extractionState": "manual",
+      "localizations": {
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Bracelet"
+          }
+        }
+      }
+    },
+    "Beta feature": {
+      "extractionState": "manual",
+      "localizations": {
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Fonction bêta"
+          }
+        }
+      }
+    },
+    "Change to Number": {
+      "extractionState": "manual",
+      "localizations": {
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Passer en nombre"
+          }
+        }
+      }
+    },
+    "Change to Yes/No": {
+      "extractionState": "manual",
+      "localizations": {
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Passer en Oui/Non"
+          }
+        }
+      }
+    },
+    "Choose a markers CSV file to import": {
+      "extractionState": "manual",
+      "localizations": {
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Choisir un fichier CSV de marqueurs à importer"
+          }
+        }
+      }
+    },
+    "Cues sent": {
+      "extractionState": "manual",
+      "localizations": {
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Signaux envoyés"
+          }
+        }
+      }
+    },
+    "End session": {
+      "extractionState": "manual",
+      "localizations": {
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Terminer la séance"
+          }
+        }
+      }
+    },
+    "Full day": {
+      "extractionState": "manual",
+      "localizations": {
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Journée entière"
+          }
+        }
+      }
+    },
+    "Heads up: this test mode is off, so the report has no capture for it. For a useful report, turn the mode on, reproduce the problem while wearing the strap, then report again.": {
+      "extractionState": "manual",
+      "localizations": {
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "À noter : ce mode de test est désactivé, le rapport ne contient donc aucune capture pour lui. Pour un rapport utile, active le mode, reproduis le problème en portant le bracelet, puis renvoie le rapport."
+          }
+        }
+      }
+    },
+    "Help, contact, and attribution.": {
+      "extractionState": "manual",
+      "localizations": {
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Aide, contact et crédits."
+          }
+        }
+      }
+    },
+    "History stays under the original question so WHOOP imports still line up.": {
+      "extractionState": "manual",
+      "localizations": {
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "L'historique reste sous la question d'origine pour que les imports WHOOP restent alignés."
+          }
+        }
+      }
+    },
+    "How to read this: HRV, Resting HR, Sleep duration, Respiratory rate and Skin temperature are measured from the strap (skin temp is shown as the deviation from your own baseline). Workouts is the count of activities you logged or that were detected. Recovery, Strain and Stress are NOOP's own on-device scores, not clinical measures: Recovery is a daily readiness composite (HRV, resting HR, sleep and skin-temp trend), Strain is cardiovascular load derived from heart rate, and Stress is a 0-3 autonomic-load index from resting HR and HRV.": {
+      "extractionState": "manual",
+      "localizations": {
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Comment lire ceci : la VFC, la FC au repos, la durée de sommeil, la fréquence respiratoire et la température cutanée sont mesurées par le bracelet (la temp. cutanée est montrée comme l'écart à ta référence). Entraînements est le nombre d'activités enregistrées ou détectées. Récupération, Effort et Stress sont les scores calculés par NOOP sur l'appareil, pas des mesures cliniques : la Récupération est un indice de forme du jour (VFC, FC au repos, sommeil et tendance de temp. cutanée), l'Effort est la charge cardiovasculaire dérivée de la fréquence cardiaque, et le Stress est un indice de charge autonome de 0 à 3 issu de la FC au repos et de la VFC."
+          }
+        }
+      }
+    },
+    "LIVE SESSION": {
+      "extractionState": "manual",
+      "localizations": {
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "SÉANCE EN DIRECT"
+          }
+        }
+      }
+    },
+    "Liquid Today (prototype)": {
+      "extractionState": "manual",
+      "localizations": {
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Liquid Today (prototype)"
+          }
+        }
+      }
+    },
+    "Live Session": {
+      "extractionState": "manual",
+      "localizations": {
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Séance en direct"
+          }
+        }
+      }
+    },
+    "Live Sessions (beta)": {
+      "extractionState": "manual",
+      "localizations": {
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Séances en direct (bêta)"
+          }
+        }
+      }
+    },
+    "Long press to show or hide your heart rate.": {
+      "extractionState": "manual",
+      "localizations": {
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Appui long pour afficher ou masquer ta fréquence cardiaque."
+          }
+        }
+      }
+    },
+    "Longer ranges unlock as more history builds.": {
+      "extractionState": "manual",
+      "localizations": {
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Les plages plus longues se débloquent à mesure que l'historique s'étoffe."
+          }
+        }
+      }
+    },
+    "Move anyway": {
+      "extractionState": "manual",
+      "localizations": {
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Déplacer quand même"
+          }
+        }
+      }
+    },
+    "NOOP gives you three daily scores (Charge, Effort and Rest), each on a 0-100 scale. They're built from your strap's raw signals using published, peer-reviewed sport science, and computed entirely on your device. They are NOT WHOOP's scores: we don't have WHOOP's private algorithms and don't pretend to. They aim at the same three questions using open science, so they'll usually track WHOOP's in direction, but won't match number-for-number. And that's the point.": {
+      "extractionState": "manual",
+      "localizations": {
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "NOOP te donne trois scores quotidiens (Charge, Effort et Repos), chacun sur une échelle de 0 à 100. Ils sont construits à partir des signaux bruts de ton bracelet avec des méthodes de science du sport publiées et revues par les pairs, et calculés entièrement sur ton appareil. Ce ne sont PAS les scores de WHOOP : nous n'avons pas les algorithmes privés de WHOOP et ne prétendons pas les avoir. Ils visent les trois mêmes questions avec de la science ouverte, donc ils suivront généralement la même direction que ceux de WHOOP, sans coïncider chiffre pour chiffre. Et c'est justement l'idée."
+          }
+        }
+      }
+    },
+    "New item group": {
+      "extractionState": "manual",
+      "localizations": {
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Nouveau groupe d'éléments"
+          }
+        }
+      }
+    },
+    "No sleep tracked last night": {
+      "extractionState": "manual",
+      "localizations": {
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Aucun sommeil enregistré la nuit dernière"
+          }
+        }
+      }
+    },
+    "No workouts yet": {
+      "extractionState": "manual",
+      "localizations": {
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Pas encore d'entraînements"
+          }
+        }
+      }
+    },
+    "Profile and settings": {
+      "extractionState": "manual",
+      "localizations": {
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Profil et réglages"
+          }
+        }
+      }
+    },
+    "Progress toward today's goal": {
+      "extractionState": "manual",
+      "localizations": {
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Progression vers l'objectif du jour"
+          }
+        }
+      }
+    },
+    "RECOVERY VITALS": {
+      "extractionState": "manual",
+      "localizations": {
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "CONSTANTES DE RÉCUPÉRATION"
+          }
+        }
+      }
+    },
+    "Refresh battery": {
+      "extractionState": "manual",
+      "localizations": {
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Actualiser la batterie"
+          }
+        }
+      }
+    },
+    "Rename item": {
+      "extractionState": "manual",
+      "localizations": {
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Renommer l'élément"
+          }
+        }
+      }
+    },
+    "Rename…": {
+      "extractionState": "manual",
+      "localizations": {
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Renommer…"
+          }
+        }
+      }
+    },
+    "Replaces the Today tab with the prototype redesign. Turn it off any time to return to the classic dashboard. Reads the same live data from your strap.": {
+      "extractionState": "manual",
+      "localizations": {
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Remplace l'onglet Aujourd'hui par la refonte prototype. Désactive-la quand tu veux pour revenir au tableau de bord classique. Elle lit les mêmes données en direct de ton bracelet."
+          }
+        }
+      }
+    },
+    "SILENT GUARDIAN": {
+      "extractionState": "manual",
+      "localizations": {
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "GARDIEN SILENCIEUX"
+          }
+        }
+      }
+    },
+    "Session summary": {
+      "extractionState": "manual",
+      "localizations": {
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Résumé de la séance"
+          }
+        }
+      }
+    },
+    "Silence-first strap coaching during workouts.": {
+      "extractionState": "manual",
+      "localizations": {
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Coaching du bracelet, silencieux d'abord, pendant les entraînements."
+          }
+        }
+      }
+    },
+    "Start a live session. Beta. Silent strap coaching against today's Charge.": {
+      "extractionState": "manual",
+      "localizations": {
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Lancer une séance en direct. Bêta. Coaching silencieux du bracelet en fonction de la Charge du jour."
+          }
+        }
+      }
+    },
+    "Support NOOP: help and contact": {
+      "extractionState": "manual",
+      "localizations": {
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Soutenir NOOP : aide et contact"
+          }
+        }
+      }
+    },
+    "Support NOOP: help and contact.": {
+      "extractionState": "manual",
+      "localizations": {
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Soutenir NOOP : aide et contact."
+          }
+        }
+      }
+    },
+    "The line is each waking hour's 0-3 proxy, scored against your own calm hours today. The bar below splits your day into calm, moderate and high stress time.": {
+      "extractionState": "manual",
+      "localizations": {
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "La courbe est l'indice 0-3 de chaque heure d'éveil, évalué par rapport à tes heures calmes du jour. La barre en dessous répartit ta journée en temps de stress calme, modéré et élevé."
+          }
+        }
+      }
+    },
+    "This moves the night to a time with no recorded data. Stages can't be derived there, so it may show as empty until data covers it.": {
+      "extractionState": "manual",
+      "localizations": {
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Cela déplace la nuit vers une période sans données enregistrées. Les stades ne peuvent pas y être calculés, la nuit peut donc apparaître vide tant que des données ne la couvrent pas."
+          }
+        }
+      }
+    },
+    "Undo": {
+      "extractionState": "manual",
+      "localizations": {
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Annuler"
+          }
+        }
+      }
+    },
+    "Undo sleep deletion": {
+      "extractionState": "manual",
+      "localizations": {
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Annuler la suppression du sommeil"
+          }
+        }
+      }
+    },
+    "View sources": {
+      "extractionState": "manual",
+      "localizations": {
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Voir les sources"
+          }
+        }
+      }
+    },
+    "We compare today's resting heart rate and HRV to your own 30-day baseline. A higher-than-usual resting HR and a lower-than-usual HRV both push the score up, classic signs the body is activated. The combined shift is mapped onto a 0-3 scale: 0 is calm, 1.5 sits at your baseline, 3 is highly activated.": {
+      "extractionState": "manual",
+      "localizations": {
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Nous comparons ta fréquence cardiaque au repos et ta VFC du jour à ta référence sur 30 jours. Une FC au repos plus haute que d'habitude et une VFC plus basse que d'habitude poussent toutes deux le score vers le haut — signes classiques d'un corps activé. L'écart combiné est ramené sur une échelle de 0 à 3 : 0 = calme, 1,5 = ta référence, 3 = très activé."
+          }
+        }
+      }
+    },
+    "Wear the strap overnight to score a night first.": {
+      "extractionState": "manual",
+      "localizations": {
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Porte le bracelet la nuit pour qu'une nuit soit d'abord évaluée."
+          }
+        }
+      }
+    },
+    "YOUR CARDS": {
+      "extractionState": "manual",
+      "localizations": {
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "TES CARTES"
+          }
+        }
+      }
+    },
+    "minus": {
+      "extractionState": "manual",
+      "localizations": {
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "moins"
+          }
+        }
+      }
+    },
+    "plus": {
+      "extractionState": "manual",
+      "localizations": {
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "plus"
+          }
+        }
+      }
     }
   },
   "version": "1.0"
