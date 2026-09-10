@@ -186,11 +186,8 @@ fun DataSourcesScreen(vm: AppViewModel) {
             when (result) {
                 is DataBackup.ImportResult.NeedsRestart -> {
                     restartNeeded = true
-                    Toast.makeText(
-                        context,
-                        "Imported. Fully close and reopen NOOP to load it.",
-                        Toast.LENGTH_LONG,
-                    ).show()
+                    Toast.makeText(context, "Imported — reloading NOOP…", Toast.LENGTH_SHORT).show()
+                    AppRestart.relaunch(context)
                 }
                 is DataBackup.ImportResult.Failed ->
                     Toast.makeText(context, result.message, Toast.LENGTH_LONG).show()
@@ -851,7 +848,7 @@ fun DataSourcesScreen(vm: AppViewModel) {
             }
             if (restartNeeded) {
                 Text(
-                    "Import staged. Fully close and reopen NOOP to load the new data.",
+                    "Import staged — NOOP is reloading. If it doesn't, fully close and reopen it.",
                     style = NoopType.subhead,
                     color = Palette.statusWarning,
                 )

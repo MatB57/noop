@@ -2373,8 +2373,7 @@ fun SettingsScreen(vm: AppViewModel, onOpenTestCentre: () -> Unit = {}) {
 
                 RowDivider()
 
-                // Support link — opens the project's contact email (same address the
-                // Support screen lists). NOOP is anonymous, so email is the support channel.
+                // Support link — opens this fork's GitHub (code, releases, and where to file an issue).
                 val supportInteraction = remember { MutableInteractionSource() }
                 Box(
                     modifier = Modifier
@@ -2387,27 +2386,24 @@ fun SettingsScreen(vm: AppViewModel, onOpenTestCentre: () -> Unit = {}) {
                             interactionSource = supportInteraction,
                             indication = null,
                         ) {
-                            val intent = Intent(Intent.ACTION_SENDTO).apply {
-                                data = Uri.parse("mailto:$SUPPORT_EMAIL")
-                                putExtra(Intent.EXTRA_SUBJECT, "NOOP support")
-                            }
+                            val intent = Intent(Intent.ACTION_VIEW, Uri.parse(PROJECT_URL))
                             try {
                                 context.startActivity(intent)
                             } catch (_: ActivityNotFoundException) {
-                                Toast.makeText(context, "Email us at $SUPPORT_EMAIL", Toast.LENGTH_LONG).show()
+                                Toast.makeText(context, PROJECT_URL, Toast.LENGTH_LONG).show()
                             }
                         }
                         .padding(horizontal = 14.dp, vertical = 12.dp)
-                        .semantics { contentDescription = "Contact support at $SUPPORT_EMAIL" },
+                        .semantics { contentDescription = "Open the project home, $PROJECT_URL" },
                 ) {
                     Row(
                         modifier = Modifier.fillMaxWidth(),
                         verticalAlignment = Alignment.CenterVertically,
                     ) {
                         Column(modifier = Modifier.weight(1f)) {
-                            Text("Support & contact", style = NoopType.headline, color = Palette.textPrimary)
+                            Text("Support & project home", style = NoopType.headline, color = Palette.textPrimary)
                             Text(
-                                "Questions, feedback, bugs: $SUPPORT_EMAIL",
+                                "Code, releases, and where to report an issue: $PROJECT_URL",
                                 style = NoopType.footnote,
                                 color = Palette.textSecondary,
                             )
@@ -2488,7 +2484,7 @@ fun SettingsScreen(vm: AppViewModel, onOpenTestCentre: () -> Unit = {}) {
     }
 }
 
-private const val SUPPORT_EMAIL = "thenoopapp@gmail.com"
+private const val PROJECT_URL = "https://github.com/MatB57/noop"
 
 // MARK: - App icon swap (v3 "Titanium & Gold")
 

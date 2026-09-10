@@ -49,17 +49,17 @@ struct SupportView: View {
     private var contactCard: some View {
         NoopCard {
             Button {
-                if let url = URL(string: "mailto:\(ProjectInfo.contactEmail)") { PlatformOpen.url(url) }
+                if let url = URL(string: ProjectInfo.projectURL) { PlatformOpen.url(url) }
             } label: {
-                groupedRow(icon: "envelope.fill", tint: StrandPalette.accent,
-                           title: "Get in touch",
-                           detail: String(localized: "Questions, feedback, bugs: \(ProjectInfo.contactEmail)"),
+                groupedRow(icon: "chevron.left.forwardslash.chevron.right", tint: StrandPalette.accent,
+                           title: "Project home",
+                           detail: String(localized: "Code, releases, and where to report an issue: \(ProjectInfo.projectURL)"),
                            showsChevron: true)
                     .contentShape(Rectangle())
             }
             .buttonStyle(.plain)
-            .accessibilityLabel("Email \(ProjectInfo.contactEmail)")
-            .help("Email \(ProjectInfo.contactEmail)")
+            .accessibilityLabel("Open \(ProjectInfo.projectURL)")
+            .help("Open \(ProjectInfo.projectURL)")
         }
     }
 

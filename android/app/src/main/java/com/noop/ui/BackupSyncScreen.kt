@@ -73,12 +73,14 @@ fun BackupSyncScreen() {
         scope.launch {
             val r = withContext(Dispatchers.IO) { DataBackup.importFrom(context, uri) }
             busy = false
-            val msg = when (r) {
-                is DataBackup.ImportResult.NeedsRestart ->
-                    "Restored. Fully close and reopen NOOP to load it."
-                is DataBackup.ImportResult.Failed -> r.message
+            when (r) {
+                is DataBackup.ImportResult.NeedsRestart -> {
+                    Toast.makeText(context, "Restored — reloading NOOP…", Toast.LENGTH_SHORT).show()
+                    AppRestart.relaunch(context)
+                }
+                is DataBackup.ImportResult.Failed ->
+                    Toast.makeText(context, r.message, Toast.LENGTH_LONG).show()
             }
-            Toast.makeText(context, msg, Toast.LENGTH_LONG).show()
         }
     }
 
