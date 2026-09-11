@@ -989,18 +989,48 @@ object SleepStager {
                     "daytime=true restingHR=${resting ?: -1} baseline=${baseline?.toInt() ?: -1} nightTail=false"))
                 continue
             }
-            val stages = if (useSleepStagerV2) {
+            var stages = if (useSleepStagerV2) {
                 SleepStagerV2.stageSession(start = p.start, end = p.end, grav = grav,
                     hr = hrS, rr = rrS, resp = respS)
             } else {
                 stageSession(start = p.start, end = p.end, grav = grav,
                     hr = hrS, rr = rrS, resp = respS)
             }
-            val eff = efficiency(start = p.start, end = p.end, stages = stages)
-            val avgHrv = sessionAvgHRV(start = p.start, end = p.end, rr = rrS)
+            // Trim leading/trailing WAKE padding (#quiet-wake window bug): the gravity-stillness
+            // spine (classifyStill/buildRuns) can't tell restful sleep from quiet, motionless
+            // WAKEFULNESS — someone reading or resting in bed for hours after actually waking
+            // produces no gravity break, so the accepted run [p.start, p.end] can run well past
+            // the true wake time with no chain/guard ever seeing it (a single unbroken run never
+            // reaches the daytime/night-continuation checks above, which only judge run-to-run
+            // gaps). The epoch classifier above already has the sharper HR+motion picture and
+            // correctly tags that tail "wake" — this uses ITS verdict to shrink the reported
+            // in-bed window to the true sleep span, then RESTAGES on the tightened bounds so
+            // classifyEpochs' percentile reference distributions aren't diluted by the trimmed
+            // quiet-wake epochs (they were pulling hrLo/hrHi/etc. toward waking HR, flattening
+            // deep/REM separation even within the genuinely-asleep portion). A run with no
+            // leading/trailing wake (the common case) is untouched — same stages, same bounds.
+            val firstAsleep = stages.firstOrNull { it.stage != "wake" }
+            val lastAsleep = stages.lastOrNull { it.stage != "wake" }
+            var trimStart = p.start
+            var trimEnd = p.end
+            if (firstAsleep != null && lastAsleep != null) {
+                trimStart = firstAsleep.start
+                trimEnd = lastAsleep.end
+            }
+            if (trimStart > p.start || trimEnd < p.end) {
+                stages = if (useSleepStagerV2) {
+                    SleepStagerV2.stageSession(start = trimStart, end = trimEnd, grav = grav,
+                        hr = hrS, rr = rrS, resp = respS)
+                } else {
+                    stageSession(start = trimStart, end = trimEnd, grav = grav,
+                        hr = hrS, rr = rrS, resp = respS)
+                }
+            }
+            val eff = efficiency(start = trimStart, end = trimEnd, stages = stages)
+            val avgHrv = sessionAvgHRV(start = trimStart, end = trimEnd, rr = rrS)
             sessions.add(
                 DetectedSleep(
-                    start = p.start, end = p.end, efficiency = eff,
+                    start = trimStart, end = trimEnd, efficiency = eff,
                     stages = stages, restingHR = resting, avgHRV = avgHrv,
                 )
             )
