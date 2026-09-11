@@ -101,6 +101,7 @@ import com.noop.ble.WhoopModel
 import com.noop.data.DataBackup
 import com.noop.ingest.RawSensorExport
 import com.noop.ingest.WhoopCsvExporter
+import com.noop.update.AutoBackup
 import com.noop.update.InAppUpdate
 import com.noop.update.UpdateCheck
 import kotlinx.coroutines.Dispatchers
@@ -2162,6 +2163,11 @@ fun SettingsScreen(vm: AppViewModel, onOpenTestCentre: () -> Unit = {}) {
                                                     updDownloadPct = 0f
                                                     scope.launch {
                                                         runCatching {
+                                                            // Best-effort safety net (never blocks the
+                                                            // update): a fresh backup to Downloads
+                                                            // survives even if install turns into an
+                                                            // uninstall.
+                                                            AutoBackup.beforeUpdate(context, avail.version)
                                                             InAppUpdate.download(context, avail.version, apk) {
                                                                 updDownloadPct = it
                                                             }

@@ -20,6 +20,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
 import com.noop.BuildConfig
+import com.noop.update.AutoBackup
 import com.noop.update.InAppUpdate
 import com.noop.update.UpdateCheck
 import kotlinx.coroutines.launch
@@ -93,6 +94,9 @@ fun UpdateGate() {
                     state = UpdateGateState.Downloading(info, 0f)
                     scope.launch {
                         runCatching {
+                            // Best-effort safety net (never blocks the update): a fresh backup to
+                            // Downloads survives even if the install turns into an uninstall.
+                            AutoBackup.beforeUpdate(context, info.version)
                             InAppUpdate.download(context, info.version, apk) { p ->
                                 state = UpdateGateState.Downloading(info, p)
                             }
