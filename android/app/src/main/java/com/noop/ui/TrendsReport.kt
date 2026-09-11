@@ -43,7 +43,7 @@ import kotlin.math.roundToInt
 //
 // Kotlin parity for the macOS/iOS shareable offline trends report. Builds the five
 // metric day→value maps from the merged DailyMetric history, calls the pure, unit-tested
-// RangeReportEngine for a chosen range, renders a clean one-page PDF with android.graphics
+// RangeReportEngine for a chosen range, renders a clean multi-page PDF with android.graphics
 // (a deterministic native Canvas — no Compose-window dependency), saves it to the app's
 // cache via the existing FileProvider, and fires an ACTION_SEND share intent. No network.
 //
@@ -166,11 +166,27 @@ private fun ReportMetric.accentArgb(): Int = when (this) {
 }
 
 // MARK: - PDF renderer (deterministic native Canvas → PdfDocument)
-
+//
+// REWORK (#trends-pdf-rework): the old renderer drew every section at a hardcoded Y offset on
+// a single fixed-height page, with no notion of how tall the content actually was. Past ~5
+// metric cards (a 90-day-or-wider export easily carries all nine) the cards ran off the bottom
+// of the page and straight through the footer, which was itself pinned to a fixed
+// PAGE_H-relative Y regardless of what had already been drawn above it — the "elements
+// overlap" the PDF was shipping with. The trend chip also floated at a Y band that overlapped
+// the sparkline it sat beside.
+//
+// The renderer is now a small cumulative layout: [PageCursor] tracks a running Y and starts a
+// fresh page whenever the next block wouldn't fit before the bottom margin, so pagination is a
+// side effect of real measurement rather than a page-count guess. Every block that can vary in
+// length (headline bullets, the footer legend, the empty-state body) is WORD-WRAPPED first via
+// [wrapPlain] to get its real line count, and the block's height is computed from that count —
+// never assumed. The trend chip moved into the title row (left of the mean value) so it no
+// longer competes with the sparkline for the same vertical band.
 object TrendsReportRenderer {
 
     // Page geometry — A4-ish portrait at the same ~612pt width the Swift page uses, so the
-    // two platforms produce visually matched sheets.
+    // two platforms produce visually matched sheets. PAGE_H is now just the per-page height;
+    // the document itself grows to as many pages as the content needs.
     private const val PAGE_W = 612
     private const val PAGE_H = 850
     private const val MARGIN = 28f
@@ -192,9 +208,62 @@ object TrendsReportRenderer {
     private val sansMedium = Typeface.create("sans-serif-medium", Typeface.NORMAL)
 
     /**
-     * Render [report] (+ its sparkline [series]) to a one-page PDF file in the cache and
-     * return it, or null on failure. Pure drawing — no view tree, so it's safe off the main
-     * thread and never depends on a window.
+     * A growing PDF document plus "where am I on the current page" state. Every draw* function
+     * below takes one of these instead of a raw Canvas + top Y, so a block that doesn't fit the
+     * remaining space on the current page cleanly starts a new one instead of running off the
+     * bottom or through whatever comes next.
+     */
+    private class PageCursor(private val doc: PdfDocument) {
+        private var pageNumber = 0
+        private var pageOpen = false
+        lateinit var canvas: Canvas
+            private set
+        var y: Float = MARGIN
+            private set
+
+        fun newPage() {
+            if (pageOpen) doc.finishPage(currentPage)
+            pageNumber += 1
+            val info = PdfDocument.PageInfo.Builder(PAGE_W, PAGE_H, pageNumber).create()
+            currentPage = doc.startPage(info)
+            canvas = currentPage.canvas
+            canvas.drawColor(SURFACE_BASE)
+            pageOpen = true
+            y = MARGIN
+        }
+
+        private lateinit var currentPage: PdfDocument.Page
+
+        /** Advance the cursor by [dy] (after drawing a block of that height). */
+        fun advance(dy: Float) {
+            y += dy
+        }
+
+        /** Move the cursor to an absolute Y (used after a block computed its own end position). */
+        fun moveTo(newY: Float) {
+            y = newY
+        }
+
+        /**
+         * Start a new page FIRST when [height] of content wouldn't fit above the bottom margin.
+         * Call this before drawing any block whose height is known up front, so a card or
+         * paragraph is never split across a page boundary or drawn past the page edge.
+         */
+        fun ensureSpace(height: Float) {
+            if (!pageOpen) { newPage(); return }
+            if (y + height > PAGE_H - MARGIN) newPage()
+        }
+
+        fun finish() {
+            if (pageOpen) { doc.finishPage(currentPage); pageOpen = false }
+        }
+    }
+
+    /**
+     * Render [report] (+ its sparkline [series]) to a PDF file in the cache and return it, or
+     * null on failure. Pure drawing — no view tree, so it's safe off the main thread and never
+     * depends on a window. Paginates automatically: a short range is one page; a long one with
+     * every metric populated spills onto as many pages as it needs.
      */
     fun renderPdf(
         context: Context,
@@ -204,24 +273,20 @@ object TrendsReportRenderer {
         generatedOn: String,
     ): File? = runCatching {
         val doc = PdfDocument()
-        val pageInfo = PdfDocument.PageInfo.Builder(PAGE_W, PAGE_H, 1).create()
-        val page = doc.startPage(pageInfo)
-        val canvas = page.canvas
-        canvas.drawColor(SURFACE_BASE)
+        val cursor = PageCursor(doc)
+        cursor.newPage()
 
-        var y = MARGIN
-        y = drawHeader(canvas, report, range, y)
-        y += 18f
+        drawHeader(cursor, report, range)
+        cursor.advance(18f)
         if (report.isEmpty) {
-            drawEmptyState(canvas, range, y)
+            drawEmptyState(cursor, range)
         } else {
-            y = drawHeadlines(canvas, report, y)
-            y += 18f
-            y = drawMetrics(canvas, report, series, y)
+            drawHeadlines(cursor, report)
+            cursor.advance(18f)
+            drawMetrics(cursor, report, series)
         }
-        drawFooter(canvas, generatedOn)
-
-        doc.finishPage(page)
+        drawFooter(cursor, generatedOn)
+        cursor.finish()
 
         val dir = File(context.cacheDir, "reports").apply { mkdirs() }
         val file = File(dir, "NOOP-trends-${report.start}_to_${report.end}.pdf")
@@ -232,84 +297,103 @@ object TrendsReportRenderer {
 
     // --- Header ---
 
-    private fun drawHeader(canvas: Canvas, report: RangeReport, range: ReportRange, top: Float): Float {
-        val cardTop = top
+    private fun drawHeader(cursor: PageCursor, report: RangeReport, range: ReportRange) {
         val cardH = 92f
-        drawCard(canvas, MARGIN, cardTop, PAGE_W - MARGIN, cardTop + cardH, ACCENT)
+        cursor.ensureSpace(cardH)
+        val top = cursor.y
+        drawCard(cursor.canvas, MARGIN, top, PAGE_W - MARGIN, top + cardH, ACCENT)
 
         val left = MARGIN + 16f
-        var ty = cardTop + 26f
-        text(canvas, "NOOP", left, ty, 11f, sansBold, ACCENT, letterSpacing = 0.12f)
-        textRight(canvas, range.longName.uppercase(), PAGE_W - MARGIN - 16f, ty, 10f, sansBold, TEXT_TERTIARY)
+        var ty = top + 26f
+        text(cursor.canvas, "NOOP", left, ty, 11f, sansBold, ACCENT, letterSpacing = 0.12f)
+        textRight(cursor.canvas, range.longName.uppercase(), PAGE_W - MARGIN - 16f, ty, 10f, sansBold, TEXT_TERTIARY)
         ty += 30f
-        text(canvas, tr("Trends report"), left, ty, 26f, sansBold, TEXT_PRIMARY)
+        text(cursor.canvas, tr("Trends report"), left, ty, 26f, sansBold, TEXT_PRIMARY)
         ty += 22f
         val span = report.totalDays
         val dayWord = if (span == 1) tr("day") else tr("days")
         text(
-            canvas,
+            cursor.canvas,
             "${prettyDate(report.start)}-${prettyDate(report.end)}   ·   $span $dayWord",
             left, ty, 12f, sans, TEXT_SECONDARY,
         )
-        return cardTop + cardH
+        cursor.moveTo(top + cardH)
     }
 
     // --- Headlines ---
 
-    private fun drawHeadlines(canvas: Canvas, report: RangeReport, top: Float): Float {
-        val lineH = 18f
-        val pad = 16f
-        val headlineCount = report.headlines.size
-        val cardH = 30f + headlineCount * lineH + pad
-        drawCard(canvas, MARGIN, top, PAGE_W - MARGIN, top + cardH, ACCENT)
-
+    private fun drawHeadlines(cursor: PageCursor, report: RangeReport) {
         val left = MARGIN + 16f
+        val right = PAGE_W - MARGIN - 16f
+        val lineH = 16f
+        val bodyPaint = Paint(Paint.ANTI_ALIAS_FLAG).apply { typeface = sans; textSize = 12f }
+
+        // Wrap every bullet up front — real multi-line wrapping, not the old single-line
+        // ellipsize — so the card is exactly as tall as what it's about to draw.
+        val wrapped = report.headlines.map { wrapPlain(bodyPaint, "•  $it", right - left) }
+        val bodyLineCount = wrapped.sumOf { it.size }
+        val headH = 22f + 24f + 12f  // SUMMARY label, "What changed" title, gap to first bullet
+        val cardH = headH + bodyLineCount * lineH + 14f
+        cursor.ensureSpace(cardH)
+
+        val top = cursor.y
+        drawCard(cursor.canvas, MARGIN, top, PAGE_W - MARGIN, top + cardH, ACCENT)
+
         var ty = top + 22f
-        text(canvas, tr("SUMMARY"), left, ty, 10f, sansBold, ACCENT, letterSpacing = 0.1f)
-        ty += 8f
-        text(canvas, tr("What changed"), left, ty + 10f, 16f, sansBold, TEXT_PRIMARY)
-        ty += 28f
-        for (line in report.headlines) {
-            text(canvas, "•  $line", left, ty, 12f, sans, TEXT_PRIMARY, maxWidth = PAGE_W - MARGIN - left - 16f)
-            ty += lineH
+        text(cursor.canvas, tr("SUMMARY"), left, ty, 10f, sansBold, ACCENT, letterSpacing = 0.1f)
+        ty += 24f
+        text(cursor.canvas, tr("What changed"), left, ty, 16f, sansBold, TEXT_PRIMARY)
+        ty += 24f
+        for (lines in wrapped) {
+            for (line in lines) {
+                text(cursor.canvas, line, left, ty, 12f, sans, TEXT_PRIMARY)
+                ty += lineH
+            }
         }
-        return top + cardH
+        cursor.moveTo(top + cardH)
     }
 
     // --- Metric cards ---
 
-    private fun drawMetrics(
-        canvas: Canvas,
-        report: RangeReport,
-        series: Map<ReportMetric, List<Double>>,
-        top: Float,
-    ): Float {
-        var y = top
-        text(canvas, tr("BY THE NUMBERS"), MARGIN, y + 4f, 10f, sansBold, TEXT_TERTIARY, letterSpacing = 0.1f)
-        y += 10f
-        text(canvas, tr("Metrics"), MARGIN, y + 14f, 16f, sansBold, TEXT_PRIMARY)
-        y += 26f
+    private fun drawMetrics(cursor: PageCursor, report: RangeReport, series: Map<ReportMetric, List<Double>>) {
+        cursor.ensureSpace(36f)
+        text(cursor.canvas, tr("BY THE NUMBERS"), MARGIN, cursor.y + 4f, 10f, sansBold, TEXT_TERTIARY, letterSpacing = 0.1f)
+        text(cursor.canvas, tr("Metrics"), MARGIN, cursor.y + 24f, 16f, sansBold, TEXT_PRIMARY)
+        cursor.advance(36f)
 
+        val cardH = 96f
         for (stat in report.metrics) {
-            y = drawMetricCard(canvas, stat, series[stat.metric] ?: emptyList(), y)
-            y += 10f
+            // One card fits fully on a page or starts a fresh one — never split across a break,
+            // and never drawn past the bottom margin.
+            cursor.ensureSpace(cardH)
+            drawMetricCard(cursor.canvas, stat, series[stat.metric] ?: emptyList(), cursor.y)
+            cursor.advance(cardH + 10f)
         }
-        return y
     }
 
-    private fun drawMetricCard(canvas: Canvas, stat: MetricRangeStat, spark: List<Double>, top: Float): Float {
+    private fun drawMetricCard(canvas: Canvas, stat: MetricRangeStat, spark: List<Double>, top: Float) {
         val cardH = 96f
         val accent = stat.metric.accentArgb()
         drawCard(canvas, MARGIN, top, PAGE_W - MARGIN, top + cardH, accent)
 
         val left = MARGIN + 16f
         val right = PAGE_W - MARGIN - 16f
-        var ty = top + 24f
+        val titleY = top + 24f
 
-        // Title + mean + trend chip.
-        text(canvas, tr(stat.metric.label).uppercase(), left, ty, 11f, sansBold, accent, letterSpacing = 0.08f)
+        // Title (left) + trend chip + mean value, right-aligned as one group on the SAME row —
+        // the chip used to float over the sparkline band below; grouping it with the mean here
+        // keeps every element on its own row, never crossing into a neighbour's space.
+        // Capped to the card's left half so a longer translated label can never run into the
+        // trend-chip/mean group on the right half of the same row.
+        text(
+            canvas, tr(stat.metric.label).uppercase(), left, titleY, 11f, sansBold, accent,
+            letterSpacing = 0.08f, maxWidth = (right - left) * 0.5f,
+        )
         val meanStr = meanText(stat)
-        textRight(canvas, meanStr, right, ty, 14f, sansMedium, TEXT_PRIMARY)
+        val meanPaint = Paint(Paint.ANTI_ALIAS_FLAG).apply { typeface = sansMedium; textSize = 14f }
+        val meanW = meanPaint.measureText(meanStr)
+        drawTrendChip(canvas, stat, pillRight = right - meanW - 8f, baselineY = titleY)
+        textRight(canvas, meanStr, right, titleY, 14f, sansMedium, TEXT_PRIMARY)
 
         // Sparkline (decorative) below the title row.
         val sparkTop = top + 34f
@@ -323,7 +407,9 @@ object TrendsReportRenderer {
         // Divider.
         line(canvas, left, top + 66f, right, top + 66f, HAIRLINE)
 
-        // Footer stats: Avg / Min(day) / Max(day) / Days, evenly spaced.
+        // Footer stats: Avg / Min(day) / Max(day) / Days, evenly spaced. Each value is clipped
+        // to its own column width (a long "12.3 ms · Sep 8" MIN/MAX string, especially in
+        // French, could otherwise bleed into the next column) rather than drawn unbounded.
         val cols = listOf(
             tr("AVG") to valueText(stat.mean, stat.metric),
             tr("MIN") to "${valueText(stat.min.value, stat.metric)} · ${prettyDate(stat.min.day)}",
@@ -333,20 +419,17 @@ object TrendsReportRenderer {
         val colW = (right - left) / cols.size
         cols.forEachIndexed { i, (label, value) ->
             val cx = left + i * colW
-            text(canvas, label, cx, top + 80f, 9f, sansBold, TEXT_TERTIARY, letterSpacing = 0.06f)
-            text(canvas, value, cx, top + 91f, 11f, sansMedium, TEXT_SECONDARY)
+            val colMaxWidth = colW - 8f
+            text(canvas, label, cx, top + 80f, 9f, sansBold, TEXT_TERTIARY, letterSpacing = 0.06f, maxWidth = colMaxWidth)
+            text(canvas, value, cx, top + 91f, 11f, sansMedium, TEXT_SECONDARY, maxWidth = colMaxWidth)
         }
-
-        // Trend chip drawn last so it sits above the divider, right-aligned under the mean.
-        drawTrendChip(canvas, stat, right, top + 58f)
-
-        return top + cardH
     }
 
-    private fun drawTrendChip(canvas: Canvas, stat: MetricRangeStat, right: Float, baselineY: Float) {
+    /** Draws a small tinted trend pill ending at [pillRight], baseline-aligned with [baselineY]. */
+    private fun drawTrendChip(canvas: Canvas, stat: MetricRangeStat, pillRight: Float, baselineY: Float) {
         val d = stat.halfDelta
         val (label, color) = if (stat.trend == ReportTrend.FLAT || abs(d) < 0.05) {
-            "steady" to TEXT_TERTIARY
+            tr("steady") to TEXT_TERTIARY
         } else {
             val up = d > 0
             val sign = if (up) "+" else "−"
@@ -358,7 +441,6 @@ object TrendsReportRenderer {
             }
             "$sign${round1(abs(d))}" to c
         }
-        // A small tinted pill.
         val paint = Paint(Paint.ANTI_ALIAS_FLAG).apply {
             typeface = sansMedium
             textSize = 10f
@@ -366,35 +448,46 @@ object TrendsReportRenderer {
         }
         val tw = paint.measureText(label)
         val padX = 7f
-        val pillRight = right
         val pillLeft = pillRight - tw - padX * 2
-        val pillTop = baselineY - 12f
+        val pillTop = baselineY - 11f
         val pillBottom = baselineY + 3f
         val bg = Paint(Paint.ANTI_ALIAS_FLAG).apply { this.color = withAlpha(color, 0.14f) }
-        canvas.drawRoundRect(RectF(pillLeft, pillTop, pillRight, pillBottom), 8f, 8f, bg)
+        canvas.drawRoundRect(RectF(pillLeft, pillTop, pillRight, pillBottom), 7f, 7f, bg)
         canvas.drawText(label, pillLeft + padX, baselineY, paint)
     }
 
     // --- Empty state ---
 
-    private fun drawEmptyState(canvas: Canvas, range: ReportRange, top: Float) {
-        val cardH = 110f
-        drawCard(canvas, MARGIN, top, PAGE_W - MARGIN, top + cardH, null)
+    private fun drawEmptyState(cursor: PageCursor, range: ReportRange) {
         val left = MARGIN + 16f
-        text(canvas, tr("Not enough data in this range yet"), left, top + 30f, 16f, sansBold, TEXT_PRIMARY)
+        val right = PAGE_W - MARGIN - 16f
+        val bodyPaint = Paint(Paint.ANTI_ALIAS_FLAG).apply { typeface = sans; textSize = 12f }
         val body = tr("No workout, stress, recovery, sleep, HRV, resting-HR, strain, respiratory-rate or ") +
             tr("skin-temp readings fell inside") + " ${range.longName.lowercase()}. " +
             tr("Wear your strap a few more days, or pick a wider range, then export again.")
-        drawWrapped(canvas, body, left, top + 52f, PAGE_W - MARGIN - left - 16f, 16f, 12f, sans, TEXT_SECONDARY)
+        val lines = wrapPlain(bodyPaint, body, right - left)
+        val cardH = 30f + 22f + lines.size * 16f + 16f
+        cursor.ensureSpace(cardH)
+
+        val top = cursor.y
+        drawCard(cursor.canvas, MARGIN, top, PAGE_W - MARGIN, top + cardH, null)
+        text(cursor.canvas, tr("Not enough data in this range yet"), left, top + 30f, 16f, sansBold, TEXT_PRIMARY)
+        var ty = top + 52f
+        for (line in lines) {
+            text(cursor.canvas, line, left, ty, 12f, sans, TEXT_SECONDARY)
+            ty += 16f
+        }
+        cursor.moveTo(top + cardH)
     }
 
     // --- Footer ---
 
-    private fun drawFooter(canvas: Canvas, generatedOn: String) {
-        val y = PAGE_H - MARGIN - 12f
+    private fun drawFooter(cursor: PageCursor, generatedOn: String) {
         // Provenance legend (#457): make clear which numbers are measured vs. NOOP's own derived scores,
         // so a clinician reading the PDF isn't misled into treating Recovery/Strain as clinical measures.
-        // Sits above the hairline; wraps to the page width (~4 lines at this size).
+        // Part of the normal content flow now (not pinned to a fixed bottom Y) — it lands right after
+        // whatever content precedes it, on the current page if there's room or a fresh one if not.
+        val legendPaint = Paint(Paint.ANTI_ALIAS_FLAG).apply { typeface = sans; textSize = 9f }
         val legend = tr(
             "How to read this: HRV, Resting HR, Sleep duration, Respiratory rate and Skin " +
                 "temperature are measured from the strap (skin temp is shown as the deviation from your own " +
@@ -403,14 +496,27 @@ object TrendsReportRenderer {
                 "readiness composite (HRV, resting HR, sleep and skin-temp trend), Strain is cardiovascular load " +
                 "derived from heart rate, and Stress is a 0-3 autonomic-load index from resting HR and HRV.",
         )
-        drawWrapped(canvas, legend, MARGIN, y - 52f, PAGE_W - 2 * MARGIN, 11f, 9f, sans, TEXT_TERTIARY)
-        line(canvas, MARGIN, y - 14f, PAGE_W - MARGIN, y - 14f, HAIRLINE)
+        val legendLines = wrapPlain(legendPaint, legend, PAGE_W - 2 * MARGIN)
+        val legendLineH = 11f
+        val blockH = legendLines.size * legendLineH + 10f + 14f + 12f + 12f
+        cursor.ensureSpace(blockH)
+
+        var ty = cursor.y
+        for (line in legendLines) {
+            text(cursor.canvas, line, MARGIN, ty, 9f, sans, TEXT_TERTIARY)
+            ty += legendLineH
+        }
+        ty += 10f
+        line(cursor.canvas, MARGIN, ty, PAGE_W - MARGIN, ty, HAIRLINE)
+        ty += 14f
         text(
-            canvas,
+            cursor.canvas,
             "${tr("Generated by NOOP on")} $generatedOn · ${tr("all on-device, no account, no cloud.")}",
-            MARGIN, y, 10f, sans, TEXT_TERTIARY,
+            MARGIN, ty, 10f, sans, TEXT_TERTIARY,
         )
-        text(canvas, tr("Informational only - not medical advice."), MARGIN, y + 12f, 10f, sans, TEXT_TERTIARY)
+        ty += 12f
+        text(cursor.canvas, tr("Informational only - not medical advice."), MARGIN, ty, 10f, sans, TEXT_TERTIARY)
+        cursor.moveTo(ty + 12f)
     }
 
     // --- Primitives ---
@@ -493,19 +599,19 @@ object TrendsReportRenderer {
         canvas.drawText(s, right, y, paint)
     }
 
-    /** Word-wrap [s] into lines, drawing up to the card's height. */
-    private fun drawWrapped(
-        canvas: Canvas, s: String, x: Float, y: Float, maxWidth: Float, lineH: Float,
-        size: Float, tf: Typeface, color: Int,
-    ) {
-        val paint = Paint(Paint.ANTI_ALIAS_FLAG).apply { typeface = tf; textSize = size; this.color = color }
-        var ty = y
+    /**
+     * Real word-wrap of [s] into lines that each fit [maxWidth] under [paint] — greedy, breaking
+     * on spaces. Shared by every block whose height depends on how much it wraps (headlines, the
+     * footer legend, the empty-state body), so a block's computed height and its drawn height are
+     * always the same number: this is measured ONCE and both used to size the card and to draw.
+     */
+    private fun wrapPlain(paint: Paint, s: String, maxWidth: Float): List<String> {
+        val lines = ArrayList<String>()
         val current = StringBuilder()
         for (word in s.split(" ")) {
             val trial = if (current.isEmpty()) word else "$current $word"
             if (paint.measureText(trial) > maxWidth && current.isNotEmpty()) {
-                canvas.drawText(current.toString(), x, ty, paint)
-                ty += lineH
+                lines.add(current.toString())
                 current.clear()
                 current.append(word)
             } else {
@@ -513,7 +619,9 @@ object TrendsReportRenderer {
                 current.append(word)
             }
         }
-        if (current.isNotEmpty()) canvas.drawText(current.toString(), x, ty, paint)
+        if (current.isNotEmpty()) lines.add(current.toString())
+        if (lines.isEmpty()) lines.add("")
+        return lines
     }
 
     private fun ellipsize(paint: Paint, s: String, maxWidth: Float): String {
