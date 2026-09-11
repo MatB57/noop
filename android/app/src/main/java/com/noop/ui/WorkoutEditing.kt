@@ -44,7 +44,7 @@ object WorkoutEditing {
      * renders "Traditional Strength Training". Already-spaced labels (manual/edited) pass through. (#175)
      */
     fun displaySport(sport: String): String {
-        if (sport == "detected") return "Activity"
+        if (sport == "detected") return tr("Activity")
         if (sport.isEmpty() || sport.contains(" ")) return sport
         val out = StringBuilder()
         var prev: Char? = null

@@ -1,5 +1,6 @@
 package com.noop.analytics
 
+import com.noop.i18n.Fr
 import java.time.LocalDate
 import kotlin.math.abs
 import kotlin.math.roundToInt
@@ -31,8 +32,10 @@ object CyclePhaseEngine {
     const val periOvulatoryHalfWidth: Int = 2
 
     /** Standing awareness-only line shown on every cycle surface (legal/ethical framing). */
-    const val awarenessLine =
-        "For awareness only. Not a medical device, not contraception, not a substitute for professional care."
+    val awarenessLine: String
+        get() = Fr.tr(
+            "For awareness only. Not a medical device, not contraception, not a substitute for professional care.",
+        )
 
     // ── Inputs ──
 
@@ -93,7 +96,7 @@ object CyclePhaseEngine {
     ): Result {
         if (!baselineUsable || nights.size < minNightsToClassify) {
             return Result(Phase.LEARNING, Confidence.LEARNING, null, null, null, null, emptyList(),
-                "Learning your pattern from your nightly temperature - keep wearing it overnight.")
+                Fr.tr("Learning your pattern from your nightly temperature - keep wearing it overnight."))
         }
 
         val fused: List<Pair<String, Double?>> = nights.map { n ->
@@ -102,7 +105,7 @@ object CyclePhaseEngine {
         val values = fused.mapNotNull { it.second }
         if (values.size < minNightsToClassify) {
             return Result(Phase.LEARNING, Confidence.LEARNING, null, null, null, null, emptyList(),
-                "Learning your pattern from your nightly temperature - keep wearing it overnight.")
+                Fr.tr("Learning your pattern from your nightly temperature - keep wearing it overnight."))
         }
 
         val center = median(values)
@@ -121,8 +124,10 @@ object CyclePhaseEngine {
 
         val lastOnsetIdx = onsets.lastOrNull()
             ?: return Result(Phase.UNKNOWN, Confidence.BUILDING, null, null, null, null, shiftMarkers,
-                "No clear temperature pattern yet - this can happen with irregular cycles, " +
-                    "hormonal birth control, or shift work.")
+                Fr.tr(
+                    "No clear temperature pattern yet - this can happen with irregular cycles, " +
+                        "hormonal birth control, or shift work.",
+                ))
 
         val onsetGaps = mutableListOf<Int>()
         if (onsets.size >= 2) {
@@ -146,8 +151,10 @@ object CyclePhaseEngine {
             val delta = daysBetween(loggedStart, fused[lastOnsetIdx].first)
             val sinceLog = daysBetween(loggedStart, lastNightDay) ?: 0
             if ((delta != null && (delta < 0 || delta > maxCycleDays)) || sinceLog > maxCycleDays) {
-                note = "Your temperature shift came at a different time than your logged date - " +
-                    "the logged start may be off."
+                note = Fr.tr(
+                    "Your temperature shift came at a different time than your logged date - " +
+                        "the logged start may be off.",
+                )
             }
         }
 
@@ -200,11 +207,11 @@ object CyclePhaseEngine {
     // ── Copy ──
 
     internal fun phaseNote(phase: Phase): String = when (phase) {
-        Phase.FOLLICULAR -> "Follicular range - temperature sitting at your baseline."
-        Phase.PERI_OVULATORY -> "Around your mid-cycle shift - temperature is turning."
-        Phase.LUTEAL -> "Luteal range - temperature is running above your baseline."
-        Phase.UNKNOWN -> "No clear pattern yet."
-        Phase.LEARNING -> "Learning your pattern - keep wearing it overnight."
+        Phase.FOLLICULAR -> Fr.tr("Follicular range - temperature sitting at your baseline.")
+        Phase.PERI_OVULATORY -> Fr.tr("Around your mid-cycle shift - temperature is turning.")
+        Phase.LUTEAL -> Fr.tr("Luteal range - temperature is running above your baseline.")
+        Phase.UNKNOWN -> Fr.tr("No clear pattern yet.")
+        Phase.LEARNING -> Fr.tr("Learning your pattern - keep wearing it overnight.")
     }
 
     // ── Small stats / day helpers (self-contained, parity-clean) ──

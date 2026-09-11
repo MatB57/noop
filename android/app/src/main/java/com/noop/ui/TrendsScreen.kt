@@ -240,10 +240,10 @@ fun TrendsScreen(vm: AppViewModel) {
                 // mirrors the iOS hero's `valueRange: 0...106`.
                 chartHeadroom = 0.06f,
                 footer = listOf(
-                    "Avg" to (recAvg?.let { "${it.roundToInt()}" } ?: EM_DASH),
-                    "Peak" to (recovery.values.maxOrNull()?.let { "${it.roundToInt()}" } ?: EM_DASH),
-                    "Low" to (recovery.values.minOrNull()?.let { "${it.roundToInt()}" } ?: EM_DASH),
-                    "Days" to "${recovery.values.size}",
+                    tr("Avg") to (recAvg?.let { "${it.roundToInt()}" } ?: EM_DASH),
+                    tr("Peak") to (recovery.values.maxOrNull()?.let { "${it.roundToInt()}" } ?: EM_DASH),
+                    tr("Low") to (recovery.values.minOrNull()?.let { "${it.roundToInt()}" } ?: EM_DASH),
+                    tr("Days") to "${recovery.values.size}",
                 ),
             )
         }
@@ -375,9 +375,9 @@ private fun WeekNavBar(weekOffset: Int, minWeekOffset: Int, onStep: (Int) -> Uni
     val atOldest = weekOffset <= minWeekOffset
     val atNewest = weekOffset >= 0
     val label = when {
-        weekOffset == 0 -> "This week"
-        weekOffset == -1 -> "Last week"
-        else -> "${-weekOffset} weeks ago"
+        weekOffset == 0 -> tr("This week")
+        weekOffset == -1 -> tr("Last week")
+        else -> "${-weekOffset} ${tr("weeks ago")}"
     }
     // liquidPress on the two week-step chevrons (the screen's tappable controls): each settles inward on
     // press, wired to the SAME interactionSource the IconButton uses for its own ripple, matching the pilot.
@@ -516,7 +516,7 @@ private enum class TrendsRange(val days: Int?, val label: String, val longName: 
     All(null, "ALL", "all history");
 
     /** "Trailing 90 days" / "All history" , the card/range subtitle. */
-    val subtitle: String get() = days?.let { "Trailing $it days" } ?: "All history"
+    val subtitle: String get() = days?.let { "${tr("Trailing")} $it ${tr("days")}" } ?: tr("All history")
 
     /** This range plus every LARGER range, ascending , the auto-expand search order. */
     val widening: List<TrendsRange>
@@ -597,7 +597,7 @@ private fun windowPoints(
 private fun caption(count: Int, eff: TrendsRange, selected: TrendsRange): String {
     val unit = if (count == 1) tr("reading") else tr("readings")
     return if (eff != selected) {
-        "$count $unit · sparse , widened to ${eff.longName}"
+        "$count $unit · ${tr("sparse , widened to")} ${eff.longName}"
     } else {
         "$count $unit · ${selected.longName}"
     }
@@ -859,9 +859,9 @@ private fun MetricTrendCard(
         footer = listOf(
             // Plain "Mean" to match the bare Min/Max columns; the unit moves into the value
             // (e.g. "58 ms") so uppercasing can't render a shouty "MEAN MS".
-            "Mean" to (avg?.let { "${fmt(it)} $unit" } ?: EM_DASH),
-            "Min" to (resolved.values.minOrNull()?.let { fmt(it) } ?: EM_DASH),
-            "Max" to (resolved.values.maxOrNull()?.let { fmt(it) } ?: EM_DASH),
+            tr("Mean") to (avg?.let { "${fmt(it)} $unit" } ?: EM_DASH),
+            tr("Min") to (resolved.values.minOrNull()?.let { fmt(it) } ?: EM_DASH),
+            tr("Max") to (resolved.values.maxOrNull()?.let { fmt(it) } ?: EM_DASH),
         ),
     )
 }

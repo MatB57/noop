@@ -169,11 +169,11 @@ fun WeeklyDigestContent(digest: WeeklyDigest, compact: Boolean = false) {
                 Text(weekRangeLabel(digest), style = NoopType.title2, color = Palette.textPrimary)
             }
             Text(
-                "${digest.daysWithData}/7 days",
+                "${digest.daysWithData}/7 ${tr("days")}",
                 style = NoopType.footnote,
                 color = Palette.textSecondary,
                 modifier = Modifier.semantics {
-                    contentDescription = "${digest.daysWithData} of 7 days had data this week"
+                    contentDescription = "${digest.daysWithData} ${tr("of 7 days had data this week")}"
                 },
             )
         }
@@ -199,7 +199,7 @@ fun WeeklyDigestContent(digest: WeeklyDigest, compact: Boolean = false) {
             Column(verticalArrangement = Arrangement.spacedBy(6.dp)) {
                 digest.sleepConsistencySD?.let { sd ->
                     Text(
-                        "Sleep steadiness: Rest varied ±${fmt1(sd)} pts night to night.",
+                        "${tr("Sleep steadiness: Rest varied ±")}${fmt1(sd)}${tr(" pts night to night.")}",
                         style = NoopType.footnote,
                         color = Palette.textTertiary,
                     )
@@ -305,7 +305,7 @@ internal fun meanText(s: WeeklyMetricSummary, effortScale: EffortScale): String 
 }
 
 internal fun deltaText(s: WeeklyMetricSummary): String {
-    if (s.weekOverWeek.current.n == 0 || s.weekOverWeek.previous.n == 0) return "new"
+    if (s.weekOverWeek.current.n == 0 || s.weekOverWeek.previous.n == 0) return tr("new")
     val pct = s.weekOverWeek.pctChange
     // Sub-1% (or unpercentable) moves read "<1%", matching Swift. The old fallback printed the raw
     // points delta: a bare "0.1", and for Effort a stored 0-100 figure the scale toggle never saw.
@@ -328,17 +328,17 @@ private fun chipTone(s: WeeklyMetricSummary): Color = when {
 private fun rowAccessibility(s: WeeklyMetricSummary, effortScale: EffortScale): String {
     val mean = meanText(s, effortScale)
     if (s.weekOverWeek.current.n == 0 || s.weekOverWeek.previous.n == 0) {
-        return "${s.metric.label}: $mean this week, no comparison."
+        return "${s.metric.label}: $mean ${tr("this week, no comparison.")}"
     }
-    val dir = if (s.wowDelta > 0) "up" else if (s.wowDelta < 0) "down" else "unchanged"
+    val dir = if (s.wowDelta > 0) tr("up") else if (s.wowDelta < 0) tr("down") else tr("unchanged")
     // A rough comparison drops the verdict framing too, so VoiceOver/TalkBack matches the neutral chip.
     val frame = when {
         s.isRoughComparison -> ""
-        s.wowGoodness == 1 -> ", a good sign"
-        s.wowGoodness == -1 -> ", worth a look"
+        s.wowGoodness == 1 -> tr(", a good sign")
+        s.wowGoodness == -1 -> tr(", worth a look")
         else -> ""
     }
-    return "${s.metric.label}: $mean this week, $dir ${deltaText(s)} week over week$frame."
+    return "${s.metric.label}: $mean ${tr("this week,")} $dir ${deltaText(s)} ${tr("week over week")}$frame."
 }
 
 private fun fmt1(x: Double): String = ((x * 10).roundToInt() / 10.0).toString()

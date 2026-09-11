@@ -567,7 +567,7 @@ fun AddDeviceWizard(
             title = { Text(tr("Make this your active device?"), style = NoopType.title2, color = Palette.textPrimary) },
             text = {
                 Text(
-                    "Make $confirmName your active device now? It will provide your live data. You can change " +
+                    "${tr("Make")} $confirmName ${tr("your active device now? It will provide your live data. You can change")} " +
                         tr("this any time."),
                     style = NoopType.subhead,
                     color = Palette.textSecondary,
@@ -890,7 +890,7 @@ private fun PrepStep(type: DeviceType, onScan: () -> Unit) {
                 .fillMaxWidth()
                 .clip(RoundedCornerShape(12.dp))
                 .background(Palette.accent)
-                .semantics { contentDescription = "Scan for ${type.title}" },
+                .semantics { contentDescription = "${tr("Scan for")} ${type.title}" },
         ) {
             Text(tr("Scan"), style = NoopType.headline, color = Palette.goldDeepText)
         }
@@ -1615,7 +1615,7 @@ private fun DiscoveredRow(name: String, subtitle: String, rssi: Int, onTap: () -
             .clip(RoundedCornerShape(12.dp))
             .frostedCardSurface(cornerRadius = 12.dp)
             .clickable(onClick = onTap)
-            .semantics { contentDescription = "$name, signal ${SignalBars.level(rssi)} of 4" }
+            .semantics { contentDescription = "$name, ${tr("signal")} ${SignalBars.level(rssi)} ${tr("of")} 4" }
             .padding(14.dp),
         horizontalArrangement = Arrangement.spacedBy(12.dp),
         verticalAlignment = Alignment.CenterVertically,

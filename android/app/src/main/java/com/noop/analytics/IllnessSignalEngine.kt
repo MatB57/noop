@@ -1,5 +1,7 @@
 package com.noop.analytics
 
+import com.noop.i18n.Fr
+
 // IllnessSignalEngine.kt — multi-signal "Heads-Up" early-warning with explicit false-positive suppression.
 // Byte-for-byte mirror of Strand/Packages/StrandAnalytics/Sources/StrandAnalytics/IllnessSignalEngine.swift.
 //
@@ -24,7 +26,7 @@ object IllnessSignalEngine {
     const val confounderDampen: Double = 0.45
 
     /** Standing not-a-diagnosis tail reused verbatim from the shipped IllnessNotifier copy. */
-    const val disclaimerTail = "On-device estimate - not a diagnosis."
+    val disclaimerTail: String get() = Fr.tr("On-device estimate - not a diagnosis.")
 
     // ── Inputs ──
 
@@ -110,53 +112,53 @@ object IllnessSignalEngine {
         // Gate 0: untrusted baseline → silent.
         if (!context.baselineTrusted) {
             return Result(score, Level.QUIET, firedSignals, emptyList(), signalCount,
-                "Still learning your baseline - keeping an eye out.")
+                Fr.tr("Still learning your baseline - keeping an eye out."))
         }
 
         // Already-unwell path: switch from "early warning" to a gentle "rest up".
         if (context.alreadyUnwell) {
             val agreeing = score >= mildThreshold && signalCount >= 1
             val copy = if (agreeing)
-                "Rest up - you logged feeling unwell, and your numbers agree. $disclaimerTail"
+                "${Fr.tr("Rest up - you logged feeling unwell, and your numbers agree.")} $disclaimerTail"
             else
-                "Rest up - you logged feeling unwell. Take it easy today. $disclaimerTail"
+                "${Fr.tr("Rest up - you logged feeling unwell. Take it easy today.")} $disclaimerTail"
             return Result(score, Level.ALREADY_UNWELL, firedSignals, emptyList(), signalCount, copy)
         }
 
         // Corroboration + magnitude gate.
         if (signalCount < minCorroboratingSignals || score < mildThreshold) {
             return Result(score, Level.QUIET, firedSignals, emptyList(), signalCount,
-                "Nothing notable - your signals look like your normal range.")
+                Fr.tr("Nothing notable - your signals look like your normal range."))
         }
 
         // Confounder suppression — the differentiating part.
         val suppressedBy = mutableListOf<String>()
-        if (context.alcohol) suppressedBy.add("alcohol")
-        if (context.stress) suppressedBy.add("stress")
-        if (context.sauna) suppressedBy.add("sauna")
-        if (context.hardOrLateWorkout) suppressedBy.add("a hard or late workout")
-        if (context.travelPhaseJump) suppressedBy.add("travel")
+        if (context.alcohol) suppressedBy.add(Fr.tr("alcohol"))
+        if (context.stress) suppressedBy.add(Fr.tr("stress"))
+        if (context.sauna) suppressedBy.add(Fr.tr("sauna"))
+        if (context.hardOrLateWorkout) suppressedBy.add(Fr.tr("a hard or late workout"))
+        if (context.travelPhaseJump) suppressedBy.add(Fr.tr("travel"))
 
-        val signalsPhrase = if (firedSignals.isEmpty()) "Some signals are up" else firedSignals.joinToString(", ")
+        val signalsPhrase = if (firedSignals.isEmpty()) Fr.tr("Some signals are up") else firedSignals.joinToString(", ")
 
         if (suppressedBy.isNotEmpty()) {
             val dampened = score * confounderDampen
             val reason = joinReasons(suppressedBy)
-            val copy = "Some signals are up ($signalsPhrase), but you logged $reason - likely that, " +
-                "not illness. $disclaimerTail"
+            val copy = "${Fr.tr("Some signals are up")} ($signalsPhrase), ${Fr.tr("but you logged")} $reason " +
+                "${Fr.tr("- likely that, not illness.")} $disclaimerTail"
             return Result(dampened, Level.SUPPRESSED, firedSignals, suppressedBy, signalCount, copy)
         }
 
         // No confounder. Mild stays in the detail view; a strong composite raises.
         if (score < raiseThreshold) {
-            val copy = "A few signals are mildly up ($signalsPhrase). Nothing alarming - worth a calmer " +
-                "day. $disclaimerTail"
+            val copy = "${Fr.tr("A few signals are mildly up")} ($signalsPhrase). " +
+                "${Fr.tr("Nothing alarming - worth a calmer day.")} $disclaimerTail"
             return Result(score, Level.MILD, firedSignals, emptyList(), signalCount, copy)
         }
 
-        val ruledOut = "no alcohol or travel logged"
-        val copy = "Heads-up - your body looks strained. $signalsPhrase. With $ruledOut, consider " +
-            "taking it easy. $disclaimerTail"
+        val ruledOut = Fr.tr("no alcohol or travel logged")
+        val copy = "${Fr.tr("Heads-up - your body looks strained.")} $signalsPhrase. ${Fr.tr("With")} $ruledOut, " +
+            "${Fr.tr("consider taking it easy.")} $disclaimerTail"
         return Result(score, Level.RAISED, firedSignals, emptyList(), signalCount, copy)
     }
 
@@ -164,12 +166,12 @@ object IllnessSignalEngine {
 
     /** Join named confounders into a natural list ("alcohol", "alcohol and stress", "a, b and c"). */
     internal fun joinReasons(reasons: List<String>): String = when (reasons.size) {
-        0 -> "something"
+        0 -> Fr.tr("something")
         1 -> reasons[0]
-        2 -> "${reasons[0]} and ${reasons[1]}"
+        2 -> "${reasons[0]} ${Fr.tr("and")} ${reasons[1]}"
         else -> {
             val head = reasons.dropLast(1).joinToString(", ")
-            "$head and ${reasons.last()}"
+            "$head ${Fr.tr("and")} ${reasons.last()}"
         }
     }
 }

@@ -247,7 +247,7 @@ private fun HeroHeartRate(bpm: Int?, zone: Int) {
             }
             Text(tr("bpm"), style = NoopType.subhead, color = Palette.textSecondary)
             Text(
-                if (zone >= 1) "Zone $zone · ${zoneName(zone)}" else tr("Below Zone 1"),
+                if (zone >= 1) "${tr("Zone")} $zone · ${zoneName(zone)}" else tr("Below Zone 1"),
                 style = NoopType.captionNumber,
                 color = tint,
                 textAlign = TextAlign.Center,
@@ -291,7 +291,7 @@ private fun ZoneRail(zone: Int, zoneSet: com.noop.analytics.HrZoneSet) {
         val band = zoneSet.zones.firstOrNull { it.number == zone }
         Text(
             if (band != null)
-                "Zone $zone: ${band.lower.toInt()} - ${band.upper.toInt()} bpm (${(band.lowerPct * 100).toInt()} - ${(band.upperPct * 100).toInt()}% max HR)"
+                "${tr("Zone")} $zone: ${band.lower.toInt()} - ${band.upper.toInt()} ${tr("bpm")} (${(band.lowerPct * 100).toInt()} - ${(band.upperPct * 100).toInt()}% ${tr("max HR")})"
             else tr("Warming up - keep moving to climb into Zone 1."),
             style = NoopType.footnote,
             color = Palette.textTertiary,

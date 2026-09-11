@@ -323,8 +323,8 @@ private fun EmptyWorkouts(loaded: Boolean, onAdd: () -> Unit) {
     Column(verticalArrangement = Arrangement.spacedBy(16.dp)) {
         DataPendingNote(
             title = tr("No workouts yet"),
-            body = "No workouts yet. They come from your WHOOP and Apple Health history. " +
-                "Import in Data Sources to bring them in, or add one you tracked elsewhere.",
+            body = tr("No workouts yet. They come from your WHOOP and Apple Health history. ") +
+                tr("Import in Data Sources to bring them in, or add one you tracked elsewhere."),
         )
         if (loaded) AddWorkoutButton(onAdd)
     }
@@ -399,11 +399,11 @@ private fun RangeBar(
             label = { it.label },
             onSelect = onSelect,
         )
-        val unit = if (rowCount == 1) "session" else "sessions"
+        val unit = if (rowCount == 1) tr("session") else tr("sessions")
         // #64: append "· filtered" when a sport/source/search filter narrows the list.
-        val suffix = if (filterActive) " · filtered" else ""
+        val suffix = if (filterActive) " · ${tr("filtered")}" else ""
         val caption = if (fellBack) {
-            "$rowCount $unit · sparse, widened to ${effectiveRange.caption}$suffix"
+            "$rowCount $unit · ${tr("sparse, widened to")} ${effectiveRange.caption}$suffix"
         } else {
             "$rowCount $unit · ${effectiveRange.caption}$suffix"
         }
@@ -428,10 +428,10 @@ private val SOURCE_FILTER_OPTIONS = listOf(
 private fun sourceFilterLabel(c: WorkoutSource): String = when (c) {
     WorkoutSource.WHOOP -> "Whoop"
     WorkoutSource.APPLE -> "Apple"
-    WorkoutSource.DETECTED -> "Detected"
-    WorkoutSource.MANUAL -> "Manual"
-    WorkoutSource.LIFTING -> "Lifting"
-    WorkoutSource.ACTIVITY_FILE -> "File"
+    WorkoutSource.DETECTED -> tr("Detected")
+    WorkoutSource.MANUAL -> tr("Manual")
+    WorkoutSource.LIFTING -> tr("Lifting")
+    WorkoutSource.ACTIVITY_FILE -> tr("File")
 }
 
 /**
@@ -673,7 +673,7 @@ private fun EffortHero(
                 verticalArrangement = Arrangement.spacedBy(10.dp),
             ) {
                 Text(
-                    "Effort this ${effectiveRange.heroWord}",
+                    "${tr("Effort this")} ${effectiveRange.heroWord}",
                     style = NoopType.headline,
                     color = Palette.textPrimary,
                 )
@@ -682,8 +682,8 @@ private fun EffortHero(
                     HeroStat(tr("Active"), oneDecimal(totalTimeH) + "h", Palette.textPrimary, Modifier.weight(1f))
                 }
                 Text(
-                    if (modal != null) "Mostly ${WorkoutEditing.displaySport(modal.sport)} (${effectiveRange.caption})."
-                    else "Logged sessions across ${effectiveRange.caption}.",
+                    if (modal != null) "${tr("Mostly")} ${WorkoutEditing.displaySport(modal.sport)} (${effectiveRange.caption})."
+                    else "${tr("Logged sessions across")} ${effectiveRange.caption}.",
                     style = NoopType.footnote,
                     color = Palette.textTertiary,
                 )
@@ -732,7 +732,7 @@ private fun SummarySection(
                 modifier = m,
                 label = tr("Total Time"),
                 value = oneDecimal(totalTimeH) + "h",
-                caption = "active",
+                caption = tr("active"),
                 accent = Palette.textPrimary,
             )
         },
@@ -750,7 +750,7 @@ private fun SummarySection(
                 modifier = m,
                 label = tr("Total Distance"),
                 value = UnitFormatter.distanceFromKilometers(totalKm, unitSystem),
-                caption = "covered",
+                caption = tr("covered"),
                 accent = Palette.metricCyan,
             )
         },
@@ -759,7 +759,7 @@ private fun SummarySection(
                 modifier = m,
                 label = tr("Most Active"),
                 value = modal?.sport ?: "–",
-                caption = modal?.let { "${it.count} session${if (it.count == 1) "" else "s"}" },
+                caption = modal?.let { "${it.count} ${if (it.count == 1) tr("session") else tr("sessions")}" },
                 accent = Palette.textPrimary,
             )
         },
@@ -784,7 +784,7 @@ private fun BreakdownSection(groups: List<SportGroup>, rows: List<WorkoutRow>) {
         SectionHeader(
             title = tr("Activity Breakdown"),
             overline = tr("By sport"),
-            trailing = "${groups.size} sport${if (groups.size == 1) "" else "s"}",
+            trailing = "${groups.size} ${if (groups.size == 1) tr("sport") else tr("sports")}",
         )
         // This sport's own sessions, so each card can carry an HR-zone mini-bar.
         groups.forEach { g -> SportCard(g, zones = zoneSummary(rows.filter { it.sport == g.sport })) }
@@ -860,7 +860,7 @@ private fun ZonesSection(rows: List<WorkoutRow>) {
         SectionHeader(
             title = tr("HR Zones"),
             overline = tr("Whoop import"),
-            trailing = "${z.sessionsWithZones} of ${rows.size} session${if (rows.size == 1) "" else "s"}",
+            trailing = "${z.sessionsWithZones} ${tr("of")} ${rows.size} ${if (rows.size == 1) tr("session") else tr("sessions")}",
         )
         NoopCard(tint = Palette.effortColor) {
             Column(verticalArrangement = Arrangement.spacedBy(12.dp)) {
@@ -948,7 +948,7 @@ private fun SessionsSection(
     Column(verticalArrangement = Arrangement.spacedBy(Metrics.gap)) {
         Row(verticalAlignment = Alignment.CenterVertically) {
             Box(modifier = Modifier.weight(1f)) {
-                SectionHeader(title = tr("All Sessions"), overline = tr("Log"), trailing = "${rows.size} total")
+                SectionHeader(title = tr("All Sessions"), overline = tr("Log"), trailing = "${rows.size} ${tr("total")}")
             }
             if (anySelectable) SelectPill(selectionMode, onToggleSelectMode)
         }
@@ -980,12 +980,12 @@ private fun SessionsSection(
                         modifier = Modifier
                             .fillMaxWidth()
                             .clickable { shownCount += SESSIONS_PAGE_SIZE }
-                            .semantics { contentDescription = "Show $more more sessions" }
+                            .semantics { contentDescription = "${tr("Show")} $more ${tr("more sessions")}" }
                             .padding(vertical = 14.dp),
                         contentAlignment = Alignment.Center,
                     ) {
                         Text(
-                            "Show $more more ($remaining remaining)",
+                            "${tr("Show")} $more ${tr("more")} ($remaining ${tr("remaining")})",
                             style = NoopType.subhead,
                             color = Palette.accent,
                         )
@@ -1789,11 +1789,11 @@ private fun FullDivider(alpha: Float = 1f) {
 // MARK: - Range model
 
 private enum class WorkoutRange(val label: String, val caption: String, val days: Int?, val heroWord: String) {
-    Week("7D", "last 7 days", 7, "week"),
-    Month("30D", "last 30 days", 30, "month"),
-    Quarter("90D", "last 90 days", 90, "quarter"),
-    Year("1Y", "last year", 365, "year"),
-    All("All", "all time", null, "log"),
+    Week("7D", tr("last 7 days"), 7, tr("week")),
+    Month("30D", tr("last 30 days"), 30, tr("month")),
+    Quarter("90D", tr("last 90 days"), 90, tr("quarter")),
+    Year("1Y", tr("last year"), 365, tr("year")),
+    All(tr("All"), tr("all time"), null, tr("log")),
 }
 
 /** This range plus every larger range, ascending — the auto-expand search order. */
@@ -1933,10 +1933,10 @@ private val WorkoutRow.sourceBadge: Pair<String, Color>
     get() = when (WorkoutEditing.classify(source)) {
         // Detected (on-device auto-detector) is honestly labelled so a duplicate is recognisable +
         // removable (#107); manual = user-logged. Both classify on `source` BEFORE the import labels.
-        WorkoutSource.DETECTED -> "Detected" to Palette.metricPurple
-        WorkoutSource.MANUAL -> "Manual" to Palette.statusWarning
-        WorkoutSource.LIFTING -> "Lifting" to Palette.zone2 // imported Hevy / Liftosaur strength log
-        WorkoutSource.ACTIVITY_FILE -> "File" to Palette.metricAmber // imported GPX / TCX / FIT
+        WorkoutSource.DETECTED -> tr("Detected") to Palette.metricPurple
+        WorkoutSource.MANUAL -> tr("Manual") to Palette.statusWarning
+        WorkoutSource.LIFTING -> tr("Lifting") to Palette.zone2 // imported Hevy / Liftosaur strength log
+        WorkoutSource.ACTIVITY_FILE -> tr("File") to Palette.metricAmber // imported GPX / TCX / FIT
         else -> when (workoutSourceLabel(deviceId, source)) {
             "HC" -> "HC" to Palette.metricPurple
             "Whoop" -> "Whoop" to Palette.accent

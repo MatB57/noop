@@ -1600,14 +1600,14 @@ private fun LiveSessionEntryCard(onOpen: () -> Unit) {
     }
     val teal = Palette.metricCyan
     val title = when {
-        running -> "Session running"
-        summaryWaiting -> "Session ended"
-        else -> "Start session"
+        running -> tr("Session running")
+        summaryWaiting -> tr("Session ended")
+        else -> tr("Start session")
     }
     val detail = when {
-        running -> "Guarding — silence means you're on track."
-        summaryWaiting -> "See the summary of your last session."
-        else -> "Strap-guided effort session. It only buzzes when you drift off today's band."
+        running -> tr("Guarding — silence means you're on track.")
+        summaryWaiting -> tr("See the summary of your last session.")
+        else -> tr("Strap-guided effort session. It only buzzes when you drift off today's band.")
     }
 
     // liquidPress on the whole tappable card (same interactionSource on clickable + press), matching the
@@ -3132,7 +3132,7 @@ private fun DashboardCardRow(
             }
             // iOS row padding: 14h / 11v (tighter than the old 13/11 icon-box row).
             .padding(horizontal = 14.dp, vertical = 11.dp)
-            .semantics { contentDescription = "${card.title}: $value" },
+            .semantics { contentDescription = "${tr(card.title)}: $value" },
         verticalAlignment = Alignment.CenterVertically,
         horizontalArrangement = Arrangement.spacedBy(12.dp),
     ) {
@@ -3151,14 +3151,14 @@ private fun DashboardCardRow(
         ) {
             // iOS: overline 11 / +1.0 tracking, textPrimary.
             Text(
-                card.title.uppercase(),
+                tr(card.title).uppercase(),
                 style = NoopType.overline.copy(fontSize = 11.sp, letterSpacing = 1.0.sp),
                 color = Palette.textPrimary,
                 maxLines = 1,
                 overflow = TextOverflow.Ellipsis,
             )
             Text(
-                card.subtitle,
+                tr(card.subtitle),
                 style = NoopType.caption,
                 color = Palette.textTertiary,
                 maxLines = 1,
@@ -3280,11 +3280,11 @@ private fun DashboardCardsEditorDialog(
                                     uncheckedTrackColor = Palette.surfaceInset,
                                     uncheckedBorderColor = Palette.hairline,
                                 ),
-                                modifier = Modifier.semantics { contentDescription = "Show ${item.card.title}" },
+                                modifier = Modifier.semantics { contentDescription = "${tr("Show")} ${tr(item.card.title)}" },
                             )
                             Spacer(Modifier.width(12.dp))
                             Text(
-                                item.card.title,
+                                tr(item.card.title),
                                 style = NoopType.body,
                                 color = if (item.enabled) Palette.textPrimary else Palette.textTertiary,
                                 modifier = Modifier.weight(1f),
@@ -3296,7 +3296,7 @@ private fun DashboardCardsEditorDialog(
                             ) {
                                 Icon(
                                     Icons.Filled.KeyboardArrowUp,
-                                    contentDescription = "Move ${item.card.title} up",
+                                    contentDescription = "${tr("Move")} ${tr(item.card.title)} ${tr("up")}",
                                     tint = if (index > 0) Palette.textSecondary else Palette.textTertiary,
                                     modifier = Modifier.size(Metrics.iconSmall),
                                 )
@@ -3308,7 +3308,7 @@ private fun DashboardCardsEditorDialog(
                             ) {
                                 Icon(
                                     Icons.Filled.KeyboardArrowDown,
-                                    contentDescription = "Move ${item.card.title} down",
+                                    contentDescription = "${tr("Move")} ${tr(item.card.title)} ${tr("down")}",
                                     tint = if (index < items.lastIndex) Palette.textSecondary else Palette.textTertiary,
                                     modifier = Modifier.size(Metrics.iconSmall),
                                 )
@@ -3804,7 +3804,7 @@ internal fun freshRestScore(
  *  "Latest sleep · <date>" so a weeks-old import is never surfaced as "Last night". Shared by every carried
  *  recovery read-out so the prior-day provenance reads identically. Mirrors iOS carriedCaption. */
 internal fun carriedCaption(priorDayKey: String, today: String = LocalDate.now().toString()): String {
-    val prefix = if (isCarryStale(priorDayKey, today)) "Latest sleep" else "Last night"
+    val prefix = if (isCarryStale(priorDayKey, today)) tr("Latest sleep") else tr("Last night")
     return "$prefix · ${lastChargeDateLabel(priorDayKey)}"
 }
 
@@ -3848,9 +3848,9 @@ sealed class ScoreState {
     val title: String
         get() = when (this) {
             is Scored -> ""
-            is Calibrating -> "Calibrating"
-            is CarriedLastNight -> if (stale) "Latest sleep · $dateLabel" else "Last night · $dateLabel"
-            NeedsStrap -> "Needs the strap"
+            is Calibrating -> tr("Calibrating")
+            is CarriedLastNight -> if (stale) "${tr("Latest sleep")} · $dateLabel" else "${tr("Last night")} · $dateLabel"
+            NeedsStrap -> tr("Needs the strap")
         }
 
     /** The one-line plain-English what-to-do. VERBATIM, mirror Swift exactly. The night(s) plural in
@@ -3859,15 +3859,15 @@ sealed class ScoreState {
         get() = when (this) {
             is Scored -> ""
             is Calibrating -> {
-                val nights = if (nightsRemaining == 1) "night" else "nights"
-                "Building your baseline. About $nightsRemaining more $nights until your scores are personal."
+                val nights = if (nightsRemaining == 1) tr("night") else tr("nights")
+                "${tr("Building your baseline. About")} $nightsRemaining ${tr("more")} $nights ${tr("until your scores are personal.")}"
             }
             is CarriedLastNight ->
                 // A fresh post-rollover carry tells you tonight's score is on its way; a stale carry (an
                 // older import, #779) instead explains the number is from that earlier session, not today.
-                if (stale) "This is your last scored session. Wear the strap overnight for a fresh score."
-                else "Tonight's lands after you sleep with the strap on."
-            NeedsStrap -> "No data for today. Was your strap worn and connected overnight?"
+                if (stale) tr("This is your last scored session. Wear the strap overnight for a fresh score.")
+                else tr("Tonight's lands after you sleep with the strap on.")
+            NeedsStrap -> tr("No data for today. Was your strap worn and connected overnight?")
         }
 }
 
@@ -3964,19 +3964,19 @@ sealed class RecordingState {
     /** The chip's status word. VERBATIM, mirror Swift exactly. */
     val title: String
         get() = when (this) {
-            Recording -> "Recording"
-            is LastSynced -> "Last synced ${minutesAgo}m ago"
-            NotRecording -> "Not recording"
-            HistoryExperimental -> "Connected"
+            Recording -> tr("Recording")
+            is LastSynced -> "${tr("Last synced")} ${minutesAgo}${tr("m ago")}"
+            NotRecording -> tr("Not recording")
+            HistoryExperimental -> tr("Connected")
         }
 
     /** The chip's one-line detail. VERBATIM, mirror Swift exactly. */
     val detail: String
         get() = when (this) {
-            Recording -> "Your strap is connected and saving data."
-            is LastSynced -> "Reconnect to pull the latest."
-            NotRecording -> "Strap not connected. Tap to connect."
-            HistoryExperimental -> "History sync is experimental on 5.0."
+            Recording -> tr("Your strap is connected and saving data.")
+            is LastSynced -> tr("Reconnect to pull the latest.")
+            NotRecording -> tr("Strap not connected. Tap to connect.")
+            HistoryExperimental -> tr("History sync is experimental on 5.0.")
         }
 
     /** Chip hue: live recording reads positive (gold/green dot), a stale-but-recent sync reads neutral,
@@ -4580,9 +4580,9 @@ private fun HeartRateTrendCard(
                     // narrowing, no re-read), so the resolution half of the label never changes — only
                     // the span half tells the truth about what's on screen.
                     val subtitle = when {
-                        selectedDay != today -> "5-minute average | selected day"
-                        hrWindow == HrWindow.TODAY -> "5-minute average | since midnight"
-                        else -> "5-minute average | last ${hrWindow.label}"
+                        selectedDay != today -> "${tr("5-minute average")} | ${tr("selected day")}"
+                        hrWindow == HrWindow.TODAY -> "${tr("5-minute average")} | ${tr("since midnight")}"
+                        else -> "${tr("5-minute average")} | ${tr("last")} ${tr(hrWindow.label)}"
                     }
                     Text(
                         subtitle,
@@ -5413,10 +5413,10 @@ private fun ReadinessSection(days: List<DailyMetric>, carriedDay: DailyMetric? =
  * the Swift TodayView.readinessWord.
  */
 internal fun readinessWord(level: ReadinessEngine.Level): String? = when (level) {
-    ReadinessEngine.Level.PRIMED -> "Push"
-    ReadinessEngine.Level.BALANCED -> "Maintain"
-    ReadinessEngine.Level.STRAINED -> "Rest"
-    ReadinessEngine.Level.RUNDOWN -> "Rest"
+    ReadinessEngine.Level.PRIMED -> tr("Push")
+    ReadinessEngine.Level.BALANCED -> tr("Maintain")
+    ReadinessEngine.Level.STRAINED -> tr("Rest")
+    ReadinessEngine.Level.RUNDOWN -> tr("Rest")
     ReadinessEngine.Level.INSUFFICIENT -> null
 }
 
@@ -5431,7 +5431,7 @@ internal fun syncedFromSummary(hasWhoop: Boolean, hasApple: Boolean, hasXiaomi: 
         if (hasApple) add("Apple Watch")
         if (hasXiaomi) add("Mi Band")
     }
-    return if (names.isEmpty()) "No sources yet" else "Synced from: " + names.joinToString(", ")
+    return if (names.isEmpty()) tr("No sources yet") else "${tr("Synced from:")} " + names.joinToString(", ")
 }
 
 /** S5: the Key-Metric overflow cap, mirroring TodayView.metricsCollapsedCap (two columns, three rows). */
@@ -5635,33 +5635,33 @@ private fun remember14(days: List<com.noop.data.DailyMetric>, anchorDay: LocalDa
 private fun greetingWord(): String {
     val h = java.util.Calendar.getInstance().get(java.util.Calendar.HOUR_OF_DAY)
     return when {
-        h < 12 -> "Good morning"
-        h < 17 -> "Good afternoon"
-        else -> "Good evening"
+        h < 12 -> tr("Good morning")
+        h < 17 -> tr("Good afternoon")
+        else -> tr("Good evening")
     }
 }
 
 private fun synthesisWord(score: Double?): String {
-    if (score == null) return "No Data"
+    if (score == null) return tr("No Data")
     return when {
-        score < 25 -> "Depleted"
-        score < 50 -> "Low"
-        score < 70 -> "Steady"
-        score < 88 -> "Primed"
-        else -> "Peak"
+        score < 25 -> tr("Depleted")
+        score < 50 -> tr("Low")
+        score < 70 -> tr("Steady")
+        score < 88 -> tr("Primed")
+        else -> tr("Peak")
     }
 }
 
 private fun synthesisDetail(d: DailyMetric?): String {
     val rec = d?.recovery
-        ?: return "No metrics yet. Import your WHOOP export or wear the strap to begin."
+        ?: return tr("No metrics yet. Import your WHOOP export or wear the strap to begin.")
     val recPart = when {
-        rec < 50 -> "Charge is low"
-        rec < 70 -> "Charge is steady"
-        else -> "Charge is strong"
+        rec < 50 -> tr("Charge is low")
+        rec < 70 -> tr("Charge is steady")
+        else -> tr("Charge is strong")
     }
     val sleepPart = d.totalSleepMin?.let { mins ->
-        if (mins / 60.0 >= 7) " and sleep was consistent" else " but sleep ran short"
+        if (mins / 60.0 >= 7) tr(" and sleep was consistent") else tr(" but sleep ran short")
     } ?: ""
     return "$recPart$sleepPart."
 }
@@ -5679,7 +5679,7 @@ private fun sleepValue(d: DailyMetric?): String {
  */
 private fun restCaption(d: DailyMetric?): String? = when {
     d?.totalSleepMin != null -> sleepValue(d)
-    d?.efficiency != null -> String.format(Locale.US, "%.0f%% eff", d.efficiency)
+    d?.efficiency != null -> String.format(Locale.US, "%.0f%% ", d.efficiency) + tr("eff")
     else -> null
 }
 
@@ -5914,11 +5914,11 @@ private fun KeyMetricsEditorDialog(
                                     uncheckedTrackColor = Palette.surfaceInset,
                                     uncheckedBorderColor = Palette.hairline,
                                 ),
-                                modifier = Modifier.semantics { contentDescription = "Show ${item.metric.title}" },
+                                modifier = Modifier.semantics { contentDescription = "${tr("Show")} ${tr(item.metric.title)}" },
                             )
                             Spacer(Modifier.width(12.dp))
                             Text(
-                                item.metric.title,
+                                tr(item.metric.title),
                                 style = NoopType.body,
                                 color = if (item.enabled) Palette.textPrimary else Palette.textTertiary,
                                 modifier = Modifier.weight(1f),
@@ -5930,7 +5930,7 @@ private fun KeyMetricsEditorDialog(
                             ) {
                                 Icon(
                                     Icons.Filled.KeyboardArrowUp,
-                                    contentDescription = "Move ${item.metric.title} up",
+                                    contentDescription = "${tr("Move")} ${tr(item.metric.title)} ${tr("up")}",
                                     tint = if (index > 0) Palette.textSecondary else Palette.textTertiary,
                                     modifier = Modifier.size(Metrics.iconSmall),
                                 )
@@ -5942,7 +5942,7 @@ private fun KeyMetricsEditorDialog(
                             ) {
                                 Icon(
                                     Icons.Filled.KeyboardArrowDown,
-                                    contentDescription = "Move ${item.metric.title} down",
+                                    contentDescription = "${tr("Move")} ${tr(item.metric.title)} ${tr("down")}",
                                     tint = if (index < items.lastIndex) Palette.textSecondary else Palette.textTertiary,
                                     modifier = Modifier.size(Metrics.iconSmall),
                                 )

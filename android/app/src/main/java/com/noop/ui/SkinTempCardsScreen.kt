@@ -345,7 +345,7 @@ private fun headsUpConfidenceLine(
 ): String? {
     if (level != IllnessSignalEngine.Level.RAISED) return null
     val d = distance ?: return null
-    return "Confidence: ${illnessConfidenceBand(d.distance)} (distance ${illnessConfidenceFormatted(d.distance)})"
+    return "${tr("Confidence:")} ${illnessConfidenceBand(d.distance)} ${tr("(distance")} ${illnessConfidenceFormatted(d.distance)})"
 }
 
 /**
@@ -354,9 +354,9 @@ private fun headsUpConfidenceLine(
  * moderate, else slight. Identical to the Swift twin (IllnessConfidence.band).
  */
 private fun illnessConfidenceBand(distance: Double): String = when {
-    distance >= 3.5 -> "strong"
-    distance >= 2.5 -> "moderate"
-    else -> "slight"
+    distance >= 3.5 -> tr("strong")
+    distance >= 2.5 -> tr("moderate")
+    else -> tr("slight")
 }
 
 /** One-decimal display value for the distance, locale-independent. Mirrors iOS String(format: "%.1f"). */
@@ -416,8 +416,8 @@ private fun bodyClockOffsetTitle(e: CircadianEngine.PhaseEstimate): String {
     if (e.confidence == CircadianEngine.PhaseConfidence.UNREADABLE) return tr("Hard to read right now")
     val mins = abs(e.offsetVsScheduleMinutes).roundToInt()
     if (mins <= 20) return tr("About in sync with your schedule")
-    val dir = if (e.offsetVsScheduleMinutes > 0) "later" else "earlier"
-    return "About $mins min $dir than your schedule"
+    val dir = if (e.offsetVsScheduleMinutes > 0) tr("later") else tr("earlier")
+    return "${tr("About")} $mins ${tr("min")} $dir ${tr("than your schedule")}"
 }
 
 private fun bodyClockConfidenceLabel(c: CircadianEngine.PhaseConfidence): String = when (c) {

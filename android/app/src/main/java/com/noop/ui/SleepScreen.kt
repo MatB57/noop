@@ -23,6 +23,7 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.layout.widthIn
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
@@ -77,6 +78,7 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.noop.analytics.AnalyticsEngine
 import com.noop.analytics.SleepDebt
@@ -618,7 +620,7 @@ private fun SleepUndoBanner(session: SleepSession, onUndo: () -> Unit) {
     val message = if (session.userEdited) {
         tr("Sleep deleted.")
     } else {
-        "Sleep deleted. NOOP won't detect sleep between $startText and $endText again."
+        "${tr("Sleep deleted. NOOP won't detect sleep between")} $startText ${tr("and")} $endText ${tr("again.")}"
     }
     NoopCard(tint = Palette.restColor) {
         Row(
@@ -815,8 +817,8 @@ private fun Hero(
             val inBedMin = session?.let { (it.endTs - it.effectiveStartTs) / 60.0 } ?: s.total
             ChartCard(
                 title = tr("Stage breakdown"),
-                subtitle = "${durationText(inBedMin)} in bed · ${display.efficiencyText} efficiency" +
-                    (if (display.realSegments != null) " · approx. stages (on-device)" else ""),
+                subtitle = "${durationText(inBedMin)} ${tr("in bed")} · ${display.efficiencyText} ${tr("efficiency")}" +
+                    (if (display.realSegments != null) " · ${tr("approx. stages (on-device)")}" else ""),
                 trailing = durationText(s.asleep),
                 tint = Palette.restColor,
                 footer = {
@@ -998,9 +1000,9 @@ internal fun mainSleepReasonText(blocks: List<SleepSession>, habitualMidsleepSec
         SleepStageTotals.MainNightReason.onlyBlock ->
             tr("This is your only sleep block today.")
         SleepStageTotals.MainNightReason.longest ->
-            "Picked as your main sleep because it was your longest block ($dur)."
+            "${tr("Picked as your main sleep because it was your longest block")} ($dur)."
         SleepStageTotals.MainNightReason.longestNearUsual ->
-            "Picked as your main sleep because it was your longest block ($dur), near your usual bedtime."
+            "${tr("Picked as your main sleep because it was your longest block")} ($dur), ${tr("near your usual bedtime.")}"
         SleepStageTotals.MainNightReason.alignedToUsual ->
             tr("Picked as your main sleep because it started near your usual sleep time.")
     }
@@ -1010,7 +1012,18 @@ internal fun mainSleepReasonText(blocks: List<SleepSession>, habitualMidsleepSec
 @Composable
 private fun NapSummaryCell(label: String, value: String, modifier: Modifier = Modifier) {
     Column(modifier = modifier) {
-        Text(label, style = NoopType.overline, color = Palette.textTertiary)
+        // A touch smaller than the shared Overline(): these three cells share a plain (non-intrinsic)
+        // Row via equal weight(1f), so a longer French label (e.g. "Main sleep" -> "Sommeil principal")
+        // wrapping to 2 lines would push just that cell's value down and misalign it against its
+        // neighbours. maxLines=1 + ellipsis is a fallback for the rare case the smaller size still isn't
+        // enough. Mirrors the SourceBadge shrink pattern (Components.kt).
+        Text(
+            label,
+            style = NoopType.overline.copy(fontSize = 10.sp, letterSpacing = 0.8.sp),
+            color = Palette.textTertiary,
+            maxLines = 1,
+            overflow = TextOverflow.Ellipsis,
+        )
         Text(value, style = NoopType.captionNumber, color = Palette.textPrimary)
     }
 }
@@ -1047,7 +1060,7 @@ private fun NapRow(
                 modifier = Modifier
                     .weight(1f)
                     .semantics(mergeDescendants = true) {
-                        contentDescription = "Nap $window, ${durationText(durMin)}"
+                        contentDescription = "${tr("Nap")} $window, ${durationText(durMin)}"
                     },
                 verticalAlignment = Alignment.CenterVertically,
             ) {
@@ -1121,7 +1134,7 @@ private fun NapRow(
                     editingEnd = true
                 },
                 startCal.get(Calendar.HOUR_OF_DAY), startCal.get(Calendar.MINUTE), true,
-            ).apply { setTitle("Nap started") }
+            ).apply { setTitle(tr("Nap started")) }
             dialog.setOnDismissListener { editingStart = false }
             dialog.show()
             onDispose { runCatching { dialog.dismiss() } }
@@ -1147,7 +1160,7 @@ private fun NapRow(
                     pendingStart = 0L
                 },
                 endCal.get(Calendar.HOUR_OF_DAY), endCal.get(Calendar.MINUTE), true,
-            ).apply { setTitle("Nap ended") }
+            ).apply { setTitle(tr("Nap ended")) }
             dialog.setOnDismissListener { editingEnd = false }
             dialog.show()
             onDispose { runCatching { dialog.dismiss() } }
@@ -1187,7 +1200,7 @@ private fun StageBreakdownRow(stage: String, minutes: Double, total: Double, col
             .fillMaxWidth()
             .semantics {
                 contentDescription =
-                    "$stage: ${durationText(minutes)}, $percent percent of the night"
+                    "$stage: ${durationText(minutes)}, $percent ${tr("percent of the night")}"
             },
     ) {
         Box(
@@ -1201,7 +1214,11 @@ private fun StageBreakdownRow(stage: String, minutes: Double, total: Double, col
             style = NoopType.overline,
             color = Palette.textPrimary,
             maxLines = 1,
-            modifier = Modifier.width(56.dp),
+            // widthIn(min=) instead of a hard width(): the French stage names ("Éveillé" for Awake,
+            // "Profond" for Deep) run longer than the English ones this row was sized for, so let the
+            // label grow past the old 56dp floor rather than clip — the LiquidTube next to it (weight(1f))
+            // absorbs the difference.
+            modifier = Modifier.widthIn(min = 56.dp),
         )
         Text(
             "$percent%",
@@ -1423,7 +1440,7 @@ private fun SleepWindowRow(session: SleepSession) {
     // same colour world as the rest of the screen. Bevel treatment — content unchanged.
     NoopCard(
         modifier = Modifier.semantics(mergeDescendants = true) {
-            contentDescription = "Fell asleep at $asleep, woke at $woke"
+            contentDescription = "${tr("Fell asleep at")} $asleep, ${tr("woke at")} $woke"
         },
         padding = Metrics.space14,
         tint = Palette.restColor,
@@ -1596,7 +1613,7 @@ private fun NightNavHeader(
                 startCal.get(Calendar.HOUR_OF_DAY),
                 startCal.get(Calendar.MINUTE),
                 true,
-            ).apply { setTitle("Bedtime") }
+            ).apply { setTitle(tr("Bedtime")) }
             dialog.setOnDismissListener { editingBed = false }
             dialog.show()
             onDispose { runCatching { dialog.dismiss() } }
@@ -1635,7 +1652,7 @@ private fun NightNavHeader(
                 endCal.get(Calendar.HOUR_OF_DAY),
                 endCal.get(Calendar.MINUTE),
                 true,
-            ).apply { setTitle("Wake-up time") }
+            ).apply { setTitle(tr("Wake-up time")) }
             dialog.setOnDismissListener { editingWake = false }
             dialog.show()
             onDispose { runCatching { dialog.dismiss() } }
@@ -1695,7 +1712,7 @@ private fun NightNavHeader(
                 startCal.get(Calendar.HOUR_OF_DAY),
                 startCal.get(Calendar.MINUTE),
                 true,
-            ).apply { setTitle("Nap started") }
+            ).apply { setTitle(tr("Nap started")) }
             dialog.setOnDismissListener { addingNapStart = false }
             dialog.show()
             onDispose { runCatching { dialog.dismiss() } }
@@ -1725,7 +1742,7 @@ private fun NightNavHeader(
                 endCal.get(Calendar.HOUR_OF_DAY),
                 endCal.get(Calendar.MINUTE),
                 true,
-            ).apply { setTitle("Nap ended") }
+            ).apply { setTitle(tr("Nap ended")) }
             dialog.setOnDismissListener { addingNapEnd = false }
             dialog.show()
             onDispose { runCatching { dialog.dismiss() } }
@@ -1765,7 +1782,7 @@ private fun NightNavHeader(
     val nightLabel = when (offset) {
         0 -> tr("Last night")
         1 -> tr("1 night ago")
-        else -> "$offset nights ago"
+        else -> "$offset ${tr("nights ago")}"
     }
     val blockShape = RoundedCornerShape(Metrics.cornerSm)
     val clockParts = clock?.split(" · ", limit = 2)
@@ -2075,7 +2092,7 @@ private fun DebtDeltaBars(ledger: SleepDebtLedger) {
             .height(56.dp)
             .semantics {
                 contentDescription =
-                    "Per-night sleep balance: ${ledger.nightCount} nights, net ${debtSigned(ledger.balanceMin)}"
+                    "${tr("Per-night sleep balance:")} ${ledger.nightCount} ${tr("nights, net")} ${debtSigned(ledger.balanceMin)}"
             }
             .drawBehind {
                 val n = max(deltas.size, 1)
@@ -2141,7 +2158,7 @@ private fun StageRow(label: String, last: Double, typical: Double?, color: Color
         } else {
             val diff = last - typical
             val sign = if (diff >= 0) "+" else "−"
-            "$sign${durationText(abs(diff))} vs typ"
+            "$sign${durationText(abs(diff))} ${tr("vs typ")}"
         }
     }
     Column(verticalArrangement = Arrangement.spacedBy(Metrics.space6)) {
@@ -2166,7 +2183,7 @@ private fun StageRow(label: String, last: Double, typical: Double?, color: Color
                 .height(Metrics.progressHeight)
                 .clip(RoundedCornerShape(Metrics.cornerPill))
                 .background(Palette.surfaceInset)
-                .semantics { contentDescription = "$label minutes vs your typical bar" }
+                .semantics { contentDescription = "$label ${tr("minutes vs your typical bar")}" }
                 .drawBehind {
                     // last-night fill
                     if (fillFrac > 0f) {
@@ -2209,7 +2226,7 @@ private fun DurationTrend(m: SleepModel) {
         ChartCard(
             title = tr("Hours asleep"),
             subtitle = tr("Per night, trailing 14 days"),
-            trailing = avg?.let { String.format(Locale.US, "%.1f h avg", it) },
+            trailing = avg?.let { "${String.format(Locale.US, "%.1f h", it)} ${tr("avg")}" },
             tint = Palette.restColor,
             footer = {
                 ChartFooter(
@@ -2364,7 +2381,17 @@ private fun ChartFooter(items: List<Pair<String, String>>) {
     Row(modifier = Modifier.fillMaxWidth()) {
         items.forEach { (label, value) ->
             Column(modifier = Modifier.weight(1f)) {
-                Overline(label, color = Palette.textTertiary)
+                // A touch smaller than the shared Overline(): these columns share a plain (non-intrinsic)
+                // Row via equal weight(1f), so a longer French label (e.g. "Per-night need") wrapping to
+                // a second line would push just that column's value down, misaligning it against its
+                // neighbours — the same #406 shape, now driven by translation length instead of digits.
+                Text(
+                    label.uppercase(),
+                    style = NoopType.overline.copy(fontSize = 10.sp, letterSpacing = 0.8.sp),
+                    color = Palette.textTertiary,
+                    maxLines = 1,
+                    overflow = TextOverflow.Ellipsis,
+                )
                 // Stage-breakdown values like "1h 23m (24%)" wrapped to a second line in a narrow column,
                 // pushing the row taller and clipping against the card edge (#406). Hold them to one line.
                 Text(
@@ -2406,7 +2433,19 @@ private fun SparkTile(
     }
     NoopCard(modifier = clickMod, padding = Metrics.space14) {
         Column(modifier = Modifier.fillMaxWidth()) {
-            Overline(label)
+            // A slightly smaller/tighter overline than the shared Overline() default: this tile's card
+            // height is FIXED (Metrics.tileHeight), and the longer French renderings of these labels
+            // (e.g. "Sleep Debt" -> "Dette de sommeil") could otherwise wrap to a second line and squeeze
+            // the value/caption below it. maxLines=1 + ellipsis is a belt-and-braces fallback so an
+            // extreme case (huge accessibility font scale) truncates cleanly instead of breaking the
+            // fixed-height grid. Mirrors the SourceBadge shrink pattern (Components.kt).
+            Text(
+                label.uppercase(),
+                style = NoopType.overline.copy(fontSize = 10.sp, letterSpacing = 0.8.sp),
+                color = Palette.textSecondary,
+                maxLines = 1,
+                overflow = TextOverflow.Ellipsis,
+            )
             Spacer(Modifier.weight(1f))
             Row(modifier = Modifier.fillMaxWidth(), verticalAlignment = Alignment.Bottom) {
                 Column(modifier = Modifier.weight(1f)) {
@@ -3036,7 +3075,7 @@ private fun vsTypical(latest: Double?, typical: Double?, suffix: String, decimal
     val sign = if (diff >= 0) "+" else "−"
     val mag = abs(diff)
     val num = if (decimals == 0) "${mag.roundToInt()}" else String.format(Locale.US, "%.${decimals}f", mag)
-    return "$sign$num$suffix vs typical"
+    return "$sign$num$suffix ${tr("vs typical")}"
 }
 
 private fun debtCaption(debt: Double?): String {
@@ -3071,15 +3110,15 @@ private fun debtTag(ledger: SleepDebtLedger): String = when {
 /** Plain-English read of the running balance over the window. */
 private fun debtRead(ledger: SleepDebtLedger): String {
     val nights = ledger.nightCount
-    val span = "the last $nights night${if (nights == 1) "" else "s"}"
+    val span = "${tr("the last")} $nights ${tr("night")}${if (nights == 1) "" else "s"}"
     if (ledger.magnitudeMin < SleepDebt.ON_TARGET_BAND_MIN) {
-        return "You're roughly on top of your sleep across $span. Slept minutes balance out against your need."
+        return "${tr("You're roughly on top of your sleep across")} $span. ${tr("Slept minutes balance out against your need.")}"
     }
     val mag = durationText(ledger.magnitudeMin)
     return if (ledger.isDebt) {
-        "You've banked about $mag of sleep debt over $span. Surplus nights count back against it. An earlier night or two would clear it."
+        "${tr("You've banked about")} $mag ${tr("of sleep debt over")} $span. ${tr("Surplus nights count back against it. An earlier night or two would clear it.")}"
     } else {
-        "You're carrying about $mag of surplus over $span. You've slept past your need on balance. Nicely ahead."
+        "${tr("You're carrying about")} $mag ${tr("of surplus over")} $span. ${tr("You've slept past your need on balance. Nicely ahead.")}"
     }
 }
 
@@ -3224,7 +3263,7 @@ internal fun HoursVsNeededCard(m: SleepModel) {
                     .height(Metrics.progressHeight)
                     .clip(RoundedCornerShape(Metrics.cornerPill))
                     .background(Palette.surfaceInset)
-                    .semantics { contentDescription = "Hours vs Needed progress bar, ${score.roundToInt()} percent" },
+                    .semantics { contentDescription = "${tr("Hours vs Needed progress bar")}, ${score.roundToInt()} ${tr("percent")}" },
             ) {
                 Box(
                     modifier = Modifier
@@ -3426,15 +3465,15 @@ internal fun SleepConsistencyCard(sleeps: List<SleepSession>) {
             }
 
             Row(horizontalArrangement = Arrangement.spacedBy(Metrics.space14)) {
-                LegendDot("Typical bedtime  $typicalBedLabel", Palette.metricPurple)
-                LegendDot("Wake  $typicalWakeLabel", Palette.restColor)
+                LegendDot("${tr("Typical bedtime")}  $typicalBedLabel", Palette.metricPurple)
+                LegendDot("${tr("Wake")}  $typicalWakeLabel", Palette.restColor)
             }
 
             Hairline()
             Row(modifier = Modifier.fillMaxWidth()) {
                 listOf(
                     tr("Score") to "${consistencyPct.roundToInt()}%",
-                    tr("Typical") to "${((bedSdH + wakeSdH) / 2f * 60f).roundToInt()} min SD",
+                    tr("Typical") to "${((bedSdH + wakeSdH) / 2f * 60f).roundToInt()} ${tr("min SD")}",
                     tr("Nights") to "${recent.size}",
                 ).forEach { (lbl, v) ->
                     Column(modifier = Modifier.weight(1f)) {
@@ -3565,9 +3604,9 @@ private fun SleepMetricDetailSheetContent(vm: AppViewModel, key: String) {
 
             Row(verticalAlignment = Alignment.CenterVertically) {
                 Column(modifier = Modifier.weight(1f)) {
-                    Overline("Sleep · ${filteredPoints.size} nights")
+                    Overline("${tr("Sleep")} · ${filteredPoints.size} ${tr("nights")}")
                     Text(spec.title, style = NoopType.title2, color = Palette.textPrimary)
-                    Text("as of ${latest.first}", style = NoopType.footnote, color = Palette.textTertiary)
+                    Text("${tr("as of")} ${latest.first}", style = NoopType.footnote, color = Palette.textTertiary)
                 }
                 Text(
                     "${spec.format(latest.second)} ${spec.unit}".trim(),
@@ -3596,7 +3635,7 @@ private fun SleepMetricDetailSheetContent(vm: AppViewModel, key: String) {
                 LineChart(
                     values = values,
                     modifier = Modifier.weight(1f).height(Metrics.chartHeight)
-                        .semantics { contentDescription = "${spec.title} trend chart" },
+                        .semantics { contentDescription = "${spec.title} ${tr("trend chart")}" },
                     color = spec.color,
                     fill = true,
                     selectionEnabled = true,

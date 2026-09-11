@@ -1,5 +1,6 @@
 package com.noop.analytics
 
+import com.noop.i18n.Fr
 import kotlin.math.abs
 import kotlin.math.exp
 import kotlin.math.roundToInt
@@ -143,48 +144,49 @@ object RecoveryDrivers {
 
         drivers.add(
             ChargeDriver(
-                label = "Heart rate variability",
+                label = Fr.tr("Heart rate variability"),
                 deltaPoints = delta(hrvIdx),
-                valueText = "${hrv.roundToInt()} ms",
-                baselineText = "${hrvBaseline.baseline.roundToInt()} ms baseline",
-                verdict = directionVerdict(hrvZ, good = "above baseline, supporting recovery",
-                    flat = "at baseline", bad = "below baseline, limiting recovery"),
+                valueText = "${hrv.roundToInt()} ${Fr.tr("ms")}",
+                baselineText = "${hrvBaseline.baseline.roundToInt()} ${Fr.tr("ms")} ${Fr.tr("baseline")}",
+                verdict = directionVerdict(hrvZ, good = Fr.tr("above baseline, supporting recovery"),
+                    flat = Fr.tr("at baseline"), bad = Fr.tr("below baseline, limiting recovery")),
             ),
         )
         if (rhrIdx >= 0 && rhrBaseline != null) {
             // RHR z is already oriented "higher z = better" (lower RHR), so a positive z is good.
             drivers.add(
                 ChargeDriver(
-                    label = "Resting heart rate",
+                    label = Fr.tr("Resting heart rate"),
                     deltaPoints = delta(rhrIdx),
-                    valueText = "${rhr.roundToInt()} bpm",
-                    baselineText = "${rhrBaseline.baseline.roundToInt()} bpm baseline",
-                    verdict = directionVerdict(terms[rhrIdx].z, good = "below baseline, supporting recovery",
-                        flat = "at baseline", bad = "above baseline, limiting recovery"),
+                    valueText = "${rhr.roundToInt()} ${Fr.tr("bpm")}",
+                    baselineText = "${rhrBaseline.baseline.roundToInt()} ${Fr.tr("bpm")} ${Fr.tr("baseline")}",
+                    verdict = directionVerdict(terms[rhrIdx].z, good = Fr.tr("below baseline, supporting recovery"),
+                        flat = Fr.tr("at baseline"), bad = Fr.tr("above baseline, limiting recovery")),
                 ),
             )
         }
         if (sleepIdx >= 0 && sleepPerf != null) {
             drivers.add(
                 ChargeDriver(
-                    label = "Sleep quality",
+                    label = Fr.tr("Sleep quality"),
                     deltaPoints = delta(sleepIdx),
                     valueText = "${(sleepPerf * 100.0).roundToInt()}%",
                     baselineText = "",   // centred on a fixed "good night", not a learned baseline
-                    verdict = directionVerdict(terms[sleepIdx].z, good = "a strong night, supporting recovery",
-                        flat = "a typical night", bad = "below a good night, limiting recovery"),
+                    verdict = directionVerdict(terms[sleepIdx].z, good = Fr.tr("a strong night, supporting recovery"),
+                        flat = Fr.tr("a typical night"), bad = Fr.tr("below a good night, limiting recovery")),
                 ),
             )
         }
         if (respIdx >= 0 && resp != null && respBaseline != null) {
             drivers.add(
                 ChargeDriver(
-                    label = "Respiratory rate",
+                    label = Fr.tr("Respiratory rate"),
                     deltaPoints = delta(respIdx),
-                    valueText = String.format(java.util.Locale.US, "%.1f br/min", resp),
-                    baselineText = String.format(java.util.Locale.US, "%.1f br/min baseline", respBaseline.baseline),
-                    verdict = directionVerdict(terms[respIdx].z, good = "below baseline, supporting recovery",
-                        flat = "at baseline", bad = "above baseline, limiting recovery"),
+                    valueText = "${String.format(java.util.Locale.US, "%.1f", resp)} ${Fr.tr("br/min")}",
+                    baselineText = "${String.format(java.util.Locale.US, "%.1f", respBaseline.baseline)} " +
+                        "${Fr.tr("br/min")} ${Fr.tr("baseline")}",
+                    verdict = directionVerdict(terms[respIdx].z, good = Fr.tr("below baseline, supporting recovery"),
+                        flat = Fr.tr("at baseline"), bad = Fr.tr("above baseline, limiting recovery")),
                 ),
             )
         }
@@ -193,9 +195,10 @@ object RecoveryDrivers {
             // deviation (signed +/- C from baseline), never an absolute temperature.
             drivers.add(
                 ChargeDriver(
-                    label = "Skin temperature",
+                    label = Fr.tr("Skin temperature"),
                     deltaPoints = delta(skinIdx),
-                    valueText = String.format(java.util.Locale.US, "%+.1f C vs baseline", skinTempDev),
+                    valueText = "${String.format(java.util.Locale.US, "%+.1f", skinTempDev)} " +
+                        "C ${Fr.tr("vs")} ${Fr.tr("baseline")}",
                     baselineText = "",   // a deviation already; the reference is the personal baseline (0)
                     verdict = skinTempVerdict(skinTempDev),
                 ),
@@ -232,8 +235,8 @@ object RecoveryDrivers {
      * recovery, warmer or cooler. Mirrors the Swift skinTempVerdict exactly.
      */
     private fun skinTempVerdict(dev: Double): String = when {
-        abs(dev) <= SKIN_TEMP_TYPICAL_BAND_C -> "near baseline"
-        dev > 0.0 -> "warmer than baseline, limiting recovery"
-        else -> "cooler than baseline, limiting recovery"
+        abs(dev) <= SKIN_TEMP_TYPICAL_BAND_C -> Fr.tr("near baseline")
+        dev > 0.0 -> Fr.tr("warmer than baseline, limiting recovery")
+        else -> Fr.tr("cooler than baseline, limiting recovery")
     }
 }

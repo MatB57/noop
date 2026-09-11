@@ -610,13 +610,13 @@ private fun HeroChartCard(
     fellBack: Boolean,
 ) {
     val heroValue = latest?.let { metric.format(it.value) } ?: ","
-    val asOf = latest?.let { "as of ${it.day}" } ?: "no readings yet"
+    val asOf = latest?.let { "${tr("as of")} ${it.day}" } ?: tr("no readings yet")
     // The range bar above already prints the authoritative reading-count caption; the hero only
     // names its window so the count isn't doubled in one card height.
     val subtitle = if (fellBack) {
-        "Trailing ${effectiveRange.windowName}"
+        "${tr("Trailing")} ${effectiveRange.windowName}"
     } else {
-        "Trailing ${range.windowName}"
+        "${tr("Trailing")} ${range.windowName}"
     }
     // Wash the hero card in the metric's domain world (Charge green / Effort amber / Rest indigo).
     NoopCard(tint = domainTint(metric.category)) {
@@ -694,7 +694,7 @@ private fun HeroChartCard(
                 ) {
                     Text(
                         if (windowed.isEmpty()) {
-                            "No ${metric.title.lowercase()} recorded yet. Sync your strap to populate this trend."
+                            "${tr("No")} ${metric.title.lowercase()} ${tr("recorded yet. Sync your strap to populate this trend.")}"
                         } else {
                             tr("Only one reading in range , widen the window to see a trend.")
                         },
@@ -706,9 +706,9 @@ private fun HeroChartCard(
 
             // Footer chips, mirroring the macOS ChartFooter (Window / Points / Latest).
             Row(horizontalArrangement = Arrangement.spacedBy(Metrics.sectionGap)) {
-                ChartFootItem("Window", effectiveRange.label)
-                ChartFootItem("Points", "${windowed.size}")
-                ChartFootItem("Latest", heroValue)
+                ChartFootItem(tr("Window"), effectiveRange.label)
+                ChartFootItem(tr("Points"), "${windowed.size}")
+                ChartFootItem(tr("Latest"), heroValue)
             }
         }
     }
@@ -783,9 +783,9 @@ private fun StatRow(
         else if ((delta > 0) == better) Palette.statusPositive else Palette.statusCritical
     }
     val deltaCaption = when {
-        hasDelta -> "vs prev ${effectiveRange.windowName}"
-        effectiveRange == ExploreRange.All -> "all history"
-        else -> "no prior ${effectiveRange.windowName}"
+        hasDelta -> "${tr("vs prev")} ${effectiveRange.windowName}"
+        effectiveRange == ExploreRange.All -> tr("all history")
+        else -> "${tr("no prior")} ${effectiveRange.windowName}"
     }
 
     Column(verticalArrangement = Arrangement.spacedBy(Metrics.gap)) {
@@ -796,7 +796,7 @@ private fun StatRow(
                 modifier = Modifier.weight(1f),
                 label = tr("Average"),
                 value = if (s.n > 0) metric.format(s.mean) else ",",
-                caption = "${s.n} days",
+                caption = "${s.n} ${tr("days")}",
                 accent = metric.accent,
             )
             StatTile(
@@ -868,6 +868,6 @@ private fun rangeCaption(
     if (series.isEmpty()) return ","
     val n = windowed.size
     val unit = if (n == 1) tr("reading") else tr("readings")
-    return if (fellBack) "$n $unit · sparse , widened to ${effectiveRange.windowName}"
+    return if (fellBack) "$n $unit · ${tr("sparse , widened to")} ${effectiveRange.windowName}"
     else "$n $unit · ${range.windowName}"
 }

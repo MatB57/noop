@@ -806,7 +806,7 @@ private fun TimeInBandRow(band: StressTotalsBand, hours: Int, total: Double) {
 private fun timelineTrailing(day: DaytimeStress.Result): String {
     val n = day.scored.size
     val mean = day.dayMean ?: return "${n}h"
-    return "avg " + String.format(Locale.US, "%.1f", mean) + " · ${n}h"
+    return tr("avg ") + String.format(Locale.US, "%.1f", mean) + " · ${n}h"
 }
 
 /**
@@ -826,8 +826,8 @@ private fun SustainedBreatheCard(day: DaytimeStress.Result, onBreathe: () -> Uni
                 StatePill("${day.sustainedRun}h elevated", tone = StrandTone.Warning, showsDot = true)
             }
             Text(
-                "Your last ${day.sustainedRun} hours have stayed in the high band. A few minutes " +
-                    "of paced breathing can help downshift your nervous system.",
+                "${tr("Your last")} ${day.sustainedRun} ${tr("hours have stayed in the high band. A few minutes ")}" +
+                    tr("of paced breathing can help downshift your nervous system."),
                 style = NoopType.subhead,
                 color = Palette.textSecondary,
             )
@@ -961,7 +961,7 @@ private fun StressTrendSection(model: StressModel, modifier: Modifier = Modifier
                         verticalAlignment = Alignment.Top,
                     ) {
                         Column(modifier = Modifier.weight(1f)) {
-                            Overline("Stress · ${range.label}")
+                            Overline("${tr("Stress")} · ${range.label}")
                             Text(
                                 tr("Daily 0-3 proxy"),
                                 style = NoopType.footnote,
@@ -969,7 +969,7 @@ private fun StressTrendSection(model: StressModel, modifier: Modifier = Modifier
                             )
                         }
                         Text(
-                            "avg " + String.format(Locale.US, "%.1f", avg),
+                            tr("avg ") + String.format(Locale.US, "%.1f", avg),
                             style = NoopType.captionNumber,
                             color = Palette.textSecondary,
                         )
@@ -1258,7 +1258,7 @@ internal class StressModel private constructor(
                 val calm = recent.count { it.value < 1.0 }
                 val pct = (calm.toDouble() / recent.size * 100).roundToInt()
                 calmValue = "$pct%"
-                calmCaption = "low-stress days · ${recent.size}d"
+                calmCaption = "${tr("low-stress days")} · ${recent.size}d"
             }
 
             return StressModel(
@@ -1320,7 +1320,7 @@ internal class StressModel private constructor(
                     else -> tr("Your autonomic markers are skewed toward stress today. Treat it as a recovery-focused day.")
                 }
                 StressBand.Medium -> when {
-                    rhrUp || hrvDn -> "Slightly off baseline (${if (rhrUp) "resting HR is a touch high" else "HRV is a little low"}), so you're moderately activated. Nothing alarming; just don't overreach."
+                    rhrUp || hrvDn -> "${tr("Slightly off baseline (")}${if (rhrUp) tr("resting HR is a touch high") else tr("HRV is a little low")}${tr("), so you're moderately activated. Nothing alarming; just don't overreach.")}"
                     else -> tr("You're sitting around your typical autonomic baseline: moderate stress, a normal, balanced day.")
                 }
                 StressBand.Low -> when {

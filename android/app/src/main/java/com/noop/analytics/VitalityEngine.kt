@@ -1,5 +1,6 @@
 package com.noop.analytics
 
+import com.noop.i18n.Fr
 import kotlin.math.abs
 
 // VitalityEngine.kt — 0–100 "Vitality" wellness score + optional "Body Age in years".
@@ -77,26 +78,26 @@ object VitalityEngine {
     fun contributions(inputs: Inputs): List<Contribution> {
         val out = ArrayList<Contribution>()
         inputs.restingHR?.let {
-            out.add(Contribution("rhr", "Resting heart rate", ((it - 65) / 10) * 0.100))
+            out.add(Contribution("rhr", Fr.tr("Resting heart rate"), ((it - 65) / 10) * 0.100))
         }
         val vo2 = inputs.vo2max; val exp = inputs.expectedVO2max
         if (vo2 != null && exp != null && exp > 0) {
-            out.add(Contribution("vo2max", "Cardio fitness", ((exp - vo2) / 3.5).coerceIn(-4.0, 4.0) * 0.130))
+            out.add(Contribution("vo2max", Fr.tr("Cardio fitness"), ((exp - vo2) / 3.5).coerceIn(-4.0, 4.0) * 0.130))
         }
         inputs.sleepHours?.let {
             val dev = maxOf(0.0, abs(it - 7.5) - 0.5)
-            out.add(Contribution("sleep", "Sleep duration", dev.coerceIn(0.0, 3.0) * 0.110))
+            out.add(Contribution("sleep", Fr.tr("Sleep duration"), dev.coerceIn(0.0, 3.0) * 0.110))
         }
         inputs.sleepConsistency?.let {
-            out.add(Contribution("consistency", "Sleep regularity", (0.75 - it.coerceIn(0.0, 1.0)) * 0.450))
+            out.add(Contribution("consistency", Fr.tr("Sleep regularity"), (0.75 - it.coerceIn(0.0, 1.0)) * 0.450))
         }
         val h = inputs.rmssd; val norm = inputs.rmssdNorm
         if (h != null && norm != null && norm > 0) {
-            out.add(Contribution("hrv", "Heart-rate variability", ((norm - h) / norm).coerceIn(-1.0, 1.0) * 0.160))
+            out.add(Contribution("hrv", Fr.tr("Heart-rate variability"), ((norm - h) / norm).coerceIn(-1.0, 1.0) * 0.160))
         }
         inputs.steps?.let {
             val deficit = (7000 - it.coerceIn(0.0, 11000.0)) / 1000
-            out.add(Contribution("steps", "Daily steps", deficit.coerceIn(-4.0, 4.0) * 0.064))
+            out.add(Contribution("steps", Fr.tr("Daily steps"), deficit.coerceIn(-4.0, 4.0) * 0.064))
         }
         return out
     }

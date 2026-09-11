@@ -204,8 +204,8 @@ fun DevicesScreen(
     switchTarget?.let { device ->
         ConfirmDialog(
             title = tr("Make this your active strap?"),
-            message = "Make ${displayName(device)} your active strap? From now on it provides your live data. " +
-                "$currentActiveName's history stays exactly as it is. Only new days come from ${displayName(device)}.",
+            message = "${tr("Make")} ${displayName(device)} ${tr("your active strap? From now on it provides your live data.")} " +
+                "$currentActiveName${tr("'s history stays exactly as it is. Only new days come from")} ${displayName(device)}.",
             confirmLabel = tr("Make active"),
             onConfirm = {
                 scope.launch { viewModel.setActiveDevice(device.id); reload() }
@@ -231,7 +231,7 @@ fun DevicesScreen(
     removeTarget?.let { device ->
         ConfirmDialog(
             title = tr("Remove this device?"),
-            message = "Remove ${displayName(device)}? NOOP will stop connecting to it. Its recorded data is " +
+            message = "${tr("Remove")} ${displayName(device)}? ${tr("NOOP will stop connecting to it. Its recorded data is")} " +
                 tr("kept and you can re-add it any time."),
             confirmLabel = tr("Remove"),
             destructive = true,
@@ -256,7 +256,7 @@ fun DevicesScreen(
     deleteDataTarget?.let { device ->
         ConfirmDialog(
             title = tr("Delete all of this device's data?"),
-            message = "This permanently deletes all data recorded from ${displayName(device)}. This can't be undone.",
+            message = "${tr("This permanently deletes all data recorded from")} ${displayName(device)}. ${tr("This can't be undone.")}",
             confirmLabel = tr("Delete data"),
             destructive = true,
             onConfirm = {
@@ -318,7 +318,7 @@ private fun DeviceCard(
         .clickable(
             interactionSource = interaction,
             indication = null,
-            onClickLabel = "Device actions for ${displayName(device)}",
+            onClickLabel = "${tr("Device actions for")} ${displayName(device)}",
         ) { menuOpen = true }
 
     // The ACTIVE device is the hero: the liquid translucent-black frosted card (rgba(13,14,20,.80), radius
@@ -435,7 +435,7 @@ private fun BatteryTube(pct: Int) {
     Row(
         verticalAlignment = Alignment.CenterVertically,
         horizontalArrangement = Arrangement.spacedBy(10.dp),
-        modifier = Modifier.semantics { contentDescription = "Battery $clamped%" },
+        modifier = Modifier.semantics { contentDescription = "${tr("Battery")} $clamped%" },
     ) {
         Text(tr("Battery"), style = NoopType.footnote, color = Palette.textTertiary)
         LiquidTube(
@@ -481,7 +481,7 @@ private fun DeviceActionsMenu(
             onClick = { onOpenChange(true) },
             modifier = Modifier
                 .size(32.dp)
-                .semantics { contentDescription = "Device actions for ${displayName(device)}" },
+                .semantics { contentDescription = "${tr("Device actions for")} ${displayName(device)}" },
         ) {
             Icon(Icons.Filled.MoreVert, contentDescription = null, tint = Palette.textSecondary, modifier = Modifier.size(20.dp))
         }
@@ -899,7 +899,7 @@ private fun OuraLocalStateNote() {
 private fun lastSeenLine(device: PairedDeviceRow, isLiveConnected: Boolean): String = when {
     device.status == DeviceStatus.archived.name -> tr("Removed · data kept")
     isLiveConnected -> tr("Connected now")
-    else -> "Last seen ${relativeAgo(device.lastSeenAt)}"
+    else -> "${tr("Last seen")} ${relativeAgo(device.lastSeenAt)}"
 }
 
 /** Best-effort brand from the advertised name. Falls back to a neutral label. Mirrors Swift brandGuess. */
@@ -913,6 +913,6 @@ internal fun brandGuess(name: String): String {
         lower.contains("scosche") || lower.contains("rhythm") -> "Scosche"
         lower.contains("magene") -> "Magene"
         lower.contains("amazfit") || lower.contains("helio") || lower.contains("zepp") -> "Amazfit"
-        else -> "Heart-rate strap"
+        else -> tr("Heart-rate strap")
     }
 }

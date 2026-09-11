@@ -13,6 +13,7 @@ import androidx.compose.animation.core.tween
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -168,6 +169,11 @@ fun OnboardingScreen(viewModel: AppViewModel, onFinished: () -> Unit) {
                 page = pageIndex + 1,
                 total = pages.size,
                 progress = (pageIndex + 1).toFloat() / pages.size.toFloat(),
+                // Lets someone who's already set NOOP up before (e.g. after a reinstall) skip
+                // straight past the walkthrough instead of re-doing every step. Same completion
+                // path as finishing normally; nothing forces a re-pair, since Devices/Settings
+                // cover pairing and permissions any time afterward.
+                onSkip = if (page != OnboardingPage.Done) { { complete() } } else null,
             )
 
             Column(
@@ -234,7 +240,7 @@ private enum class OnboardingPage(val cta: String) {
 // MARK: - Shell
 
 @Composable
-private fun OnboardingTopBar(page: Int, total: Int, progress: Float) {
+private fun OnboardingTopBar(page: Int, total: Int, progress: Float, onSkip: (() -> Unit)? = null) {
     val animated by animateFloatAsState(
         targetValue = progress.coerceIn(0f, 1f),
         animationSpec = tween(Motion.durationStandard),
@@ -249,6 +255,19 @@ private fun OnboardingTopBar(page: Int, total: Int, progress: Float) {
             Overline("NOOP", color = Palette.accent)
             Spacer(Modifier.weight(1f))
             Text("$page / $total", style = NoopType.captionNumber, color = Palette.textTertiary)
+            if (onSkip != null) {
+                Spacer(Modifier.width(12.dp))
+                Text(
+                    tr("Skip"),
+                    style = NoopType.captionNumber,
+                    color = Palette.accent,
+                    modifier = Modifier.clickable(
+                        interactionSource = remember { MutableInteractionSource() },
+                        indication = null,
+                        onClick = onSkip,
+                    ),
+                )
+            }
         }
         Box(
             modifier = Modifier

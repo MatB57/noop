@@ -1,5 +1,6 @@
 package com.noop.analytics
 
+import com.noop.i18n.Fr
 import kotlin.math.abs
 import kotlin.math.roundToInt
 import kotlin.math.sqrt
@@ -37,19 +38,19 @@ enum class WeeklyMetric(val key: String) {
     /** Human label (matches the rest of the app's naming). */
     val label: String
         get() = when (this) {
-            CHARGE -> "Charge"
-            EFFORT -> "Effort"
-            REST -> "Rest"
-            RHR -> "Resting HR"
-            HRV -> "HRV"
+            CHARGE -> Fr.tr("Charge")
+            EFFORT -> Fr.tr("Effort")
+            REST -> Fr.tr("Rest")
+            RHR -> Fr.tr("Resting HR")
+            HRV -> Fr.tr("HRV")
         }
 
     /** Display unit suffix (empty for the unitless 0–100 scores). */
     val unit: String
         get() = when (this) {
             CHARGE, EFFORT, REST -> ""
-            RHR -> "bpm"
-            HRV -> "ms"
+            RHR -> Fr.tr("bpm")
+            HRV -> Fr.tr("ms")
         }
 
     /** True when a HIGHER value is the better outcome. Resting HR is the lone exception. */
@@ -153,13 +154,13 @@ enum class BalanceRead {
     val sentence: String
         get() = when (this) {
             OVERREACHING ->
-                "Your Effort outpaced your Charge this week: you leaned into the red. Watch for a recovery dip."
+                Fr.tr("Your Effort outpaced your Charge this week: you leaned into the red. Watch for a recovery dip.")
             BALANCED ->
-                "Effort and Charge tracked together this week: a sustainable load."
+                Fr.tr("Effort and Charge tracked together this week: a sustainable load.")
             UNDERLOADED ->
-                "You carried more Charge than you spent this week: there's room to push if you want it."
+                Fr.tr("You carried more Charge than you spent this week: there's room to push if you want it.")
             INSUFFICIENT ->
-                "Not enough Effort and Charge days this week to read your balance."
+                Fr.tr("Not enough Effort and Charge days this week to read your balance.")
         }
 }
 
@@ -370,21 +371,23 @@ object WeeklyDigestEngine {
             val currentDays = summaries.maxOfOrNull { it.weekOverWeek.current.n } ?: 0
             val prevDays = summaries.maxOfOrNull { it.weekOverWeek.previous.n } ?: 0
             if (currentDays in 1 until MIN_DAYS_FOR_FOCUS) {
-                val dayWord = if (currentDays == 1) "day" else "days"
+                val dayWord = if (currentDays == 1) Fr.tr("day") else Fr.tr("days")
                 lines.add(
-                    "Only $currentDays $dayWord into this week so far, too early to " +
-                        "call a week-over-week trend yet.",
+                    "${Fr.tr("Only")} $currentDays $dayWord " +
+                        Fr.tr("into this week so far, too early to call a week-over-week trend yet."),
                 )
             } else if (currentDays >= MIN_DAYS_FOR_FOCUS && prevDays in 1 until MIN_DAYS_FOR_FOCUS) {
-                val dayWord = if (prevDays == 1) "day" else "days"
+                val dayWord = if (prevDays == 1) Fr.tr("day") else Fr.tr("days")
                 lines.add(
-                    "Last week only had $prevDays $dayWord of data, so week-over-week " +
-                        "changes are rough, not a trend.",
+                    "${Fr.tr("Last week only had")} $prevDays $dayWord " +
+                        Fr.tr("of data, so week-over-week changes are rough, not a trend."),
                 )
             } else if (consistencySD != null && consistencySD <= 6.0) {
-                lines.add("A steady week: Rest held even (±${round1(consistencySD)} pts) and nothing moved much.")
+                lines.add(
+                    "${Fr.tr("A steady week: Rest held even (±")}${round1(consistencySD)}${Fr.tr(" pts) and nothing moved much.")}",
+                )
             } else {
-                lines.add("A steady week: no metric moved meaningfully from last week.")
+                lines.add(Fr.tr("A steady week: no metric moved meaningfully from last week."))
             }
         }
 
@@ -398,22 +401,23 @@ object WeeklyDigestEngine {
      */
     private fun moverSentence(s: WeeklyMetricSummary, effortDisplayFactor: Double = 1.0): String {
         val f = if (s.metric == WeeklyMetric.EFFORT) effortDisplayFactor else 1.0
-        val directionWord = if (s.wowDelta > 0) "up" else if (s.wowDelta < 0) "down" else "flat"
+        val directionWord = if (s.wowDelta > 0) Fr.tr("up") else if (s.wowDelta < 0) Fr.tr("down") else Fr.tr("flat")
         val pct = s.weekOverWeek.pctChange
         val magnitude = if (pct != null && abs(pct) >= 1) {
             "${abs(pct).roundToInt()}%"
         } else {
-            val suffix = if (s.metric.unit.isEmpty()) " pts" else " ${s.metric.unit}"
+            val suffix = if (s.metric.unit.isEmpty()) " ${Fr.tr("pts")}" else " ${s.metric.unit}"
             "${round1(abs(s.wowDelta) * f)}$suffix"
         }
         val frame = when (s.wowGoodness) {
-            1 -> ", a good sign"
-            -1 -> ", worth a look"
+            1 -> ", ${Fr.tr("a good sign")}"
+            -1 -> ", ${Fr.tr("worth a look")}"
             else -> ""
         }
         val thisAvg = (s.thisWeek.mean * f).roundToInt()
         val lastAvg = (s.weekOverWeek.previous.mean * f).roundToInt()
-        return "${s.metric.label} is $directionWord $magnitude week over week (avg $thisAvg vs $lastAvg)$frame."
+        return "${s.metric.label} ${Fr.tr("is")} $directionWord $magnitude " +
+            "${Fr.tr("week over week (avg")} $thisAvg ${Fr.tr("vs")} $lastAvg)$frame."
     }
 
     // MARK: - Range extraction

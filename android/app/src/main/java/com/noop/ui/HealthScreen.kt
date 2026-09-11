@@ -716,7 +716,7 @@ private fun VitalityHero(
                     )
                     Text(
                         if (delta == 0) tr("about your age")
-                        else "${kotlin.math.abs(delta)} ${yearWord(delta)} ${if (younger) "younger" else "older"}",
+                        else "${kotlin.math.abs(delta)} ${yearWord(delta)} ${if (younger) tr("younger") else tr("older")}",
                         style = NoopType.footnote,
                         color = if (delta == 0) Palette.textSecondary
                         else if (younger) Palette.statusPositive else Palette.statusWarning,
@@ -816,8 +816,8 @@ private fun FitnessAgeHero(
     val younger = fitnessAge < chronoAge
     val deltaWord = when {
         deltaYears == 0 -> tr("About your age")
-        younger -> "$deltaYears ${yearWord(deltaYears)} younger than your age"
-        else -> "${kotlin.math.abs(deltaYears)} ${yearWord(deltaYears)} older than your age"
+        younger -> "$deltaYears ${yearWord(deltaYears)} ${tr("younger than your age")}"
+        else -> "${kotlin.math.abs(deltaYears)} ${yearWord(deltaYears)} ${tr("older than your age")}"
     }
     // Vessel fill: a bounded, honest reading of the SAME younger/older signal the card already states,
     // mapped across the ±5 yr band the section advertises — "about your age" is half-full, younger fills
@@ -997,7 +997,7 @@ private fun ReadinessRow(item: FitnessReadinessItem) {
     }
 }
 
-private fun yearWord(years: Int): String = if (kotlin.math.abs(years) == 1) "year" else "years"
+private fun yearWord(years: Int): String = if (kotlin.math.abs(years) == 1) tr("year") else tr("years")
 
 @Composable
 fun VitalSignsScreen(vm: AppViewModel, onVitalClick: (String) -> Unit = {}) {
@@ -1276,14 +1276,14 @@ private fun HeartRateSection(vm: AppViewModel, hrMax: Int) {
 
 private fun zoneLabel(hasLiveHr: Boolean, zone: Int, fraction: Double): String {
     if (!hasLiveHr) return tr("Idle")
-    return "Zone $zone · ${(fraction * 100).roundToInt()}%"
+    return "${tr("Zone")} $zone · ${(fraction * 100).roundToInt()}%"
 }
 
 @Composable
 private fun HeartRateFooter(zone: String, percentMax: String, maxHr: String, state: String) {
     Row(modifier = Modifier.fillMaxWidth().padding(top = Metrics.space4)) {
         FooterStat(tr("Zone"), zone, Modifier.weight(1f))
-        FooterStat("% Max", percentMax, Modifier.weight(1f))
+        FooterStat(tr("% Max"), percentMax, Modifier.weight(1f))
         FooterStat(tr("Max HR"), maxHr, Modifier.weight(1f))
         FooterStat(tr("State"), state, Modifier.weight(1f))
     }
@@ -1569,7 +1569,7 @@ private fun vitalsFor(
     fun rangeCaption(allValues: List<Double>, unit: String, format: (Double) -> String): String? {
         val min = allValues.minOrNull() ?: return null
         val max = allValues.maxOrNull() ?: return null
-        return "within ${format(min)} -- ${format(max)} $unit"
+        return "${tr("within")} ${format(min)} -- ${format(max)} $unit"
     }
     // Trailing values (oldest → newest) feeding each tile's sparkline trail. Built from the same
     // history already gathered for banding, including the displayed day's value. Presentation-only.
@@ -1836,7 +1836,7 @@ fun VitalDetailScreen(vm: AppViewModel, key: String) {
     var range by remember { mutableStateOf(VitalDetailRange.MONTH) }
 
     ScreenScaffold(
-        title = detail?.title ?: "Vital Signs",
+        title = detail?.title ?: tr("Vital Signs"),
         subtitle = tr("Historical trend from cached daily metrics."),
     ) {
         if (isSeriesBacked && !seriesLoaded) {
@@ -1874,7 +1874,7 @@ fun VitalDetailScreen(vm: AppViewModel, key: String) {
         val max = values.maxOrNull()
         val avg = values.average()
 
-        SectionHeader(detail.title, overline = tr("Vital Signs"), trailing = "${filteredPoints.size} readings")
+        SectionHeader(detail.title, overline = tr("Vital Signs"), trailing = "${filteredPoints.size} ${tr("readings")}")
         NoopCard {
             Column(verticalArrangement = Arrangement.spacedBy(12.dp)) {
                 Row(verticalAlignment = Alignment.Top) {
@@ -1886,7 +1886,7 @@ fun VitalDetailScreen(vm: AppViewModel, key: String) {
                             color = detail.color,
                         )
                         Text(
-                            text = "as of ${latest.first}",
+                            text = "${tr("as of")} ${latest.first}",
                             style = NoopType.footnote,
                             color = Palette.textTertiary,
                         )
@@ -1984,12 +1984,12 @@ private fun missingVitalsTitle(offset: Int): String = when (offset) {
 
 private fun asOfLabel(day: String?): String? {
     if (day.isNullOrBlank()) return null
-    val date = runCatching { LocalDate.parse(day) }.getOrNull() ?: return "as of $day"
+    val date = runCatching { LocalDate.parse(day) }.getOrNull() ?: return "${tr("as of")} $day"
     val today = LocalDate.now()
     return when (date) {
         today -> tr("as of today")
         today.minusDays(1) -> tr("as of yesterday")
-        else -> "as of ${date.format(DateTimeFormatter.ofPattern("d MMM", Locale.US))}"
+        else -> "${tr("as of")} ${date.format(DateTimeFormatter.ofPattern("d MMM", Locale.US))}"
     }
 }
 

@@ -1,5 +1,7 @@
 package com.noop.analytics
 
+import com.noop.i18n.Fr
+
 // FitnessAgeEngine.kt — on-device "Fitness Age" from resting HR + activity + profile.
 // Byte-for-byte mirror of Strand/Packages/StrandAnalytics/Sources/StrandAnalytics/FitnessAgeEngine.swift.
 //
@@ -133,28 +135,28 @@ object FitnessAgeEngine {
     fun assessReadiness(hasAge: Boolean, hasSex: Boolean, rhrDays: Int, activityDays: Int,
                         hasHeightWeight: Boolean, hasWaist: Boolean): FitnessAgeReadiness {
         val items = listOf(
-            FitnessReadinessItem("age", "Your age",
+            FitnessReadinessItem("age", Fr.tr("Your age"),
                 if (hasAge) FitnessReadinessStatus.SATISFIED else FitnessReadinessStatus.MISSING,
                 required = true, role = FitnessReadinessRole.DRIVES_AGE,
-                detail = if (hasAge) "Set" else "Add it in Settings"),
-            FitnessReadinessItem("sex", "Biological sex",
+                detail = if (hasAge) Fr.tr("Set") else Fr.tr("Add it in Settings")),
+            FitnessReadinessItem("sex", Fr.tr("Biological sex"),
                 if (hasSex) FitnessReadinessStatus.SATISFIED else FitnessReadinessStatus.MISSING,
                 required = true, role = FitnessReadinessRole.DRIVES_AGE,
-                detail = if (hasSex) "Set" else "Add it in Settings"),
-            FitnessReadinessItem("rhr", "Resting heart rate",
+                detail = if (hasSex) Fr.tr("Set") else Fr.tr("Add it in Settings")),
+            FitnessReadinessItem("rhr", Fr.tr("Resting heart rate"),
                 coverageStatus(rhrDays, minCoverageDays), required = true,
-                role = FitnessReadinessRole.DRIVES_AGE, detail = "$rhrDays of last 7 nights"),
-            FitnessReadinessItem("activity", "Recent activity",
+                role = FitnessReadinessRole.DRIVES_AGE, detail = "$rhrDays ${Fr.tr("of last 7 nights")}"),
+            FitnessReadinessItem("activity", Fr.tr("Recent activity"),
                 coverageStatus(activityDays, minCoverageDays), required = false,
-                role = FitnessReadinessRole.DRIVES_AGE, detail = "$activityDays of last 7 days"),
-            FitnessReadinessItem("bodyMetrics", "Height & weight",
+                role = FitnessReadinessRole.DRIVES_AGE, detail = "$activityDays ${Fr.tr("of last 7 days")}"),
+            FitnessReadinessItem("bodyMetrics", Fr.tr("Height & weight"),
                 if (hasHeightWeight) FitnessReadinessStatus.SATISFIED else FitnessReadinessStatus.MISSING,
                 required = false, role = FitnessReadinessRole.UNLOCKS_VO2MAX,
-                detail = if (hasHeightWeight) "Unlocks your VO₂max" else "Add to also see VO₂max"),
-            FitnessReadinessItem("waist", "Waist (optional)",
+                detail = if (hasHeightWeight) Fr.tr("Unlocks your VO₂max") else Fr.tr("Add to also see VO₂max")),
+            FitnessReadinessItem("waist", Fr.tr("Waist (optional)"),
                 if (hasWaist) FitnessReadinessStatus.SATISFIED else FitnessReadinessStatus.MISSING,
                 required = false, role = FitnessReadinessRole.UNLOCKS_VO2MAX,
-                detail = if (hasWaist) "Sharpens VO₂max" else "Optional - sharpens VO₂max"),
+                detail = if (hasWaist) Fr.tr("Sharpens VO₂max") else Fr.tr("Optional - sharpens VO₂max")),
         )
         val confidence = when {
             !hasAge || !hasSex || rhrDays < minCoverageDays -> FitnessAgeConfidence.NOT_READY
