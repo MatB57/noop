@@ -636,6 +636,33 @@ public final class BLEManager: NSObject, ObservableObject {
     /// it connects to the FIRST WHOOP discovered. Set by the app via `setPreferredPeripheral(_:)` to
     /// the active device's persisted `peripheralId`. Purely additive; nothing reads it on the nil path.
     private var preferredPeripheralUUID: UUID?
+    /// STRICT single-strap lock (family setup: two people with the same WHOOP model in radio range, and only
+    /// ONE of the straps may ever feed this phone). Persisted so it is already in force at launch, BEFORE the
+    /// registry-driven `preferredPeripheralUUID` pin is applied (that pin arrives asynchronously, and until it
+    /// does the unpinned path connects to the FIRST WHOOP it hears, which could be someone else's). Set when a
+    /// pin is applied or, failing that, at the first genuine encrypted bond; cleared only by removing the strap
+    /// (`forgetDevice`) or switching strap model. Consulted whenever no explicit pin is set.
+    private static let lockedStrapKey = "lockedWhoopPeripheralUUID"
+    private var lockedPeripheralUUID: UUID? =
+        UserDefaults.standard.string(forKey: BLEManager.lockedStrapKey).flatMap { UUID(uuidString: $0) }
+    /// The strap every connect/discover/attach path must be restricted to: the explicit pin, else the lock.
+    /// nil only when NO strap has ever been pinned or bonded (a brand-new install), which keeps first-time
+    /// pairing working exactly as before.
+    private var effectivePinUUID: UUID? { preferredPeripheralUUID ?? lockedPeripheralUUID }
+
+    /// Persist (or clear) the strict lock. Idempotent; logs every change so the strap log shows which strap
+    /// this phone is locked to (the id suffix can be compared with a second phone's log).
+    private func setStrapLock(_ id: UUID?, reason: String) {
+        guard id != lockedPeripheralUUID else { return }
+        lockedPeripheralUUID = id
+        if let id {
+            UserDefaults.standard.set(id.uuidString, forKey: BLEManager.lockedStrapKey)
+            log("Strap lock: this phone now only accepts strap …\(id.uuidString.suffix(8)) (\(reason)). Any other WHOOP in range is ignored.")
+        } else {
+            UserDefaults.standard.removeObject(forKey: BLEManager.lockedStrapKey)
+            log("Strap lock: cleared (\(reason)). The next strap that bonds becomes the locked one.")
+        }
+    }
     /// Multi-WHOOP Add-a-WHOOP wizard: while true, `didDiscover` POPULATES `discoveredWhoops` instead
     /// of auto-connecting — an explicit, separate "present the nearby straps" mode the wizard turns on
     /// (`scanForWhoops()`) then off (`stopWhoopScan()`). Default false leaves the auto-connect path
@@ -985,7 +1012,7 @@ public final class BLEManager: NSObject, ObservableObject {
         // STALE — `readoptWorkingStrap()` repoints the pin to the live-bonding strap first, so after a
         // handoff this loop drops the dead strap and attaches to the working one instead of vice-versa.
         let existing = central.retrieveConnectedPeripherals(withServices: [model.scanService])
-        if preferredPeripheralUUID != nil {
+        if effectivePinUUID != nil {
             for other in existing where !isPreferredPeripheral(other) {
                 log("Dropping non-active WHOOP connection \(other.identifier) — not the selected strap")
                 central.cancelPeripheralConnection(other)
@@ -1009,7 +1036,7 @@ public final class BLEManager: NSObject, ObservableObject {
         // Pinned to a specific strap that isn't already open → connect it DIRECTLY by identifier. A scan
         // would let any in-range WHOOP satisfy the connect and could land on the wrong one; the targeted
         // retrieve can only ever return the strap we asked for.
-        if let preferred = preferredPeripheralUUID,
+        if let preferred = effectivePinUUID,
            let p = central.retrievePeripherals(withIdentifiers: [preferred]).first {
             log("Connecting to selected strap \(preferred) — targeted")
             preparePeripheral(p)
@@ -1056,6 +1083,7 @@ public final class BLEManager: NSObject, ObservableObject {
         // so connect()/restoration can't re-target it.
         if target == nil || preferredPeripheralUUID == target { setPreferredPeripheral(nil) }
         if target == nil || restoredPeripheral?.identifier == target { restoredPeripheral = nil }
+        if target == nil || lockedPeripheralUUID == target { setStrapLock(nil, reason: "strap removed") }
         // Drop the live BLE link so the strap is free to enter pairing mode.
         if isCurrent, let p = peripheral {
             central.cancelPeripheralConnection(p)
@@ -1082,6 +1110,8 @@ public final class BLEManager: NSObject, ObservableObject {
     /// `bonded` stayed true from the first strap, which hid the strap picker and kept the scan pointed at
     /// the old family's service. Call this when the user changes the strap selection.
     public func prepareForModelSwitch() {
+        // A different strap family is a different physical strap: the old lock must not veto its discovery.
+        setStrapLock(nil, reason: "strap model switch")
         disconnect()
         state.connected = false
         state.bonded = false
@@ -1195,6 +1225,7 @@ public final class BLEManager: NSObject, ObservableObject {
             if resolved != readoptingTo { readoptingTo = nil }
         }
         preferredPeripheralUUID = resolved
+        if let resolved { setStrapLock(resolved, reason: "registry pin") }
     }
 
     /// True when `p` is the strap we're pinned to — or when no pin is set (the single-WHOOP default, so
@@ -1202,7 +1233,7 @@ public final class BLEManager: NSObject, ObservableObject {
     /// attach/reconnect paths consult this so they can never adopt the WRONG already-connected strap on a
     /// multi-WHOOP setup (the registry said one strap, the radio stayed on another — multi-WHOOP switch bug).
     private func isPreferredPeripheral(_ p: CBPeripheral) -> Bool {
-        guard let preferred = preferredPeripheralUUID else { return true }
+        guard let preferred = effectivePinUUID else { return true }
         return p.identifier == preferred
     }
 
@@ -1217,6 +1248,7 @@ public final class BLEManager: NSObject, ObservableObject {
     private func noteGenuineBond(of p: CBPeripheral) {
         lastBondedPeripheralUUID = p.identifier
         pinnedBondRefusals = 0
+        if lockedPeripheralUUID == nil { setStrapLock(p.identifier, reason: "first genuine bond") }
         if readoptingTo == p.identifier {
             readoptingTo = nil
             log("Multi-WHOOP (#52): working strap bonded — confirming re-adoption to the registry.")
@@ -1235,6 +1267,13 @@ public final class BLEManager: NSObject, ObservableObject {
     /// so the registry re-adopts it. The normal first-connect/identity path (encryptedBond false at
     /// didConnect) is untouched, so this never fires on the correct-pin or single-strap path.
     private func readoptWorkingStrap(_ working: UUID, awayFrom stalePin: UUID) {
+        // Strict lock: a stale registry pin may be corrected toward the locked strap, but NEVER toward a
+        // stranger. Without this, if this phone's own strap refused the bond a few times while someone
+        // else's strap (same model, in range) bonded, the pin — and the registry — would move to theirs.
+        if let lock = lockedPeripheralUUID, working != lock {
+            log("Multi-WHOOP (#52): NOT handing the pin to strap …\(working.uuidString.suffix(8)) — this phone is locked to …\(lock.uuidString.suffix(8)).")
+            return
+        }
         log("Multi-WHOOP (#52): pinned strap refused the bond \(pinnedBondRefusals)× but another strap is bonded — handing the pin off to the working strap.")
         preferredPeripheralUUID = working
         pinnedBondRefusals = 0
@@ -2622,7 +2661,7 @@ extension BLEManager: @preconcurrency CBCentralManagerDelegate {
         // OTHER discovered WHOOP and keep scanning. When `preferredPeripheralUUID == nil` (the single-
         // WHOOP default) this guard is skipped and the original "connect to the first discovered" path
         // below is byte-for-byte unchanged.
-        if let preferred = preferredPeripheralUUID, peripheral.identifier != preferred {
+        if let preferred = effectivePinUUID, peripheral.identifier != preferred {
             log("Discovered \(name) (\(peripheral.identifier)) — not the preferred strap; ignoring")
             return
         }
