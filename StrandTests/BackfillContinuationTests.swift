@@ -213,7 +213,7 @@ final class BackfillContinuationTests: XCTestCase {
     /// the strap's newest) until either we catch up OR the cap is hit — never silently stalling at one.
     func testMultiPassDrainUntilCaughtUpOrCapped() {
         let strapNewest = 1_800_000_000
-        var frontier = strapNewest - 7 * 86_400      // a full week behind
+        var frontier = strapNewest - 30 * 86_400     // a month behind: deeper than the cap, so the cap (not catching up) ends it
         var count = 0
         var passes = 0
         while BackfillContinuation.shouldAutoContinue(

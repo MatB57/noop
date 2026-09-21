@@ -258,7 +258,7 @@ class BackfillContinuationTest {
     @Test
     fun multiPassDrain_untilCaughtUpOrCapped() {
         val strapNewest = 1_800_000_000L
-        var frontier = strapNewest - 7L * 86_400L   // a week behind
+        var frontier = strapNewest - 30L * 86_400L  // a month behind: deeper than the cap, so the cap (not catching up) ends it
         var count = 0
         var passes = 0
         while (WhoopBleClient.shouldAutoContinue(
