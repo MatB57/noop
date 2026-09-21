@@ -314,10 +314,12 @@ struct Whoop5EmptyOffloadTracker {
 /// its idle timeout — the reported ~15-min sync). The stale/PAST-epoch case 2b actually exists for (#451)
 /// reads BEHIND the frontier, never future-dated, so it is untouched.
 struct BackfillContinuation {
-    /// Hard cap on consecutive auto-continues per connection (resets on disconnect). 6 × ~60s ≈ 6 min of
-    /// back-to-back draining — enough to chew through a multi-night backlog far faster than the 15-min
-    /// floor, without letting a misbehaving strap monopolise Bluetooth.
-    static let defaultMaxAutoContinues = 6
+    /// Hard cap on consecutive auto-continues per connection (resets on disconnect). 20 × ~60s ≈ 20 min of
+    /// back-to-back draining (raised from 6 so a first sync of a full ~14-day strap backlog finishes in one
+    /// connection instead of stalling after ~6 min) — still far faster than the 15-min floor, and the other
+    /// guards stop it the moment the trim stops advancing or the strap is caught up, so a misbehaving strap
+    /// can't monopolise Bluetooth.
+    static let defaultMaxAutoContinues = 20
     /// How far ahead the strap must be (seconds) before "more backlog remains" is real, not clock noise.
     /// Matches StuckStrapDetector.behindGapSeconds (5 min) so the two agree on "behind".
     static let defaultBehindGapSeconds = 300

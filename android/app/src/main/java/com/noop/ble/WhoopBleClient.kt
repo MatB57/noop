@@ -813,9 +813,11 @@ class WhoopBleClient(
         }
 
         /** #364 auto-continue cap: consecutive immediate re-kicks per connection before falling back to
-         *  the 900s periodic timer. 6 × ~60s ≈ 6 min of back-to-back draining without letting a
-         *  misbehaving strap monopolise Bluetooth. Mirrors Swift BackfillContinuation.defaultMaxAutoContinues. */
-        const val MAX_AUTO_CONTINUES = 6
+         *  the 900s periodic timer. 20 × ~60s ≈ 20 min of back-to-back draining (raised from 6 so a first
+         *  sync of a full ~14-day strap backlog finishes in one connection) without letting a misbehaving
+         *  strap monopolise Bluetooth — the other guards still stop it the moment the trim stops advancing
+         *  or the strap is caught up. Mirrors Swift BackfillContinuation.defaultMaxAutoContinues. */
+        const val MAX_AUTO_CONTINUES = 20
 
         /** #364 "more backlog remains" margin (seconds): how far ahead the strap must be of our persisted
          *  data frontier before we treat it as behind, not clock noise. Matches the Swift
