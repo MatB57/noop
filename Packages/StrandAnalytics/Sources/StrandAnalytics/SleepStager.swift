@@ -866,14 +866,36 @@ public enum SleepStager {
                     detail: "daytime=true restingHR=\(resting ?? -1) baseline=\(baseline.map { Int($0) } ?? -1) nightTail=false"))
                 continue
             }
-            let stages = useSleepStagerV2
+            var stages = useSleepStagerV2
                 ? SleepStagerV2.stageSession(start: p.start, end: p.end, grav: grav,
                                              hr: hrS, rr: rrS, resp: respS)
                 : stageSession(start: p.start, end: p.end, grav: grav,
                                hr: hrS, rr: rrS, resp: respS)
-            let eff = efficiency(start: p.start, end: p.end, stages: stages)
-            let avgHrv = sessionAvgHRV(start: p.start, end: p.end, rr: rrS)
-            sessions.append(SleepSession(start: p.start, end: p.end, efficiency: eff,
+            // Trim leading/trailing WAKE padding (quiet-wake window bug; mirrors Kotlin). The gravity-
+            // stillness spine can't tell sleep from motionless wakefulness (reading or resting in bed
+            // after waking), so one unbroken accepted run can extend hours past the true wake with no
+            // chain/guard ever judging it (the daytime guards only compare run-to-run gaps). The epoch
+            // classifier has the sharper HR+motion picture and already tags that tail "wake": shrink the
+            // reported in-bed window to the first/last non-wake stage, then RESTAGE on the tightened
+            // bounds so classifyEpochs' percentile references (hrLo/hrHi/...) aren't diluted by the
+            // trimmed-out quiet-wake epochs. A run with no leading/trailing wake is untouched.
+            var trimStart = p.start
+            var trimEnd = p.end
+            if let firstAsleep = stages.first(where: { $0.stage != "wake" }),
+               let lastAsleep = stages.last(where: { $0.stage != "wake" }) {
+                trimStart = firstAsleep.start
+                trimEnd = lastAsleep.end
+            }
+            if trimStart > p.start || trimEnd < p.end {
+                stages = useSleepStagerV2
+                    ? SleepStagerV2.stageSession(start: trimStart, end: trimEnd, grav: grav,
+                                                 hr: hrS, rr: rrS, resp: respS)
+                    : stageSession(start: trimStart, end: trimEnd, grav: grav,
+                                   hr: hrS, rr: rrS, resp: respS)
+            }
+            let eff = efficiency(start: trimStart, end: trimEnd, stages: stages)
+            let avgHrv = sessionAvgHRV(start: trimStart, end: trimEnd, rr: rrS)
+            sessions.append(SleepSession(start: trimStart, end: trimEnd, efficiency: eff,
                                          stages: stages, restingHR: resting, avgHRV: avgHrv))
             traceSink?(GateTrace.runLine(index: runIndex, startTs: p.start, endTs: p.end,
                 verdict: .kept, gate: "accepted",

@@ -507,7 +507,11 @@ struct TrendsReportSheet: View {
             .padding(.vertical, NoopMetrics.space6)
         }
         .background(StrandPalette.surfaceBase)
+        #if os(macOS)
+        // The fixed 460x640 window is a macOS sheet size. On iPhone it forced a 460pt-wide layout
+        // inside a ~390pt screen, clipping the preview and the Export button off the edge.
         .frame(width: 460, height: 640)
+        #endif
         #if os(iOS)
         .noopSheetPresentation(largeFirst: true)
         #endif
